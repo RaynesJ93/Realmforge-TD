@@ -5,7 +5,7 @@
   const tray = document.createElement('div'); tray.className = 'xpPopups'; tray.setAttribute('aria-live','polite'); tray.setAttribute('aria-atomic','false'); document.body.appendChild(tray);
   const combat = ['Attack','Strength','Defence','Ranged','Magic','Hitpoints'];
   const panels = [];
-  for (const id of ['activeSkill','battleXpAnchor']) {
+  for (const id of ['activeSkill']) {
     const anchor = document.getElementById(id); if (!anchor) continue;
     const panel=document.createElement('div');panel.className='trainingXp';
     panel.innerHTML='<div class="trainingXpHeading"><b></b><span></span></div><div class="trainingXpBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div><small></small>';
@@ -43,10 +43,8 @@
   }
   window.addEventListener('realmforge:xp',e=>{
     const {skill,gained,oldLevel,level}=e.detail;
-    if(combat.includes(skill)) {
-      // Shared Hitpoints/Strength XP must not steal focus from the attacking class.
-      if(skill!=='Hitpoints' && skill!=='Strength')lastCombat=skill;
-    } else if(!activeSkill())lastSkill=skill;
+    if(combat.includes(skill)) return;
+    if(!activeSkill())lastSkill=skill;
     const p=pending.get(skill)||{amount:0,level:0};p.amount+=gained;if(level>oldLevel)p.level=level;pending.set(skill,p);
     if(!flushTimer)flushTimer=setTimeout(flush,180);
     refresh();
