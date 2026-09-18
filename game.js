@@ -44,7 +44,6 @@ function stopSmithing(show=true){if(smithTimer)clearInterval(smithTimer);smithTi
 function renderSmithProgress(){if(!smithingKey)return;let r=recipes[smithingKey],pct=Math.min(100,(performance.now()-smithStart)/r.time*100);activityProgress.querySelector('i').style.width=pct+'%';requestAnimationFrame(renderSmithProgress)}
 const oldStopGather=stopGathering;stopGathering=function(show=true){oldStopGather(show);if(smithingKey)stopSmithing(show)}
 window.startSmithing=startSmithing;
-const stopGatherBase=stopGathering;stopGathering=function(show=true){stopGatherBase(show);if(artisanKey)stopArtisan(show)};window.stopGathering=stopGathering;
 function equipItem(name){let it=itemDB[name];if(!it||!(save.items[name]>0))return;if(it.req){for(const [skill,lvl] of Object.entries(it.req))if(save.skills[skill].lvl<lvl){alert(name+' requires '+skill+' level '+lvl+'.');return}}save.equipment[it.class][it.slot]=name;persist()}window.equipItem=equipItem;
 
 
@@ -84,6 +83,7 @@ function completeArtisan(k){if(artisanKey!==k)return;let r=artisanRecipes[k];if(
 function stopArtisan(show=true){if(artisanTimer)clearInterval(artisanTimer);artisanTimer=null;artisanKey=null;if(show){let an=document.querySelector('#activityName'),at=document.querySelector('#activityText'),sb=document.querySelector('#stopGather'),ap=document.querySelector('#activityProgress i');if(an)an.textContent='Not currently gathering';if(at)at.textContent='Production stopped.';if(sb)sb.disabled=true;if(ap)ap.style.width='0%'}}
 function renderArtisanProgress(){if(!artisanKey)return;let r=artisanRecipes[artisanKey],ap=document.querySelector('#activityProgress i');if(ap)ap.style.width=Math.min(100,(performance.now()-artisanStart)/r.time*100)+'%';requestAnimationFrame(renderArtisanProgress)}
 window.startArtisan=startArtisan;
+const stopGatherBase=stopGathering;stopGathering=function(show=true){stopGatherBase(show);if(artisanKey)stopArtisan(show)};window.stopGathering=stopGathering;
 function renderArtisan(){let g=document.querySelector('#artisanGrid');if(!g)return;g.innerHTML=Object.entries(artisanRecipes).map(([k,r])=>'<div class="card tier2"><b>'+r.name+'</b><p>'+r.skill+' Lv '+r.level+' • '+r.xp+' XP • '+(r.time/1000).toFixed(1)+' sec</p><small>'+Object.entries(r.cost).map(([n,q])=>q+' '+n).join(' + ')+'</small><br><button '+(save.skills[r.skill].lvl<r.level?'disabled':'')+' onclick="startArtisan(\''+k+'\')">Auto-'+(r.skill==='Fletching'?'fletch':'craft')+'</button></div>').join('')}
 
 const hunterTasks=[{kind:'rat',name:'Rats',min:18,max:30,level:1,xp:80,points:4},{kind:'goblin',name:'Goblins',min:20,max:35,level:1,xp:100,points:5},{kind:'wolf',name:'Wolves',min:18,max:30,level:3,xp:120,points:6},{kind:'scout',name:'Goblin Scouts',min:20,max:32,level:5,xp:150,points:7},{kind:'brute',name:'Goblin Brutes',min:15,max:25,level:7,xp:180,points:8},{kind:'emberling',name:'Emberlings',min:25,max:40,level:10,xp:240,points:10},{kind:'cinderhound',name:'Cinder Hounds',min:20,max:35,level:12,xp:280,points:12},{kind:'ashgolem',name:'Ash Golems',min:12,max:22,level:15,xp:360,points:15},{kind:'flameguard',name:'Flameguards',min:10,max:18,level:20,xp:450,points:18}];
