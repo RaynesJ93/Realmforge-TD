@@ -37,3 +37,18 @@
 #skilling #skillMessage:empty{display:none}
 @media(min-width:700px){#skilling .activityList{grid-template-columns:repeat(2,minmax(0,1fr))}#skilling .workshopTabs{grid-template-columns:repeat(7,minmax(0,1fr))}}
 @media(max-width:350px){#skilling .workshopTabs{grid-template-columns:repeat(3,minmax(0,1fr))}#skilling .activityList .oreCard{grid-template-columns:32px minmax(0,1fr) auto}#skilling .oreIcon{width:32px;height:32px}}
+
+
+/* V169: compact level progress and short, non-interactive XP drops. */
+.trainingXp{padding:8px 10px;background:#18201a;border:1px solid #536147;border-radius:8px;margin:0 0 10px}
+.trainingXpHeading{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:#e4c66a}
+.trainingXpHeading b{font-size:12px}.trainingXpHeading span{white-space:nowrap}
+.trainingXpBar{height:7px;background:#0e120f;border-radius:5px;overflow:hidden;margin:6px 0 4px}
+.trainingXpBar i{display:block;height:100%;background:linear-gradient(90deg,#779a50,#d5b854);transition:width .2s ease}
+.trainingXp small{display:block;font-size:11px;color:#bcc8b7;line-height:1.35}
+#battle .trainingXp{margin:5px 0}
+.xpPopups{position:fixed;z-index:1000;top:max(12px,env(safe-area-inset-top));right:10px;display:flex;flex-direction:column;gap:5px;pointer-events:none;max-width:calc(100vw - 20px)}
+.xpPopup{padding:8px 12px;background:rgba(22,34,22,.95);border:1px solid #95b875;border-radius:8px;color:#d9f7ac;font-size:13px;font-weight:700;box-shadow:0 2px 8px #0005;animation:xpFloat 2.2s ease-out forwards}
+.xpLevelUp{color:#ffe390;border-color:#e4c66a}
+@keyframes xpFloat{0%{opacity:0;transform:translateY(8px)}12%,75%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-14px)}}
+@media(prefers-reduced-motion:reduce){.xpPopup{animation:none}.trainingXpBar i{transition:none}}
