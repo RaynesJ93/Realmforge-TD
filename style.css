@@ -6,3 +6,34 @@
 .tower span{display:block;text-align:left}.tower small{display:block;color:#e4c66a;font-size:12px;margin-top:4px}
 .towerbar #startWave{align-self:stretch}
 @media(max-width:600px){.towerbar{gap:6px}.towerbar .tower{min-width:0;flex:1 1 28%;flex-direction:column;gap:2px;padding:5px 2px;font-size:12px;min-height:104px}.towerPortrait{height:66px;width:40px}.tower span{text-align:center}.tower small{display:inline;margin-left:4px;font-size:11px}.towerbar #startWave{flex:1 1 100%;min-height:44px}}
+
+
+/* V168: compact workshop only; all other game menus retain their layout. */
+#skilling .workshop{padding:12px}
+#skilling h2{font-size:21px;margin:0 0 5px}
+#skilling .workshopIntro{font-size:12px;color:#b9c3b9;margin:0 0 10px;line-height:1.4}
+#skilling .activeSkill{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px;padding:10px;margin:0 0 10px}
+#skilling .activeSkill b{font-size:14px;margin:0;grid-column:1}
+#skilling .activeSkill .skillprogress{height:6px;grid-column:1;margin:0}
+#skilling .activeSkill small{font-size:11px;margin:0;grid-column:1;line-height:1.3}
+#skilling #stopGather{grid-column:2;grid-row:1 / span 3;align-self:center;margin:0;min-height:44px;padding:8px 12px}
+#skilling .workshopTabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:10px}
+#skilling .workshopTabs button{padding:7px 2px;font-size:12px;min-height:44px;overflow-wrap:anywhere}
+#skilling .workshopTabs button[aria-pressed="true"]{background:#49523a;border-color:#e4c66a;color:#ffe597;box-shadow:inset 0 -2px #e4c66a}
+#skilling .workshopTabs button:focus-visible{outline:2px solid #ffe597;outline-offset:2px}
+#skilling .workshopPane[hidden]{display:none!important}
+#skilling .workshopPane h3{font-size:15px;margin:0 0 7px;color:#e4c66a}
+#skilling .activityList{grid-template-columns:1fr;gap:6px}
+#skilling .activityList .card{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 8px;padding:9px;align-items:center;min-width:0}
+#skilling .activityList .card>b{font-size:13px;grid-column:1;line-height:1.25}
+#skilling .activityList .card>p,#skilling .activityList .card>small{font-size:11px;line-height:1.4;color:#b9c3b9;margin:0;grid-column:1;overflow-wrap:anywhere}
+#skilling .activityList .card>br{display:none}
+#skilling .activityList .card>button{grid-column:2;grid-row:1 / span 4;min-height:44px;max-width:100px;padding:8px;font-size:11px}
+#skilling .activityList .oreCard{grid-template-columns:44px minmax(0,1fr) auto}
+#skilling .oreIcon{width:44px;height:44px;object-fit:contain;grid-column:1;grid-row:1 / span 3}
+#skilling .activityList .oreCard>b,#skilling .activityList .oreCard>p{grid-column:2}
+#skilling .activityList .oreCard>button{grid-column:3}
+#skilling #skillMessage{font-size:12px;margin:8px 0 0}
+#skilling #skillMessage:empty{display:none}
+@media(min-width:700px){#skilling .activityList{grid-template-columns:repeat(2,minmax(0,1fr))}#skilling .workshopTabs{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(max-width:350px){#skilling .workshopTabs{grid-template-columns:repeat(3,minmax(0,1fr))}#skilling .activityList .oreCard{grid-template-columns:32px minmax(0,1fr) auto}#skilling .oreIcon{width:32px;height:32px}}
