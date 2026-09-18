@@ -173,7 +173,7 @@ function spawn(kind){let d=enemyDB[kind],scale=dungeonMode?(1.15+wave*.14):maps[
 function checkBossMilestones(kind){let kills=kind==='warlord'?save.campaign.bossKills:kind==='tyrant'?save.campaign.ashenBossKills:save.campaign.frostBossKills,arr=save.bossHunt.milestones[kind];[10,25,50,100,250].forEach(m=>{if(kills>=m&&!arr.includes(m)){arr.push(m);let reward=m*25;save.coins+=reward;save.drops.push((kind==='warlord'?'Warlord':kind==='tyrant'?'Ember Tyrant':'Frost Wyrm')+' '+m+' kills milestone: +'+reward+' coins')}})}
 function rollDrop(kind){if(kind==='rootwarden'){dungeonBossKilled=true;save.drops.push('Root Warden defeated!');return}if(kind==='warlord'||kind==='tyrant'||kind==='frostwyrm'){bossKilled=true;if(kind==='warlord')save.campaign.bossKills++;else if(kind==='tyrant')save.campaign.ashenBossKills++;else save.campaign.frostBossKills++;let r=Math.random(),name=null;if(kind==='warlord')name=r<.04?'Warlord Cleaver':r<.10?'Warlord Crest':null;else if(kind==='tyrant')name=r<.03?'Emberfang Blade':r<.07?'Ashguard Helm':r<.11?'Cinderbow':r<.15?'Ember Staff':null;checkBossMilestones(kind);if(kind==='frostwyrm'){var fr=Math.random(),fn=null;if(fr<.025)fn='Wyrmfrost Blade';else if(fr<.05)fn='Glacier Bow';else if(fr<.075)fn='Wintercore Staff';else if(fr<.105)fn='Wyrmscale Crown';if(fn){save.items[fn]=(save.items[fn]||0)+1;save.collection[fn]=true;save.drops.push(fn+' UNIQUE DROP!')}else{save.bank['Frostsilver bar']+=3+Math.floor(Math.random()*5);save.bank['Frostweave Cloth']+=2+Math.floor(Math.random()*4);save.drops.push('Frost Wyrm cache: Frostsilver bars + Frostweave Cloth')}checkBossMilestones(kind);return}if(name){save.items[name]=(save.items[name]||0)+1;save.collection[name]=true;save.drops.push(name+' UNIQUE DROP!')}else if(kind==='tyrant'){save.bank['Ironvale bar']+=3+Math.floor(Math.random()*5);save.drops.push('Ember Tyrant cache: Ironvale bars')}else{save.bank['Bronze bar']+=2+Math.floor(Math.random()*4);save.drops.push('Warlord cache: Bronze bars')}return}let pool=kind==='goblin'||kind==='brute'||kind==='scout'?[['Bronze Sword',.025],['Bronze Dagger',.02],['Bronze Helm',.018],['Bronze Armour',.012],['Oak Shortbow',.018],['Leather Hood',.016],['Leather Body',.012],['Apprentice Staff',.012],['Cloth Hood',.014],['Apprentice Robe',.01]]:[['Bronze Dagger',.004],['Leather Hood',.003],['Cloth Hood',.003]];for(const [name,chance] of pool)if(Math.random()<chance){save.items[name]=(save.items[name]||0)+1;save.drops.push(name+' drop!');if(save.drops.length>20)save.drops.shift();return}}
 function finishMap(){if(mapFinished)return;if(maps[currentMap].boss&&!bossKilled){alert('The boss escaped. This map is not cleared.');return}mapFinished=true;waveRunning=false;if(!save.campaign.cleared.includes(currentMap))save.campaign.cleared.push(currentMap);save.campaign.unlocked=Math.max(save.campaign.unlocked,Math.min(15,currentMap+2));let reward=75+(currentMap*50);save.coins+=reward;if(maps[currentMap].ore)save.bank['Copper ore']+=5;if(maps[currentMap].ashOre)save.bank['Ironvale ore']+=8;if(save.drops.length>20)save.drops=save.drops.slice(-20);persist();setTimeout(()=>alert(maps[currentMap].name+' cleared! +'+reward+' coins'+(currentMap<14?'\nNext location unlocked.':'\nFrostmere conquered!')),150)}
-function update(dt,now){for(const e of enemies){if(e.dead)continue;let p=path[e.seg];if(!p){e.dead=true;lives--;continue}let dx=p[0]-e.x,dy=p[1]-e.y,d=Math.hypot(dx,dy),step=e.speed*dt;if(d<=step){e.x=p[0];e.y=p[1];e.seg++}else{e.x+=dx/d*step;e.y+=dy/d*step}}for(const t of towers){let cfg=types[t.type],range=cfg.range+bonus(t.type,'range'),target=enemies.find(e=>!e.dead&&Math.hypot(e.x-t.x,e.y-t.y)<=range),rate=cfg.rate*(1-bonus(t.type,'speed'));if(target&&now-t.last>=rate){t.last=now;let level=save.skills[cfg.skill].lvl,damage=(cfg.damage+bonus(t.type,'damage'))*(1+(level-1)*.025);target.hp-=damage;shots.push({x:t.x,y:t.y,tx:target.x,ty:target.y,life:.12});addXP(cfg.skill,2);if(t.type==='warrior')addXP('Strength',1);addXP('Hitpoints',1);if(target.hp<=0&&!target.dead){target.dead=true;battleCoins+=target.reward;save.coins+=target.reward;if(['goblin','scout','brute','warlord','emberling','cinderhound','ashgolem','flameguard','tyrant'].includes(target.kind))save.bank['Goblin scrap']++;if(Math.random()<.12)save.bank['Copper ore']++;hunterKill(target.kind);questKill(target.kind);if(['iceraider','frozengolem','frostguard'].includes(target.kind)&&Math.random()<.10){save.bank['Frostweave Cloth']++;save.drops.push('Frostweave Cloth drop!')}if(['emberling','cinderhound','flameguard'].includes(target.kind)&&Math.random()<.08){save.bank['Ashweave Cloth']++;save.drops.push('Ashweave Cloth drop!')}if(target.kind==='ashgolem'){let ch=save.hunter.unlocks.materials ? .02 : .01;if(Math.random()<ch){save.bank['Golem Core']++;save.drops.push('RARE DROP: Golem Core!')}}if(target.kind==='flameguard'){let ch=save.hunter.unlocks.materials ? .016 : .008;if(Math.random()<ch){save.bank['Flameguard Sigil']++;save.drops.push('RARE DROP: Flameguard Sigil!')}}rollDrop(target.kind);persist();hud()}}}shots.forEach(s=>s.life-=dt);shots=shots.filter(s=>s.life>0);enemies=enemies.filter(e=>!e.dead);if(waveRunning&&enemies.length===0&&spawnPending===0&&now-lastSpawnCheck>500){waveRunning=false;save.bestWave=Math.max(save.bestWave,wave);addXP('Defence',Math.max(8,Math.round((6+wave*2)*(1+currentMap*.08))));persist();if(dungeonMode&&wave===15){if(dungeonBossKilled)finishDungeon();else{mapFinished=true;alert('The Root Warden escaped. Dungeon failed.')}}else if(bossMode&&wave===3){if(bossKilled){let elapsed=Math.round(performance.now()-bossStart);if(!save.bossHunt.best[bossMode]||elapsed<save.bossHunt.best[bossMode])save.bossHunt.best[bossMode]=elapsed;let done=bossMode;mapFinished=true;persist();setTimeout(()=>alert((done==='warlord'?'Goblin Warlord':done==='tyrant'?'Ember Tyrant':'Frost Wyrm')+' defeated!\nTime: '+(elapsed/1000).toFixed(1)+'s'),100)}else alert('The boss escaped. Hunt failed.')}else if(!dungeonMode&&wave===10)finishMap()}if(lives<=0){if(dungeonMode){dungeonMode=false;alert('Dungeon failed. Your account XP and loot are saved.');resetBattle()}else{alert('Defence failed. Your account XP and loot are saved.');resetBattle()}}}
+function update(dt,now){for(const e of enemies){if(e.dead)continue;let p=path[e.seg];if(!p){e.dead=true;lives--;continue}let dx=p[0]-e.x,dy=p[1]-e.y,d=Math.hypot(dx,dy),step=e.speed*dt;if(d<=step){e.x=p[0];e.y=p[1];e.seg++}else{e.x+=dx/d*step;e.y+=dy/d*step}}for(const t of towers){let cfg=types[t.type],range=cfg.range+bonus(t.type,'range'),target=enemies.find(e=>!e.dead&&Math.hypot(e.x-t.x,e.y-t.y)<=range),rate=cfg.rate*(1-bonus(t.type,'speed'));if(target&&now-t.last>=rate){t.last=now;let level=save.skills[cfg.skill].lvl,damage=(cfg.damage+bonus(t.type,'damage'))*(1+(level-1)*.025);target.hp-=damage;startTowerAttack(t,target);addXP(cfg.skill,2);if(t.type==='warrior')addXP('Strength',1);addXP('Hitpoints',1);if(target.hp<=0&&!target.dead){target.dead=true;battleCoins+=target.reward;save.coins+=target.reward;if(['goblin','scout','brute','warlord','emberling','cinderhound','ashgolem','flameguard','tyrant'].includes(target.kind))save.bank['Goblin scrap']++;if(Math.random()<.12)save.bank['Copper ore']++;hunterKill(target.kind);questKill(target.kind);if(['iceraider','frozengolem','frostguard'].includes(target.kind)&&Math.random()<.10){save.bank['Frostweave Cloth']++;save.drops.push('Frostweave Cloth drop!')}if(['emberling','cinderhound','flameguard'].includes(target.kind)&&Math.random()<.08){save.bank['Ashweave Cloth']++;save.drops.push('Ashweave Cloth drop!')}if(target.kind==='ashgolem'){let ch=save.hunter.unlocks.materials ? .02 : .01;if(Math.random()<ch){save.bank['Golem Core']++;save.drops.push('RARE DROP: Golem Core!')}}if(target.kind==='flameguard'){let ch=save.hunter.unlocks.materials ? .016 : .008;if(Math.random()<ch){save.bank['Flameguard Sigil']++;save.drops.push('RARE DROP: Flameguard Sigil!')}}rollDrop(target.kind);persist();hud()}}}updateAttackVisuals(dt);shots=shots.filter(s=>s.life>0);enemies=enemies.filter(e=>!e.dead);if(waveRunning&&enemies.length===0&&spawnPending===0&&now-lastSpawnCheck>500){waveRunning=false;save.bestWave=Math.max(save.bestWave,wave);addXP('Defence',Math.max(8,Math.round((6+wave*2)*(1+currentMap*.08))));persist();if(dungeonMode&&wave===15){if(dungeonBossKilled)finishDungeon();else{mapFinished=true;alert('The Root Warden escaped. Dungeon failed.')}}else if(bossMode&&wave===3){if(bossKilled){let elapsed=Math.round(performance.now()-bossStart);if(!save.bossHunt.best[bossMode]||elapsed<save.bossHunt.best[bossMode])save.bossHunt.best[bossMode]=elapsed;let done=bossMode;mapFinished=true;persist();setTimeout(()=>alert((done==='warlord'?'Goblin Warlord':done==='tyrant'?'Ember Tyrant':'Frost Wyrm')+' defeated!\nTime: '+(elapsed/1000).toFixed(1)+'s'),100)}else alert('The boss escaped. Hunt failed.')}else if(!dungeonMode&&wave===10)finishMap()}if(lives<=0){if(dungeonMode){dungeonMode=false;alert('Dungeon failed. Your account XP and loot are saved.');resetBattle()}else{alert('Defence failed. Your account XP and loot are saved.');resetBattle()}}}
 // V166: shared, preloaded character sprites; visual-only, no save or combat changes.
 const towerSprites = {};
 for (const type of ['warrior', 'ranger', 'mage']) {
@@ -181,6 +181,71 @@ for (const type of ['warrior', 'ranger', 'mage']) {
   image.src = 'assets/tower-' + type + '-v166.webp';
   towerSprites[type] = image;
 }
+// V167: visual effects use the existing battle clock; damage remains in update().
+let warriorLayers = null;
+function getWarriorLayers(image) {
+  if (warriorLayers) return warriorLayers;
+  const make = () => { const c = document.createElement('canvas'); c.width = image.naturalWidth; c.height = image.naturalHeight; return c; };
+  const body = make(), sword = make();
+  const outline = c => {
+    c.beginPath();
+    [[0,20],[12,20],[32,84],[42,94],[40,119],[25,126],[9,107],[0,60]].forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));
+    c.closePath();
+  };
+  const b = body.getContext('2d'); b.drawImage(image,0,0);
+  b.globalCompositeOperation='destination-out'; outline(b); b.fill();
+  const w = sword.getContext('2d'); outline(w); w.clip(); w.drawImage(image,0,0);
+  warriorLayers = {body,sword}; return warriorLayers;
+}
+function startTowerAttack(t, target) {
+  const duration = t.type === 'warrior' ? .32 : .28;
+  t.attackVisual = {life:duration,duration,angle:Math.atan2(target.y-(t.y-30),target.x-t.x)};
+  const x=t.x+(t.type==='mage'?-13:t.type==='ranger'?10:-15), y=t.y-(t.type==='mage'?53:42);
+  const travel=t.type==='warrior'?.22:Math.max(.18,Math.min(.42,Math.hypot(target.x-x,target.y-y)/540));
+  shots.push({type:t.type,x,y,tx:target.x,ty:target.y,target,travel,age:0,life:travel+.12});
+}
+function updateAttackVisuals(dt) {
+  for (const t of towers) if(t.attackVisual) {
+    t.attackVisual.life-=dt;
+    if(t.attackVisual.life<=0)t.attackVisual=null;
+  }
+  for(const s of shots) {
+    s.age+=dt; s.life-=dt;
+    // Follow living targets until arrival, then leave the impact at that point.
+    if(s.age<s.travel && s.target && !s.target.dead){s.tx=s.target.x;s.ty=s.target.y;}
+  }
+}
+function drawAttackEffect(s) {
+  ctx.save();
+  const progress=Math.min(1,s.age/s.travel), angle=Math.atan2(s.ty-s.y,s.tx-s.x);
+  if(s.type==='warrior') {
+    // A brief crescent traces the physical sword's swing toward its target.
+    ctx.translate(s.x,s.y);ctx.rotate(angle);
+    ctx.globalAlpha=Math.sin(progress*Math.PI)*.85;
+    ctx.strokeStyle='#e5ecf5';ctx.lineWidth=4;
+    ctx.beginPath();ctx.arc(0,0,31,-1.1+progress*1.4,-.45+progress*1.4);ctx.stroke();
+  } else if(progress<1) {
+    const x=s.x+(s.tx-s.x)*progress, y=s.y+(s.ty-s.y)*progress;
+    ctx.translate(x,y);ctx.rotate(angle);
+    if(s.type==='ranger') {
+      ctx.lineWidth=2;ctx.strokeStyle='#c79a59';ctx.beginPath();ctx.moveTo(-14,0);ctx.lineTo(5,0);ctx.stroke();
+      ctx.fillStyle='#e8e8d7';ctx.beginPath();ctx.moveTo(9,0);ctx.lineTo(2,-4);ctx.lineTo(2,4);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#ddd5bb';ctx.beginPath();ctx.moveTo(-13,-4);ctx.lineTo(-9,0);ctx.lineTo(-13,4);ctx.stroke();
+    } else {
+      // Small solid-alpha circles keep blue magic readable without costly blur.
+      for(let i=3;i>=1;i--){ctx.globalAlpha=.12*(4-i);ctx.fillStyle='#438eff';ctx.beginPath();ctx.arc(-i*6,0,Math.max(2,6-i),0,Math.PI*2);ctx.fill();}
+      ctx.globalAlpha=.22;ctx.fillStyle='#2685ff';ctx.beginPath();ctx.arc(0,0,12,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle='#368cff';ctx.beginPath();ctx.arc(0,0,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#bdeaff';ctx.beginPath();ctx.arc(1,-1,3,0,Math.PI*2);ctx.fill();
+    }
+  } else {
+    const fade=Math.max(0,s.life/.12);ctx.globalAlpha=fade;
+    ctx.strokeStyle=s.type==='mage'?'#72c4ff':'#e8dfb4';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(s.tx,s.ty,3+(1-fade)*10,0,Math.PI*2);ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawTowerCharacter(t) {
   const image = towerSprites[t.type];
   if (image && image.complete && image.naturalWidth) {
@@ -189,7 +254,21 @@ function drawTowerCharacter(t) {
     // Keep edge placements visible without moving their gameplay footprint.
     const left = Math.max(0, Math.min(canvas.width - width, t.x - width / 2));
     const top = Math.max(0, Math.min(canvas.height - height, t.y + 12 - height));
-    ctx.drawImage(image, left, top, width, height);
+    const a=t.attackVisual, pulse=a?Math.sin((1-a.life/a.duration)*Math.PI):0;
+    ctx.save();
+    if(t.type==='warrior' && a) {
+      const layers=getWarriorLayers(image), scale=height/image.naturalHeight;
+      ctx.drawImage(layers.body,left,top,width,height);
+      ctx.translate(left+29*scale,top+105*scale);
+      const phase=1-a.life/a.duration;
+      // Wind through the target direction, then return to the resting pose.
+      ctx.rotate((a.angle+2.0+(phase-.5)*2.1)*pulse);
+      ctx.drawImage(layers.sword,-29*scale,-105*scale,width,height);
+    } else {
+      const recoil=t.type==='ranger'?pulse*2:0;
+      ctx.drawImage(image,left-(a?Math.cos(a.angle)*recoil:0),top-(t.type==='mage'?pulse*1.5:0),width,height);
+    }
+    ctx.restore();
     return;
   }
   // Loading/offline fallback: placing a tower always remains usable.
@@ -199,5 +278,6 @@ function drawTowerCharacter(t) {
   ctx.fillStyle = 'white'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(t.type[0].toUpperCase(), t.x, t.y + 4);
 }
-function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);enemies.forEach(e=>{let d=enemyDB[e.kind];ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.fillRect(e.x-18,e.y-27,36,5);ctx.fillStyle=['warlord','tyrant','rootwarden'].includes(e.kind)?'#f1b05f':'#ddd';ctx.fillRect(e.x-18,e.y-27,36*(e.hp/e.max),5);if(['warlord','tyrant','rootwarden'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,e.y-34)}});ctx.strokeStyle='#f4dd79';ctx.lineWidth=3;shots.forEach(s=>{ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.tx,s.ty);ctx.stroke()})}
+function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);enemies.forEach(e=>{let d=enemyDB[e.kind];ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.fillRect(e.x-18,e.y-27,36,5);ctx.fillStyle=['warlord','tyrant','rootwarden'].includes(e.kind)?'#f1b05f':'#ddd';ctx.fillRect(e.x-18,e.y-27,36*(e.hp/e.max),5);if(['warlord','tyrant','rootwarden'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,e.y-34)}});shots.forEach(drawAttackEffect)}
 function loop(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);draw();requestAnimationFrame(loop)}try{resetBattle();renderUI();writeSave(false);requestAnimationFrame(loop)}catch(e){console.error(e);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));let t=document.querySelector('#'+b.dataset.screen);if(t)t.classList.add('active')})}
+
