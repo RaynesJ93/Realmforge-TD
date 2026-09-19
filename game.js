@@ -197,8 +197,6 @@ function finishDungeon(){
  save.bank['Oakheart logs']+=oak;
  save.bank['Ironvale ore']+=iron;
  save.bank['Ashweave Cloth']+=cloth;
- var chaseRoll=Math.random();
- var chase=chaseRoll<0.01?'Crown of the Crypt':null;
  var roll=Math.random();
  var unique=null;
  if(roll<0.025)unique='Verdant Edge';
@@ -210,12 +208,12 @@ function finishDungeon(){
   save.drops.push(unique+' DUNGEON UNIQUE!');
  }
  var bonusReward=oak+' Oakheart logs\n'+iron+' Ironvale ore\n'+cloth+' Ashweave Cloth';
- var chest=coins+' coins\n'+bars+' Bronze bars\n'+bonusReward+(unique?'\nRARE: '+unique:'')+(chase?'\nMYTHIC 1%: '+chase:'');
+ var chest=coins+' coins\n'+bars+' Bronze bars\n'+bonusReward+(unique?'\nRARE: '+unique:'');
  save.drops.push('Greenvale Depths chest: '+oak+' Oakheart logs - '+iron+' Ironvale ore - '+cloth+' Ashweave Cloth');
  save.drops.push('Dungeon Chest: '+chest.replace(/\n/g,' - '));
  persist();
  renderUI();
- setTimeout(function(){alert('DUNGEON COMPLETE!\n\nGREENVALE DEPTHS CHEST\n--------------------\n'+chest+'\n\nClear time: '+(elapsed/1000).toFixed(1)+'s')},150);
+ setTimeout(function(){showDungeonResults('greenvale',elapsed);bossRunStart=null},150);
 }
 function finishFrozenCrypt(){
  if(mapFinished)return;
@@ -243,6 +241,7 @@ function finishFrozenCrypt(){
  save.bank['Frostsilver ore']=(save.bank['Frostsilver ore']||0)+ore;
  save.bank['Frostpine logs']=(save.bank['Frostpine logs']||0)+logs;
  save.bank['Frostweave Cloth']=(save.bank['Frostweave Cloth']||0)+cloth;
+ var chase=Math.random()<0.01?'Crown of the Crypt':null;
  var roll=Math.random();
  var unique=null;
  if(roll<0.03)unique='Cryptfang Greatsword';
@@ -258,11 +257,11 @@ function finishFrozenCrypt(){
   save.collection[chase]=true;
   save.drops.push(chase+' 1% CHASE DROP!');
  }
- var chest=coins+' coins\n'+bars+' Frostsilver bars\n'+ore+' Frostsilver ore\n'+logs+' Frostpine logs\n'+cloth+' Frostweave Cloth'+(unique?'\nRARE: '+unique:'');
+ var chest=coins+' coins\n'+bars+' Frostsilver bars\n'+ore+' Frostsilver ore\n'+logs+' Frostpine logs\n'+cloth+' Frostweave Cloth'+(unique?'\nRARE: '+unique:'')+(chase?'\nMYTHIC 1%: '+chase:'');
  save.drops.push('Frozen Crypt Chest: '+chest.replace(/\n/g,' - '));
  persist();
  renderUI();
- setTimeout(function(){alert('THE FROZEN CRYPT COMPLETE!\n\nFROZEN CRYPT CHEST\n--------------------\n'+chest+'\n\nClear time: '+(elapsed/1000).toFixed(1)+'s')},150);
+ setTimeout(function(){showDungeonResults('frozen',elapsed);bossRunStart=null},150);
 }
 function renderSupplyBag(){var g=document.querySelector('#supplyBagGrid'),c=document.querySelector('#supplyBagCount');if(!g)return;var foods=['Cooked Minnow','Cooked Trout','Cooked Pike'];if(c)c.textContent=supplyCount()+'/8';g.innerHTML=foods.map(function(n){var q=save.dungeon.supplies[n]||0,bank=save.bank[n]||0;return '<div class="card"><b>'+n+'</b><div>Bag: '+q+' | Bank: '+bank+'</div><small>Restores '+foodHeal[n]+' lives</small><br><button '+(bank<1||supplyCount()>=8?'disabled':'')+' onclick="addDungeonFood(\''+n+'\')">Add</button> <button '+(q<1?'disabled':'')+' onclick="removeDungeonFood(\''+n+'\')">Remove</button> <button '+(!dungeonMode||q<1?'disabled':'')+' onclick="eatDungeonFood(\''+n+'\')">Eat</button></div>'}).join('')}
 function renderDungeon(){var g=document.querySelector('#dungeonGrid');if(!g)return;var unlocked=dungeonUnlocked();var frozen=frozenCryptUnlocked();var foods=['Cooked Minnow','Cooked Trout','Cooked Pike'];var supply=foods.map(function(n){var q=save.dungeon.supplies[n]||0;var bank=save.bank[n]||0;return '<div class="card"><b>'+n+'</b><div>Bag: '+q+' • Bank: '+bank+'</div><small>Restores '+foodHeal[n]+' lives • Bag max 8 total</small><br><button '+(bank<1||supplyCount()>=8?'disabled':'')+' onclick="addDungeonFood(\''+n+'\')">Add</button> <button '+(q<1?'disabled':'')+' onclick="removeDungeonFood(\''+n+'\')">Remove</button> <button '+(!dungeonMode||q<1?'disabled':'')+' onclick="eatDungeonFood(\''+n+'\')">Eat</button></div>'}).join('');var fc=save.dungeon.frozenCrypt;g.innerHTML='<div class="card bossCard '+(unlocked?'':'locked')+'"><h3>Greenvale Depths</h3><p>15-wave endurance dungeon. Elite encounters await on waves 5 and 10, with the Root Warden on wave 15.</p><div>Completions: <b>'+save.dungeon.completions+'</b></div><div>Best: <b>'+(save.dungeon.best?(save.dungeon.best/1000).toFixed(1)+'s':'--')+'</b></div><button '+(unlocked?'':'disabled')+' onclick="startDungeon()">'+(unlocked?'Enter Dungeon':'Clear Goblin Stronghold')+'</button></div><div class="card bossCard '+(frozen?'':'locked')+'"><h3>The Frozen Crypt</h3><p>20-wave Frostmere endurance dungeon. Elite encounters strike on waves 5, 10 and 15. Survive wave 20 to face the Crypt King.</p><div>Completions: <b>'+fc.completions+'</b></div><div>Best: <b>'+(fc.best?(fc.best/1000).toFixed(1)+'s':'--')+'</b></div><small>Final Boss: Crypt King • Chest: 1,400–2,000 coins, Frostmere materials, 3 weapons at 3% each and the 1% Crown of the Crypt chase drop.</small><div>Milestones: <b>'+[5,10,25,50,100].map(function(m){return (fc.milestones.includes(m)?'✓ ':'')+m}).join(' • ')+'</b></div><small></small><br><button '+(frozen?'':'disabled')+' onclick="startFrozenCrypt()">'+(frozen?'Enter Frozen Crypt':'Clear Citadel of Ice')+'</button></div><h3>Dungeon Supply Bag — '+supplyCount()+'/8</h3><p>Prepare cooked food before entering. Food restores lives only between waves, up to the 20-life maximum.</p><div class="grid">'+supply+'</div>'}
@@ -280,6 +279,7 @@ function bossRewardData(kind,elapsed){
 }
 function bossRewardSummary(kind,elapsed){var d=bossRewardData(kind,elapsed),r=d.rewards.map(function(x){return x[0]+': +'+x[1]}),xp=d.xp.map(function(x){return x[0]+' XP: +'+x[1]});return d.title+' defeated!\n\nREWARDS EARNED\n'+(r.length?r.join('\n'):'No item/resource drops this run.')+'\n\nXP EARNED\n'+(xp.length?xp.join('\n'):'No XP earned.')+'\n\nClear time: '+(elapsed/1000).toFixed(1)+'s';}
 function showBossResults(kind,elapsed){
+ var victory=document.querySelector('.bossVictory');if(victory)victory.textContent='BOSS DEFEATED!';
  var d=bossRewardData(kind,elapsed),modal=document.querySelector('#bossResultsModal');if(!modal){alert(bossRewardSummary(kind,elapsed));return}
  var themes={warlord:['#6f8f3a','#26351f','Goblin Stronghold conquered'],tyrant:['#d76528','#401d12','The flames of the citadel grow silent'],frostwyrm:['#73b9db','#173447','The frozen beast has fallen']},t=themes[kind]||themes.warlord;
  modal.style.setProperty('--boss-accent',t[0]);modal.style.setProperty('--boss-deep',t[1]);
@@ -289,6 +289,24 @@ function showBossResults(kind,elapsed){
  document.querySelector('#bossResultXp').innerHTML=d.xp.length?d.xp.map(function(x){return '<div class="bossResultRow"><span>'+x[0]+' XP</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No XP earned</span></div>';
  document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
  document.querySelector('#bossResultWaves').textContent=bossMode?'3 / 3':'10 / 10';
+ modal.classList.add('show');
+}
+function showDungeonResults(type,elapsed){
+ var modal=document.querySelector('#bossResultsModal');if(!modal)return;
+ var before=bossRunStart||snapshotBossRun(),rewards=[],xp=[];
+ var coinGain=Math.max(0,save.coins-before.coins);if(coinGain)rewards.push(['Coins',coinGain]);
+ Object.keys(save.bank).forEach(function(n){var d=(save.bank[n]||0)-(before.bank[n]||0);if(d>0)rewards.push([n,d])});
+ Object.keys(save.items).forEach(function(n){var d=(save.items[n]||0)-(before.items[n]||0);if(d>0)rewards.push([n,d])});
+ Object.entries(save.skills).forEach(function(entry){var n=entry[0],v=entry[1],b=before.xp[n];if(!b)return;var d=xpTotalAt(n,v)-xpTotalAt(n,b);if(d>0)xp.push([n,d])});
+ var frozen=type==='frozen';
+ modal.style.setProperty('--boss-accent',frozen?'#73b9db':'#6f9b55');modal.style.setProperty('--boss-deep',frozen?'#132f43':'#1d3524');
+ document.querySelector('.bossVictory').textContent='DUNGEON COMPLETE!';
+ document.querySelector('#bossResultName').textContent=frozen?'THE FROZEN CRYPT':'GREENVALE DEPTHS';
+ document.querySelector('#bossResultFlavor').textContent=frozen?'The Crypt King has fallen. The frozen vault yields its treasures.':'The Root Warden has fallen. The depths surrender their treasures.';
+ document.querySelector('#bossResultRewards').innerHTML=rewards.length?rewards.map(function(x){return '<div class="bossResultRow"><span>'+x[0]+'</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No rewards</span></div>';
+ document.querySelector('#bossResultXp').innerHTML=xp.length?xp.map(function(x){return '<div class="bossResultRow"><span>'+x[0]+' XP</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No XP earned</span></div>';
+ document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
+ document.querySelector('#bossResultWaves').textContent=frozen?'20 / 20':'15 / 15';
  modal.classList.add('show');
 }
 function closeBossResults(){var m=document.querySelector('#bossResultsModal');if(m)m.classList.remove('show')}window.closeBossResults=closeBossResults;
