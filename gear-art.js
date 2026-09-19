@@ -118,8 +118,27 @@ function render(mesh,width,height,character=false){
  mesh.faces.map(f=>({...f,depth:f.p.reduce((n,p)=>n+p[2]*.85-p[0]*.4+p[1]*.32,0)/f.p.length})).sort((a,b)=>a.depth-b.depth).forEach(f=>{c.fillStyle=f.c;c.beginPath();f.p.map(project).forEach((p,i)=>i?c.lineTo(ox+p[0]*scale,oy+p[1]*scale):c.moveTo(ox+p[0]*scale,oy+p[1]*scale));c.closePath();c.fill();});
  return canvas;
 }
+// Approved illustrated equipment icons; unillustrated items retain their existing art.
+const equipmentArtwork={
+  "Rusty Sword": "assets/equipment/rusty-sword.webp",
+  "Bronze Sword": "assets/equipment/bronze-sword.webp",
+  "Bronze Dagger": "assets/equipment/bronze-dagger.webp",
+  "Warlord Cleaver": "assets/equipment/warlord-cleaver.webp",
+  "Ironvale Sword": "assets/equipment/ironvale-sword.webp",
+  "Emberfang Blade": "assets/equipment/emberfang-blade.webp",
+  "Verdant Edge": "assets/equipment/verdant-edge.webp",
+  "Frostsilver Sword": "assets/equipment/frostsilver-sword.webp",
+  "Wyrmfrost Blade": "assets/equipment/wyrmfrost-blade.webp",
+  "Cryptfang Greatsword": "assets/equipment/cryptfang-greatsword.webp",
+  "Bronze Helm": "assets/equipment/bronze-helm.webp",
+  "Warlord Crest": "assets/equipment/warlord-crest.webp",
+  "Ironvale Helm": "assets/equipment/ironvale-helm.webp",
+  "Ashguard Helm": "assets/equipment/ashguard-helm.webp",
+  "Frostsilver Helm": "assets/equipment/frostsilver-helm.webp",
+  "Wyrmscale Crown": "assets/equipment/wyrmscale-crown.webp"
+};
 const icons=new Map(),towerCache=new Map();
-function icon(name,cls){const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
+function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
 function portrait(cls){tower(cls);const entry=towerCache.get(cls);if(!entry.url)entry.url=entry.frames.get(0).toDataURL('image/png');return entry.url}
@@ -140,3 +159,4 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
