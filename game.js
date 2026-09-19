@@ -218,7 +218,15 @@ function renderArtisanProgress(){if(!artisanKey)return;let r=artisanRecipes[arti
 window.startArtisan=startArtisan;
 const stopBeforeCooking=stopGathering;stopGathering=function(show=true){stopBeforeCooking(show);if(cookingKey)stopCooking(show)};window.stopGathering=stopGathering;
 const stopGatherBase=stopGathering;stopGathering=function(show=true){stopGatherBase(show);if(artisanKey)stopArtisan(show)};window.stopGathering=stopGathering;
-function renderArtisan(){let g=document.querySelector('#artisanGrid');if(!g)return;g.innerHTML=Object.entries(artisanRecipes).map(([k,r])=>'<div class="card tier2"><b>'+r.name+'</b><p>'+r.skill+' Lv '+r.level+' • '+Math.round(r.xp*3)+' XP • +(r.time/1000).toFixed(1)+' sec</p><small>'+Object.entries(r.cost).map(([n,q])=>q+' '+n).join(' + ')+'</small><br><button '+(save.skills[r.skill].lvl<r.level?'disabled':'')+' onclick="startArtisan(\''+k+'\')">Auto-'+(r.skill==='Fletching'?'fletch':'craft')+'</button></div>').join('')}
+function renderArtisan(){
+ let g=document.querySelector('#artisanGrid');
+ if(!g)return;
+ g.innerHTML=Object.entries(artisanRecipes).map(function(entry){
+  let k=entry[0],r=entry[1],actualXp=Math.round(r.xp*3);
+  return '<div class="card tier2"><b>'+r.name+'</b><p>'+r.skill+' Lv '+r.level+' • '+actualXp+' XP • '+(r.time/1000).toFixed(1)+' sec</p><small>'+Object.entries(r.cost).map(function(cost){return cost[1]+' '+cost[0]}).join(' + ')+'</small><br><button '+(save.skills[r.skill].lvl<r.level?'disabled':'')+' data-artisan="'+k+'">Auto-'+(r.skill==='Fletching'?'fletch':'craft')+'</button></div>'
+ }).join('');
+ g.querySelectorAll('[data-artisan]').forEach(function(btn){btn.onclick=function(){startArtisan(btn.getAttribute('data-artisan'))}})
+}
 
 const hunterTasks=[{kind:'rat',name:'Rats',min:18,max:30,level:1,xp:80,points:4},{kind:'goblin',name:'Goblins',min:20,max:35,level:1,xp:100,points:5},{kind:'wolf',name:'Wolves',min:18,max:30,level:3,xp:120,points:6},{kind:'scout',name:'Goblin Scouts',min:20,max:32,level:5,xp:150,points:7},{kind:'brute',name:'Goblin Brutes',min:15,max:25,level:7,xp:180,points:8},{kind:'emberling',name:'Emberlings',min:25,max:40,level:10,xp:240,points:10},{kind:'cinderhound',name:'Cinder Hounds',min:20,max:35,level:12,xp:280,points:12},{kind:'ashgolem',name:'Ash Golems',min:12,max:22,level:15,xp:360,points:15},{kind:'flameguard',name:'Flameguards',min:10,max:18,level:20,xp:450,points:18}];
 const hunterShop=[{key:'elite',name:'Elite Contracts',cost:50,desc:'Unlock the toughest Monster Hunter assignments.'},{key:'cache',name:'Bounty Caches',cost:75,desc:'Completed assignments award +50% coins.'},{key:'materials',name:'Material Hunter',cost:100,desc:'Double rare monster-material drop chances.'}];
