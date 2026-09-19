@@ -52,3 +52,18 @@
 .xpLevelUp{color:#ffe390;border-color:#e4c66a}
 @keyframes xpFloat{0%{opacity:0;transform:translateY(8px)}12%,75%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-14px)}}
 @media(prefers-reduced-motion:reduce){.xpPopup{animation:none}.trainingXpBar i{transition:none}}
+
+
+/* V178: equipment art and previews use the same modular models as battle towers. */
+.gearIcon{display:block;float:left;width:48px;height:48px;object-fit:contain;margin:0 9px 5px 0;background:#18201a;border-radius:7px;padding:3px}
+#bankGrid .card:has(.gearIcon),#collectionGrid .card:has(.gearIcon){display:flow-root}
+#equipmentGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}
+#equipmentGrid .card>h3{margin:0 0 5px;color:#e4c66a;text-align:center}
+.equippedPreview{display:block;width:160px;height:200px;object-fit:contain;margin:0 auto 8px;background:radial-gradient(ellipse at 50% 80%,#46513b,#202722 70%);border-radius:10px}
+.equipmentSlot{display:flex;align-items:center;gap:5px;min-height:36px;border-top:1px solid #414d40;font-size:12px;flex-wrap:wrap;padding:3px 0}
+.gearSlotIcon{width:32px;height:32px;object-fit:contain;flex-shrink:0}
+.equipClass{font-size:11px;padding:8px 5px;margin:4px 3px 0 0;min-height:40px}
+#skilling .activityList .card:has(.gearIcon){grid-template-columns:44px minmax(0,1fr) auto}
+#skilling .activityList .card>.gearIcon{grid-column:1;grid-row:1 / span 4;width:44px;height:44px;margin:0;padding:2px;float:none}
+#skilling .activityList .card:has(.gearIcon)>b,#skilling .activityList .card:has(.gearIcon)>p,#skilling .activityList .card:has(.gearIcon)>small{grid-column:2}
+#skilling .activityList .card:has(.gearIcon)>button{grid-column:3}
