@@ -44,14 +44,14 @@
   window.addEventListener('realmforge:xp',e=>{
     const {skill,gained,oldLevel,level}=e.detail;
     if(combat.includes(skill)) return;
-    if(!activeSkill())lastSkill=skill;
+    if(!activeTrainingSkill())lastSkill=skill;
     const p=pending.get(skill)||{amount:0,level:0};p.amount+=gained;if(level>oldLevel)p.level=level;pending.set(skill,p);
     if(!flushTimer)flushTimer=setTimeout(flush,180);
     refresh();
   });
   document.addEventListener('click',e=>{
     const category=e.target.closest('[data-workshop]');
-    if(category&&!activeSkill())lastSkill=({mining:'Mining',woodcutting:'Woodcutting',smelting:'Smithing',fishing:'Fishing',cooking:'Cooking',artisan:'Fletching',smithing:'Smithing'})[category.dataset.workshop]||lastSkill;
+    if(category&&!activeTrainingSkill())lastSkill=({mining:'Mining',woodcutting:'Woodcutting',smelting:'Smithing',fishing:'Fishing',cooking:'Cooking',artisan:'Fletching',smithing:'Smithing'})[category.dataset.workshop]||lastSkill;
     // Run after existing inline actions and the category switch have completed.
     queueMicrotask(refresh);
   });
