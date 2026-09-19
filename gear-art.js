@@ -3,20 +3,20 @@
 (function(){
 'use strict';
 const palettes={
- cloth:['#81755d','#a4977b','#4b4338'],leather:['#526b39','#829153','#393f27'],rust:['#796352','#af9874','#4a3c33'],
+ cloth:['#81755d','#a4977b','#4b4338'],leather:['#755034','#ac7c4e','#443021'],rust:['#796352','#af9874','#4a3c33'],
  bronze:['#a77340','#d1a46b','#64472d'],iron:['#78878f','#bec8c9','#424f58'],ash:['#564c51','#da8340','#302d36'],
  frost:['#83abb9','#d8eef0','#4e707e'],green:['#526f42','#9fc66d','#344c32'],crypt:['#55547b','#a1d9ee','#302f4c'],
- blue:['#354fa1','#839bd1','#283660'],gold:['#b89a4b','#f1d585','#706037']};
+ blue:['#4b6089','#90a4c5','#2d3e5d'],gold:['#b89a4b','#f1d585','#706037']};
 function descriptor(name,cls){
  const db=typeof itemDB!=='undefined'?itemDB:{};const it=db[name]||{};
  const slot=it.slot||(/Robe|Tunic/.test(name)?'body':'weapon');
- let tier=/Crypt|Soulfrost/.test(name)?'crypt':/Frost|Glaci|Winter|Wyrm/.test(name)?'frost':/Ember|Cinder|Ash/.test(name)?'ash':/Bronze/.test(name)?'bronze':/Ironvale/.test(name)?'iron':/Verdant|Thorn|Root|Greenvale/.test(name)?'green':/Warlord/.test(name)?'iron':/Leather|Oak/.test(name)?'leather':/Apprentice|Cloth Hood|Cloth Robe/.test(name)?'blue':/Rusty|Cracked|Old /.test(name)?'rust':'cloth';
+ let tier=/Crypt|Soulfrost/.test(name)?'crypt':/Frost|Glaci|Winter|Wyrm/.test(name)?'frost':/Ember|Cinder|Ash/.test(name)?'ash':/Bronze/.test(name)?'bronze':/Ironvale/.test(name)?'iron':/Verdant|Thorn|Root|Greenvale/.test(name)?'green':/Warlord/.test(name)?'iron':/Leather|Oak/.test(name)?'leather':/Apprentice|Cloth Hood|Cloth Robe|Cloth Boots|Cloth Gloves|Cloth Legwraps/.test(name)?'blue':/Rusty|Cracked|Old /.test(name)?'rust':'cloth';
  if(/Signet|Pendant/.test(name))tier='gold';
  let kind=slot;
  if(slot==='weapon')kind=/Bow|bow|Recurve/.test(name)?'bow':/Staff|Sceptre/.test(name)?'staff':'sword';
  if(slot==='head')kind=/Crown|Crest/.test(name)?'crown':/Hood|Cowl/.test(name)?'hood':'helm';
  if(slot==='body')kind=/Robe/.test(name)?'robe':/Armour/.test(name)?'armour':'tunic';
- if(slot==='offhand')kind=/Arrow/.test(name)?'quiver':/Ward/.test(name)?'ward':'charm';
+ if(slot==='offhand')kind=/Shield/.test(name)?'shield':/Arrow|Quiver/.test(name)?'quiver':/Spellbook/.test(name)?'book':/Orb/.test(name)?'orb':/Ward/.test(name)?'ward':'charm';
  return {name,slot,kind,tier,p:palettes[tier],rare:/Warlord|Emberfang|Verdant|Thornshot|Rootbinder|Wyrmfrost|Glacier|Wintercore|Crypt|Glacial|Soulfrost/.test(name),cls:it.class||cls};
 }
 function shade(hex,n){const a=hex.match(/\w\w/g).map(x=>parseInt(x,16));return '#'+a.map(v=>Math.max(0,Math.min(255,Math.round(v*n))).toString(16).padStart(2,'0')).join('')}
@@ -33,6 +33,14 @@ class Mesh{
 function crystal(m,x,y,z,size,color){m.cone(x,y-size*.4,z,size*.42,size*.34,size*.55,1,color,5);m.cone(x,y+size*.15,z,size*.42,size*.34,size*.8,0,color,5)}
 function weapon(m,d){const [c,hi,dark]=d.p;
  if(d.kind==='sword'){
+  if(/Cleaver/.test(d.name)){
+   m.cone(0,-.30,0,.075,.065,.43,1,'#68372d',6);m.cone(0,-.39,0,.10,.085,.10,.8,'#4f5358');
+   m.box(0,.065,0,.36,.09,.15,'#55565a');
+   const outline=[[-.19,.12,.025],[.22,.12,.025],[.34,1.10,.025],[.14,1.31,.025],[-.25,1.22,.025]];
+   m.face(outline,'#606165');m.face([[-.19,.12,.04],[-.12,.19,.07],[-.17,1.16,.07],[-.25,1.22,.04]],'#bbc1c3');
+   m.face([[-.25,1.22,.04],[-.17,1.16,.07],[.13,1.22,.07],[.14,1.31,.04]],'#979fa4');return;
+  }
+
   const dagger=/Dagger/.test(d.name),great=/Greatsword/.test(d.name),cleaver=/Cleaver/.test(d.name),len=dagger?.65:great?1.7:1.22,w=cleaver?.24:great?.17:.115;
   m.cone(0,-.26,0,.065,.06,.34,1,'#65442c',6);m.box(0,.05,0,.42,.075,.13,d.rare?hi:dark);m.cone(0,-.35,0,.095,.09,.1,.8,c);
   m.face([[-w,.12,0],[0,.12,.065],[0,len+.3,0],[-w,len*.83+.15,0]],hi);
@@ -50,7 +58,7 @@ function weapon(m,d){const [c,hi,dark]=d.p;
   if(plain){m.beam([0,1.1,0],[.11,1.35,0],.06,'#886b44');}else{m.cone(0,1.13,0,.13,.11,.17,.7,c);crystal(m,0,1.48,0,d.rare?.5:.32,hi);if(d.rare)for(const x of [-.19,.19])m.beam([0,1.18,0],[x,1.48,0],.045,c);}
  }
 }
-function headwear(m,d,worn=false){const [c,hi,dark]=d.p;
+function legacyHeadwear(m,d,worn=false){const [c,hi,dark]=d.p;
  if(d.kind==='hood'){
   m.cone(0,-.26,0,.32,.29,.54,.75,c);m.box(0,-.06,.258,.36,.3,.05,worn?'#b79a6c':dark);if(worn)for(const x of [-.10,.10])m.box(x,-.01,.29,.05,.035,.02,'#30291f');
   if(d.cls==='mage'){m.cone(0,.17,0,.45,.35,.06,.94,c);m.cone(0,.23,0,.29,.24,.5,.04,c);}
@@ -62,6 +70,25 @@ function headwear(m,d,worn=false){const [c,hi,dark]=d.p;
   if(/Ashguard/.test(d.name))m.cone(0,.23,0,.08,.17,.34,.3,hi,4);
  }
 }
+// Sculpted helmet shells leave a dark visor instead of a mannequin face.
+function headwear(m,d,worn=false){const [c,hi,dark]=d.p;
+ if(d.kind==='crown'){legacyHeadwear(m,d,worn);return;}
+ if(d.kind==='hood'){
+  m.cone(0,-.29,-.035,.39,.32,.56,.77,c,8);
+  m.face([[-.25,.16,.28],[0,.29,.30],[.25,.16,.28],[.26,-.25,.30],[0,-.30,.33],[-.26,-.25,.30]],dark);
+  if(worn){m.face([[-.15,.08,.34],[.15,.08,.34],[.13,-.19,.34],[0,-.25,.35],[-.13,-.19,.34]],'#bc936b');for(const x of [-.085,.085])m.box(x,.01,.355,.042,.023,.012,'#30291f');}
+  m.face([[-.3,.17,.30],[0,.35,.14],[.3,.17,.30],[.23,.12,.34],[0,.26,.29],[-.23,.12,.34]],hi);
+  return;
+ }
+ m.cone(0,-.3,-.02,.38,.32,.56,.85,c,8);
+ m.cone(0,.26,-.02,.32,.275,.18,.35,c,8);
+ m.face([[-.31,.09,.295],[0,.135,.35],[.31,.09,.295],[.27,-.06,.32],[0,-.105,.37],[-.27,-.06,.32]],'#171b1c');
+ m.face([[-.31,.07,.315],[-.19,-.07,.365],[-.17,-.33,.32],[-.34,-.36,.25]],c);
+ m.face([[.31,.07,.315],[.19,-.07,.365],[.17,-.33,.32],[.34,-.36,.25]],dark);
+ m.face([[-.19,-.08,.365],[0,-.105,.385],[0,-.35,.35],[-.17,-.33,.32]],hi);
+ m.face([[.19,-.08,.365],[0,-.105,.385],[0,-.35,.35],[.17,-.33,.32]],c);
+ if(/Ashguard/.test(d.name))m.cone(0,.38,-.06,.09,.23,.27,.7,'#984d30',4);
+}
 function torso(m,d){const [c,hi,dark]=d.p;
  m.cone(0,-.45,0,.45,.25,.82,1.15,c,6);
  if(d.kind==='armour'){
@@ -72,48 +99,80 @@ function torso(m,d){const [c,hi,dark]=d.p;
  m.box(0,-.36,.02,.87,.105,.54,dark);m.box(0,-.36,.31,.13,.13,.055,hi);if(/Apprentice|Ashweave|Frostweave/.test(d.name)){m.box(0,.03,.27,.055,.57,.03,hi);}
 }
 function accessory(m,d){const [c,hi,dark]=d.p;
- if(d.kind==='cape') {m.face([[-.43,.6,0],[.43,.6,0],[.65,-.9,.15],[0,-1.1,.22],[-.65,-.9,.15]],c);m.face([[-.43,.6,0],[0,.55,.03],[0,-1.1,.22],[-.65,-.9,.15]],hi);}
+ if(d.kind==='shield'){
+  const edge=[[-.39,.47,0],[0,.57,0],[.39,.47,0],[.32,-.20,0],[0,-.57,0],[-.32,-.20,0]];
+  m.face(edge,dark);const rim=edge.map(p=>[p[0]*.88,p[1]*.88,.05]);
+  for(let i=0;i<6;i++)m.face([edge[i],edge[(i+1)%6],rim[(i+1)%6],rim[i]],hi);
+  for(let i=0;i<6;i++)m.face([rim[i],rim[(i+1)%6],[0,.04,.19]],i<3?c:shade(c,.8));
+ }else if(d.kind==='book'){
+  m.box(0,0,0,.48,.64,.15,dark);m.box(0,0,.08,.42,.56,.045,'#c1b48f');m.box(0,0,.12,.49,.65,.05,c);crystal(m,0,.03,.18,.17,hi);
+ }else if(d.kind==='orb'){crystal(m,0,.08,0,.54,hi);m.cone(0,-.2,0,.17,.15,.13,.75,c);}
+ else if(d.kind==='cape') {m.face([[-.43,.6,0],[.43,.6,0],[.65,-.9,.15],[0,-1.1,.22],[-.65,-.9,.15]],c);m.face([[-.43,.6,0],[0,.55,.03],[0,-1.1,.22],[-.65,-.9,.15]],hi);}
  else if(d.kind==='ring'){for(let i=0;i<10;i++){const a=i*Math.PI/5,b=(i+1)*Math.PI/5;m.beam([Math.cos(a)*.2,Math.sin(a)*.2,0],[Math.cos(b)*.2,Math.sin(b)*.2,0],.055,c);}crystal(m,0,.21,0,.19,hi);}
  else if(d.kind==='amulet'||d.kind==='charm'){m.beam([-.2,.45,0],[0,0,0],.015,c);m.beam([.2,.45,0],[0,0,0],.015,c);crystal(m,0,0,0,.35,hi);}
  else if(d.kind==='quiver'){m.cone(0,-.4,0,.15,.12,.65,1,'#725437');for(const x of [-.08,0,.08]){m.beam([x,-.1,0],[x,.57,.04],.013,'#b89e6d');m.face([[x,.57,0],[x-.06,.43,0],[x+.06,.43,0]],hi);}}
  else {m.face([[-.3,.4,0],[.3,.4,0],[.25,-.1,0],[0,-.4,0],[-.25,-.1,0]],c);m.box(0,.07,.02,.09,.55,.08,hi);}
 }
 function itemMesh(name,cls){const m=new Mesh(),d=descriptor(name,cls);if(['sword','bow','staff'].includes(d.kind))weapon(m,d);else if(['helm','hood','crown'].includes(d.kind))headwear(m,d);else if(['tunic','robe','armour'].includes(d.kind))torso(m,d);else accessory(m,d);return m}
-function characterMesh(cls,eq,phase){const m=new Mesh();const body=descriptor(eq.body||'Cloth Tunic',cls),skin='#b79a6c',pants='#514a3d';
- // Low stone placement pad; actual empty slots show plain clothing, not invented armour.
- m.cone(0,-.1,0,.94,.62,.13,1,'#7a7b67',10);
- if(eq.cape&&eq.cape!=='None')m.at(0,1.66,-.38,()=>accessory(m,descriptor(eq.cape,cls)));
- for(const s of [-1,1]){
-  m.beam([s*.25,.2,.02],[s*.22,1.25,0],.155,eq.legs&&eq.legs!=='None'?descriptor(eq.legs,cls).p[0]:pants);
-  m.box(s*.26,.13,.18,.32,.24,.5,eq.boots&&eq.boots!=='None'?descriptor(eq.boots,cls).p[0]:'#614b35');
+function characterMesh(cls,eq,phase=0){
+ const m=new Mesh(),body=descriptor(eq.body||'Cloth Tunic',cls),skin='#bb9067',pants='#484538';
+ const equipped=slot=>eq[slot]&&eq[slot]!=='None';
+ const leg=equipped('legs')?descriptor(eq.legs,cls):null,boot=equipped('boots')?descriptor(eq.boots,cls):null,glove=equipped('gloves')?descriptor(eq.gloves,cls):null;
+ const plate=body.kind==='armour',robe=body.kind==='robe',swing=Math.sin(phase*Math.PI);
+ m.cone(0,-.055,0,.89,.57,.10,1,'#686b5d',10);
+ if(equipped('cape'))m.group(p=>[p[0]*1.1,1.46+p[1],-.31+p[2]*.25],()=>accessory(m,descriptor(eq.cape,cls)));
+ // Broad hips join bent thighs and calves; no exposed gaps between equipment slots.
+ m.cone(0,.99,0,.37,.23,.35,1.1,leg?leg.p[0]:pants,8);
+ for(const side of [-1,1]){
+  const x=side*.25,z=side===-1?.06:-.03,col=leg?leg.p[0]:pants;
+  m.beam([x,1.14,z],[x*1.14,.69,z+.045],.215,col);
+  m.beam([x*1.14,.69,z+.045],[x*1.25,.20,z],.173,col);
+  if(leg&&/Platelegs/.test(leg.name)){
+   m.cone(x*1.14,.57,z+.105,.205,.19,.24,.85,leg.p[1],6);
+   m.face([[x-.13,.54,z+.185],[x+.15,.54,z+.185],[x+.13,.22,z+.17],[x-.12,.22,z+.17]],leg.p[0]);
+  }
+  const bc=boot?boot.p[0]:'#57412d';
+  m.cone(x*1.25,.09,z+.10,.225,.32,.21,.84,bc,6);
+  m.cone(x*1.25,.23,z,.183,.18,.17,1.07,bc,6);
  }
- m.at(0,1.92,0,()=>torso(m,body));
- m.cone(0,2.39,0,.125,.12,.23,1,skin);
- m.cone(0,2.61,0,.26,.23,.47,.92,skin,6);m.box(0,2.81,.249,.12,.15,.10,skin);
- for(const x of [-.12,.12])m.box(x,2.89,.23,.055,.035,.025,'#30291f');
- m.cone(0,2.99,-.015,.268,.236,.17,.8,'#5a4430');
- if(eq.head&&eq.head!=='None')m.at(0,2.96,0,()=>headwear(m,descriptor(eq.head,cls),true));
- // Hands remain fixed to weapon grips; attack phases articulate the weapon arm.
- const swing=cls==='warrior'?Math.sin(phase*Math.PI)*1.6:0;
- const lx=-.72+Math.sin(swing)*.25,ly=1.62+Math.sin(swing)*.27;
- for(const [s,hx,hy] of [[-1,lx,ly],[1,.72,1.63]]){
-  m.beam([s*.54,2.19,0],[s*.69,1.92,.1],.16,body.p[0]);
-  m.beam([s*.69,1.92,.1],[hx,hy,.23],.12,/Armour/.test(eq.body||'')?body.p[0]:skin);
-  m.box(hx,hy,.24,.2,.22,.19,eq.gloves&&eq.gloves!=='None'?descriptor(eq.gloves,cls).p[0]:skin);
+ // Tailored body shape: wide shoulders, tapered waist, overlapping fauld and belt.
+ m.cone(0,1.19,0,.37,.245,.72,1.40,body.p[0],8);
+ if(plate){
+  m.face([[-.43,1.83,.24],[0,1.97,.31],[.43,1.83,.24],[.31,1.28,.25],[0,1.19,.31],[-.31,1.28,.25]],body.p[0]);
+  m.face([[-.43,1.83,.245],[0,1.97,.315],[0,1.19,.315],[-.31,1.28,.255]],shade(body.p[0],1.16));
+  m.cone(0,1.00,0,.45,.28,.27,.83,body.p[0],8);
+ }else if(robe){m.cone(0,.34,0,.52,.32,.99,.72,body.p[0],8);m.face([[-.055,1.77,.32],[.055,1.77,.32],[.09,.35,.325],[-.09,.35,.325]],body.p[1]);}
+ m.box(0,1.20,.025,.77,.115,.54,'#42372c');m.box(0,1.20,.312,.14,.14,.04,plate?body.p[1]:'#b5a27d');
+ m.cone(0,1.89,0,.16,.14,.20,1,skin,6);
+ m.cone(0,2.02,0,.285,.25,.47,.92,skin,8);
+ m.box(0,2.19,.25,.09,.12,.07,skin);for(const x of [-.11,.11])m.box(x,2.28,.245,.045,.025,.018,'#30291f');
+ m.cone(0,2.40,-.015,.29,.255,.15,.85,'#513b28',8);
+ if(equipped('head'))m.at(0,2.32,0,()=>headwear(m,descriptor(eq.head,cls),true));
+ const left=cls==='ranger'?[-.24-swing*.18,1.43,.47]:[-.70+swing*(cls==='warrior'?.36:0),1.27+swing*(cls==='warrior'?.35:.06),.28];
+ const right=[.70,1.30+swing*(cls==='ranger'?.15:0),.28];
+ for(const [side,hand] of [[-1,left],[1,right]]){
+  const elbow=[side*.65,1.49,cls==='ranger'&&side===-1?.28:.10];m.beam([side*.46,1.83,0],elbow,.20,body.p[0]);m.beam(elbow,hand,.155,plate?body.p[0]:skin);
+  if(plate)m.cone(side*.51,1.68,0,.28,.29,.31,.67,body.p[0],6);
+  else m.cone(side*.50,1.64,0,.23,.235,.23,.9,body.p[0],6);
+  m.cone(hand[0],hand[1]-.105,hand[2],.135,.13,.22,.9,glove?glove.p[0]:skin,6);
  }
  const wd=descriptor(eq.weapon||({warrior:'Rusty Sword',ranger:'Old Shortbow',mage:'Cracked Staff'})[cls],cls);
- if(wd.kind==='bow')m.at(.74,1.72,.41,()=>weapon(m,wd),-.10+Math.sin(phase*Math.PI)*.1);
- else if(wd.kind==='staff')m.at(-.77,1.35,.3,()=>weapon(m,wd),-.06+Math.sin(phase*Math.PI)*.06);
- else m.at(lx,ly,.36,()=>weapon(m,wd),.4-swing);
- if(eq.offhand&&eq.offhand!=='None')m.at(.83,1.63,.4,()=>accessory(m,descriptor(eq.offhand,cls)));
- if(eq.amulet&&eq.amulet!=='None')m.group(p=>[p[0]*.45,2.04+p[1]*.45,.32+p[2]*.45],()=>accessory(m,descriptor(eq.amulet,cls)));
- if(eq.ring&&eq.ring!=='None')m.group(p=>[.73+p[0]*.21,1.6+p[1]*.21,.36+p[2]*.21],()=>accessory(m,descriptor(eq.ring,cls)));
+ if(wd.kind==='bow'){
+  m.at(.71,1.38,.42,()=>weapon(m,wd),-.12+swing*.09);
+  // A nocked arrow and drawing hand give the bow a readable firing pose.
+  m.beam([-.28-swing*.14,1.40,.45],[.91,1.40,.45],.012,'#c4ae7d');
+ }else if(wd.kind==='staff')m.at(-.72,1.09,.34,()=>weapon(m,wd),-.10+swing*.10);
+ else m.at(left[0],left[1]+.13,.40,()=>weapon(m,wd),.24-swing*1.5);
+ if(equipped('offhand')){const d=descriptor(eq.offhand,cls);if(d.kind==='quiver')m.at(-.47,1.85,-.26,()=>accessory(m,d),-.28);else m.at(.69,1.29,.49,()=>accessory(m,d),-.05);}
+ if(equipped('amulet'))m.group(p=>[p[0]*.40,1.65+p[1]*.40,.33+p[2]*.40],()=>accessory(m,descriptor(eq.amulet,cls)));
+ if(equipped('ring'))m.group(p=>[right[0]+p[0]*.19,right[1]+p[1]*.19,.43+p[2]*.19],()=>accessory(m,descriptor(eq.ring,cls)));
  return m;
 }
+
 function render(mesh,width,height,character=false){
  const canvas=document.createElement('canvas');canvas.width=width;canvas.height=height;const c=canvas.getContext('2d');
  const project=p=>[p[0]*.91+p[2]*.42,-p[1]*.94+p[2]*.29-p[0]*.10];
- const all=mesh.faces.flatMap(f=>f.p.map(project));const minX=character?-1.65:Math.min(...all.map(p=>p[0])),maxX=character?1.65:Math.max(...all.map(p=>p[0])),minY=character?-3.6:Math.min(...all.map(p=>p[1])),maxY=character?.38:Math.max(...all.map(p=>p[1]));
+ const all=mesh.faces.flatMap(f=>f.p.map(project));const minX=character?-1.65:Math.min(...all.map(p=>p[0])),maxX=character?1.65:Math.max(...all.map(p=>p[0])),minY=character?-3.0:Math.min(...all.map(p=>p[1])),maxY=character?.38:Math.max(...all.map(p=>p[1]));
  const scale=Math.min((width-12)/(maxX-minX),(height-12)/(maxY-minY)),ox=width/2-(minX+maxX)*scale/2,oy=height/2-(minY+maxY)*scale/2;
  mesh.faces.map(f=>({...f,depth:f.p.reduce((n,p)=>n+p[2]*.85-p[0]*.4+p[1]*.32,0)/f.p.length})).sort((a,b)=>a.depth-b.depth).forEach(f=>{c.fillStyle=f.c;c.beginPath();f.p.map(project).forEach((p,i)=>i?c.lineTo(ox+p[0]*scale,oy+p[1]*scale):c.moveTo(ox+p[0]*scale,oy+p[1]*scale));c.closePath();c.fill();});
  return canvas;
@@ -236,4 +295,5 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
