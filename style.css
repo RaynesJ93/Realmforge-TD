@@ -67,3 +67,23 @@
 #skilling .activityList .card>.gearIcon{grid-column:1;grid-row:1 / span 4;width:44px;height:44px;margin:0;padding:2px;float:none}
 #skilling .activityList .card:has(.gearIcon)>b,#skilling .activityList .card:has(.gearIcon)>p,#skilling .activityList .card:has(.gearIcon)>small{grid-column:2}
 #skilling .activityList .card:has(.gearIcon)>button{grid-column:3}
+
+/* V189 Realmforge boss victory screen */
+.bossResultsModal{position:fixed;inset:0;z-index:99999;background:rgba(3,6,4,.86);display:none;align-items:center;justify-content:center;padding:16px;overflow:auto}
+.bossResultsModal.show{display:flex}
+.bossResultsCard{--boss-accent:#d76528;--boss-deep:#401d12;position:relative;width:min(720px,100%);max-height:94vh;overflow:auto;padding:26px 18px 20px;border:3px solid var(--boss-accent);border-radius:20px;background:radial-gradient(circle at 50% 0,var(--boss-deep),#121713 38%,#090c0a 100%);box-shadow:0 0 0 5px #242b25,0 0 35px color-mix(in srgb,var(--boss-accent) 55%,transparent);color:#eee}
+.bossResultsCard:before{content:"REALMFORGE TD";display:block;text-align:center;color:#d9c47d;font-weight:900;letter-spacing:2px;font-size:13px;margin-bottom:8px}
+.bossVictory{text-align:center;color:#f2c35d;font-weight:1000;font-size:clamp(30px,8vw,54px);line-height:1;text-shadow:0 3px #301b08,0 0 16px var(--boss-accent);padding:14px 36px 8px}
+.bossResultsCard>h2{text-align:center;text-transform:uppercase;color:var(--boss-accent);font-size:25px;margin:5px 0}
+.bossResultsCard>p{text-align:center;color:#d6cba7;margin:5px 0 18px}
+.bossResultsX{position:absolute;right:12px;top:12px;width:42px;height:42px;padding:0;border:2px solid #777;background:#221a16;color:#ff6b4e;font-size:30px;line-height:34px}
+.bossResultColumns{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bossResultColumns section{border:2px solid #665331;border-radius:12px;background:rgba(0,0,0,.32);padding:10px}
+.bossResultColumns h3{text-align:center;color:#e4c476;margin:2px 0 9px;font-size:19px}
+.bossResultRow{display:flex;justify-content:space-between;gap:10px;padding:9px 8px;border-top:1px solid #3c433d;font-size:15px}
+.bossResultRow b{color:#f0c761;white-space:nowrap}
+.bossResultStats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.bossResultStats>div{text-align:center;border:1px solid #565b52;border-radius:10px;padding:10px;background:#111512}
+.bossResultStats small{display:block;color:#aaa;font-weight:800}.bossResultStats b{display:block;color:#f0c761;font-size:22px;margin-top:3px}
+.bossContinue{display:block;width:100%;font-size:23px;font-weight:1000;color:#f3e8bd;background:linear-gradient(#376c29,#1d4819);border:3px solid #829348;border-radius:12px;padding:14px;margin-top:8px}
+@media(max-width:560px){.bossResultsCard{padding:22px 12px 14px}.bossResultColumns{grid-template-columns:1fr}.bossVictory{font-size:34px}.bossResultsCard>h2{font-size:21px}.bossResultRow{padding:7px 5px}.bossResultColumns section{padding:8px}.bossResultsModal{padding:8px}}
