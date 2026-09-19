@@ -337,8 +337,17 @@ function drawTowerCharacter(t) {
   ctx.fillStyle = 'white'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(t.type[0].toUpperCase(), t.x, t.y + 4);
 }
-function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);enemies.forEach(e=>{let d=enemyDB[e.kind];ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#222';ctx.fillRect(e.x-18,e.y-27,36,5);ctx.fillStyle=['warlord','tyrant','rootwarden'].includes(e.kind)?'#f1b05f':'#ddd';ctx.fillRect(e.x-18,e.y-27,36*(e.hp/e.max),5);if(['warlord','tyrant','rootwarden'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,e.y-34)}});shots.forEach(drawAttackEffect)}
+function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
+ const d=enemyDB[e.kind];
+ const visualHeight=window.GreenvaleEnemies?window.GreenvaleEnemies.draw(e,ctx):0;
+ if(!visualHeight){ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();}
+ const barY=e.y-(visualHeight?visualHeight+8:27);
+ ctx.fillStyle='#222';ctx.fillRect(e.x-18,barY,36,5);
+ ctx.fillStyle=['warlord','tyrant','rootwarden'].includes(e.kind)?'#f1b05f':'#ddd';ctx.fillRect(e.x-18,barY,36*Math.max(0,e.hp/e.max),5);
+ if(['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,barY-7);}
+});shots.forEach(drawAttackEffect)}
 function loop(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);draw();requestAnimationFrame(loop)}try{resetBattle();renderUI();writeSave(false);requestAnimationFrame(loop)}catch(e){console.error(e);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));let t=document.querySelector('#'+b.dataset.screen);if(t)t.classList.add('active')})}
+
 
 
 
