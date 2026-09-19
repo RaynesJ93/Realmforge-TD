@@ -512,6 +512,7 @@ function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?
  if(['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,barY-7);}
 });shots.forEach(drawAttackEffect)}
 function loop(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);draw();requestAnimationFrame(loop)}
+window.getRealmforgeSkillState=function(skill){return save&&save.skills?save.skills[skill]||null:null};window.getRealmforgeXpNeed=function(level){return xpNeed(level)};
 window.getRealmforgeActiveSkill=function(){
  if(gathering&&gatherDB[gathering])return gatherDB[gathering].skill;
  if(cookingKey)return 'Cooking';
