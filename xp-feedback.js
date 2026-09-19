@@ -12,11 +12,11 @@
     anchor.insertAdjacentElement('afterend',panel);panels.push({panel,battle:id==='battleXpAnchor'});
   }
   function activeSkill() {
-    if (gathering && gatherDB[gathering]) return gatherDB[gathering].skill;
-    if (cookingKey) return 'Cooking';
-    if (smithingKey) return 'Smithing';
-    if (artisanKey && artisanRecipes[artisanKey]) return artisanRecipes[artisanKey].skill;
-    return null;
+    try {
+      return typeof window.getRealmforgeActiveSkill === 'function' ? window.getRealmforgeActiveSkill() : null;
+    } catch (e) {
+      return null;
+    }
   }
   function refresh() {
     const current=activeSkill();
