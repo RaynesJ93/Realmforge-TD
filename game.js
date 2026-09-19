@@ -511,7 +511,14 @@ function draw(){let m=currentMap;ctx.clearRect(0,0,900,520);ctx.fillStyle=m>=10?
  ctx.fillStyle=['warlord','tyrant','rootwarden'].includes(e.kind)?'#f1b05f':'#ddd';ctx.fillRect(e.x-18,barY,36*Math.max(0,e.hp/e.max),5);
  if(['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)){ctx.fillStyle='#fff';ctx.font='11px sans-serif';ctx.textAlign='center';ctx.fillText(e.kind==='rootwarden'?'ROOT WARDEN':e.kind==='tyrant'?'EMBER TYRANT':e.kind==='frostwyrm'?'FROST WYRM':'WARLORD',e.x,barY-7);}
 });shots.forEach(drawAttackEffect)}
-function loop(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);draw();requestAnimationFrame(loop)}try{resetBattle();renderUI();writeSave(false);requestAnimationFrame(loop)}catch(e){console.error(e);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));let t=document.querySelector('#'+b.dataset.screen);if(t)t.classList.add('active')})}
+function loop(now){let dt=Math.min(.04,(now-last)/1000||0);last=now;update(dt,now);draw();requestAnimationFrame(loop)}
+window.getRealmforgeActiveSkill=function(){
+ if(gathering&&gatherDB[gathering])return gatherDB[gathering].skill;
+ if(cookingKey)return 'Cooking';
+ if(smithingKey)return 'Smithing';
+ if(artisanKey&&artisanRecipes[artisanKey])return artisanRecipes[artisanKey].skill;
+ return null
+};try{resetBattle();renderUI();writeSave(false);requestAnimationFrame(loop)}catch(e){console.error(e);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));let t=document.querySelector('#'+b.dataset.screen);if(t)t.classList.add('active')})}
 
 
 
