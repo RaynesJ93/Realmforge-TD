@@ -22,8 +22,8 @@
     const current=activeTrainingSkill();
     if(current)lastSkill=current;
     for (const {panel,battle} of panels) {
-      const skill=battle?lastCombat:lastSkill, s=save.skills[skill]; if(!s)continue;
-      const max=s.lvl>=99, need=xpNeed(s.lvl), pct=max?100:Math.max(0,Math.min(100,s.xp/need*100));
+      if(typeof window.getRealmforgeSkillState!=='function')continue; const skill=battle?lastCombat:lastSkill, s=window.getRealmforgeSkillState(skill); if(!s)continue;
+      const max=s.lvl>=99, need=(typeof window.getRealmforgeXpNeed==='function'?window.getRealmforgeXpNeed(s.lvl):1), pct=max?100:Math.max(0,Math.min(100,s.xp/need*100));
       panel.querySelector('b').textContent=skill+' · Level '+s.lvl;
       panel.querySelector('.trainingXpHeading span').textContent=max?'MAX LEVEL':pct.toFixed(1)+'%';
       const bar=panel.querySelector('[role="progressbar"]');bar.setAttribute('aria-label',skill+' level progress');bar.setAttribute('aria-valuenow',pct.toFixed(1));
