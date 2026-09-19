@@ -11,7 +11,7 @@
     panel.innerHTML='<div class="trainingXpHeading"><b></b><span></span></div><div class="trainingXpBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><i></i></div><small></small>';
     anchor.insertAdjacentElement('afterend',panel);panels.push({panel,battle:id==='battleXpAnchor'});
   }
-  function activeSkill() {
+  function activeTrainingSkill() {
     try {
       return typeof window.getRealmforgeActiveSkill === 'function' ? window.getRealmforgeActiveSkill() : null;
     } catch (e) {
@@ -19,7 +19,7 @@
     }
   }
   function refresh() {
-    const current=activeSkill();
+    const current=activeTrainingSkill();
     if(current)lastSkill=current;
     for (const {panel,battle} of panels) {
       const skill=battle?lastCombat:lastSkill, s=save.skills[skill]; if(!s)continue;
