@@ -104,3 +104,7 @@
 
 /* V205 mobile tower drag placement */
 #game{touch-action:none;user-select:none;-webkit-user-select:none}
+
+/* V206 lock battle canvas during touch dragging */
+#game{touch-action:none!important;overscroll-behavior:contain;-webkit-touch-callout:none}
+body:has(#battle.active){overscroll-behavior:none}
