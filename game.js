@@ -458,9 +458,9 @@ canvas.addEventListener('pointerdown',function(e){
  canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);e.preventDefault()
 });
 canvas.addEventListener('pointermove',function(e){
- if(!towerDrag)return;let p=canvasPoint(e);towerDrag.x=p.x;towerDrag.y=p.y;
- if(towerDrag.tower){if(Math.hypot(p.x-towerDrag.oldX,p.y-towerDrag.oldY)>5)towerDrag.moved=true;towerDrag.tower.x=p.x;towerDrag.tower.y=p.y}
- towerDrag.valid=validTowerPosition(p.x,p.y,towerDrag.tower);e.preventDefault()
+ if(!towerDrag)return;let p=canvasPoint(e);towerDrag.x=p.x;towerDrag.y=Math.max(42,p.y-58);
+ if(towerDrag.tower){if(Math.hypot(p.x-towerDrag.oldX,p.y-towerDrag.oldY)>5)towerDrag.moved=true;towerDrag.tower.x=towerDrag.x;towerDrag.tower.y=towerDrag.y}
+ towerDrag.valid=validTowerPosition(towerDrag.x,towerDrag.y,towerDrag.tower);e.preventDefault()
 });
 function finishTowerDrag(e){
  if(!towerDrag)return;
@@ -586,7 +586,7 @@ function drawTowerCharacter(t) {
   ctx.fillStyle = 'white'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(t.type[0].toUpperCase(), t.x, t.y + 4);
 }
-function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);if(towerDrag){ctx.save();ctx.beginPath();ctx.arc(towerDrag.x,towerDrag.y,31,0,Math.PI*2);ctx.fillStyle=towerDrag.valid?'rgba(58,190,82,.18)':'rgba(220,54,54,.20)';ctx.fill();ctx.strokeStyle=towerDrag.valid?'#45e36a':'#ff4747';ctx.lineWidth=5;ctx.stroke();if(!towerDrag.tower){ctx.globalAlpha=.72;drawTowerCharacter({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0})}ctx.restore()}enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
+function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);if(towerDrag){ctx.save();ctx.beginPath();ctx.arc(towerDrag.x,towerDrag.y,48,0,Math.PI*2);ctx.fillStyle=towerDrag.valid?'rgba(58,190,82,.18)':'rgba(220,54,54,.20)';ctx.fill();ctx.strokeStyle=towerDrag.valid?'#45e36a':'#ff4747';ctx.lineWidth=5;ctx.stroke();if(!towerDrag.tower){ctx.globalAlpha=.72;drawTowerCharacter({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0})}ctx.restore()}enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
  const d=enemyDB[e.kind];
  const visualHeight=window.GreenvaleEnemies?window.GreenvaleEnemies.draw(e,ctx):0;
  if(!visualHeight){ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();}
