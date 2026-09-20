@@ -101,3 +101,6 @@
 .bankCompactCard img{object-fit:contain;flex:0 0 40px}
 .bankCompactCard small{display:block;opacity:.75;margin-top:2px}
 .bankEmpty{padding:10px;opacity:.65}
+
+/* V205 mobile tower drag placement */
+#game{touch-action:none;user-select:none;-webkit-user-select:none}
