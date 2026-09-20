@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Realmforge TD</title><link rel="stylesheet" href="style.css?v=214"></head><body><main class="app"><header><h1>REALMFORGE TD</h1><p>V1.3 • Greenvale Depths</p></header><nav><button data-screen="home">World</button><button data-screen="battle">Battle</button><button data-screen="character">Character</button><button data-screen="skills">Skills</button><button data-screen="skilling">Skilling</button><button data-screen="bank">Bank</button><button data-screen="market">Marketplace</button><button data-screen="perks">Perks</button><button data-screen="equipment">Equipment</button><button data-screen="quests">Quests</button><button data-screen="hunter">Hunter Guild</button><button data-screen="bosses">Bosses</button><button data-screen="dungeons">Dungeons</button><button data-screen="collection">Collection</button></nav>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Realmforge TD</title><link rel="stylesheet" href="style.css?v=215"></head><body><main class="app"><header><h1>REALMFORGE TD</h1><p>V1.3 • Greenvale Depths</p></header><nav><button data-screen="home">World</button><button data-screen="battle">Battle</button><button data-screen="character">Character</button><button data-screen="skills">Skills</button><button data-screen="skilling">Skilling</button><button data-screen="bank">Bank</button><button data-screen="market">Marketplace</button><button data-screen="perks">Perks</button><button data-screen="equipment">Equipment</button><button data-screen="quests">Quests</button><button data-screen="hunter">Hunter Guild</button><button data-screen="bosses">Bosses</button><button data-screen="dungeons">Dungeons</button><button data-screen="collection">Collection</button></nav>
 <section id="home" class="screen active"><div class="panel hero"><h2>Realm Map</h2><p>Conquer Greenvale, then push into the volcanic Ashen Peaks.</p><div class="stats"><span>Coins: <b id="coins">0</b></span><span>Maps Cleared: <b id="mapsCleared">0</b>/15</span><span>Warlord Kills: <b id="bossKills">0</b></span><span>Ember Tyrant Kills: <b id="ashenBossKills">0</b></span><span>Frost Wyrm Kills: <b id="frostBossKills">0</b></span></div><div id="mapGrid" class="mapgrid"></div><div class="panel" style="margin-top:12px"><h3>Save & Test Accounts</h3><p><button onclick="forceRecoverNormalSave()">RECOVER MY ORIGINAL SAVE</button></p><p><button onclick="exportRealmforgeSave()">Export Save</button> <button onclick="importRealmforgeSave()">Import Save</button></p><p class="hint">Export creates a portable backup file. Import validates the file and keeps a safety copy of your current save before replacing it.</p><input id="realmforgeImportFile" type="file" accept=".json,application/json" style="display:none" onchange="handleRealmforgeImport(event)"><p><button onclick="loadFrostmereTestSave()">Load Frostmere Test Account</button> <button onclick="restoreBackup()">Restore Backup</button></p><details><summary>Danger Zone</summary><button id="newGame">Reset Save</button></details></div></div><div class="panel" id="recoveryPanel" style="margin-top:12px"><h3>Save Recovery</h3><p>This only reads Realmforge saves stored on this device. Nothing is changed until you choose Restore This Save.</p><button onclick="scanRealmforgeSaves()">Scan Saved Accounts</button> <button onclick="activateJamesRecoveryNow()">ACTIVATE MY RECOVERY NOW</button><div id="recoveryResults"></div></div></section>
 <section id="battle" class="screen"><div class="panel mapTitle"><h2 id="battleMapName">Greenvale Outskirts</h2><p id="battleMapDesc"></p></div><div class="battleHud"><span>Lives <b id="lives">20</b></span><span>Wave <b id="wave">0</b>/<b id="waveMax">10</b></span><span>Battle Coins <b id="battleCoins">100</b></span></div><div id="battleXpAnchor"></div><canvas id="game" width="900" height="520"></canvas><div class="towerbar"><button class="tower" data-type="warrior"><img class="towerPortrait" src="assets/tower-warrior-v166.webp" alt="" width="48" height="80"><span>Warrior<small>• 40</small></span></button><button class="tower" data-type="ranger"><img class="towerPortrait" src="assets/tower-ranger-v166.webp" alt="" width="48" height="80"><span>Ranger<small>• 55</small></span></button><button class="tower" data-type="mage"><img class="towerPortrait" src="assets/tower-mage-v166.webp" alt="" width="48" height="80"><span>Mage<small>• 70</small></span></button><button id="startWave">Start Wave</button></div><div class="battleControls"><button id="autoWave" type="button" onclick="toggleAutoWave()">Auto Wave: OFF</button><button id="battleSpeed" type="button" onclick="toggleBattleSpeed()">1x Speed</button></div><p class="hint">Beat the final wave to clear the location and unlock the next map.</p><div class="panel"><h3>Recent Drops</h3><div id="dropLog">No equipment drops yet.</div></div></section>
 <section id="character" class="screen"><div class="panel"><h2>Character</h2><div class="combatHero"><span>Combat Level</span><b id="combatLevel">3</b><small>Your combat level grows with Attack, Strength, Defence, Hitpoints, Ranged and Magic.</small></div><div id="combatStats" class="grid"></div><h3>Combat Bonuses</h3><div id="combatBonuses" class="grid"></div><p class="hint">Warriors train Attack + Strength. Rangers train Ranged. Mages train Magic. All combat also trains Hitpoints; clearing waves trains Defence.</p></div></section><section id="skills" class="screen"><div class="panel"><h2>Skills</h2><div id="skillGrid" class="grid"></div></div></section>
@@ -15,7 +15,7 @@
    window.__realmforgeSaveDiagnostic={primary:p,backup:bk};
  }catch(e){show('Save read error: '+e.message)}
 })();
-</script><script src="gear-art.js?v=214-characters"></script><script src="greenvale-enemies.js?v=214"></script><script src="greenvale-maps.js?v=214"></script><script src="game.js?v=214"></script><script>
+</script><script src="gear-art.js?v=215-characters"></script><script src="greenvale-enemies.js?v=215"></script><script src="greenvale-maps.js?v=215"></script><script src="game.js?v=215"></script><script>
 function forceRecoverNormalSave(){
  try{
   var p=JSON.parse(localStorage.getItem('realmforge_v01')||'null');
@@ -55,7 +55,7 @@ function restoreExactRealmforgeSave(key){
  localStorage.setItem('realmforge_recovery_safety_selected',JSON.stringify(x));
  localStorage.removeItem('realmforge_test_v01');
  alert('Selected save restored to BOTH normal and backup slots so the startup loader cannot replace it. Reloading now.');
- location.href=location.pathname+'?v=214&recovered=1';
+ location.href=location.pathname+'?v=215&recovered=1';
 }
 </script><script>
 function buildKnownRecoverySave(){
@@ -102,10 +102,10 @@ function activateJamesRecoveryNow(){
   localStorage.setItem('realmforge_active_override',JSON.stringify(x));
   localStorage.removeItem('realmforge_test_v01');
   alert('Recovery activated. The page will reload once.');
-  location.replace(location.pathname+'?v=214&forceRecovery=1');
+  location.replace(location.pathname+'?v=215&forceRecovery=1');
  }catch(e){alert('Activation stopped safely: '+e.message)}
 }
-</script><script src="workshop.js?v=214"></script><script src="xp-feedback.js?v=214"></script><script>
+</script><script src="workshop.js?v=215"></script><script src="xp-feedback.js?v=215"></script><script>
 function exportRealmforgeSave(){
  try{
   var raw=localStorage.getItem('realmforge_v01');
@@ -137,7 +137,7 @@ function handleRealmforgeImport(event){
    localStorage.setItem('realmforge_backup',raw);
    localStorage.setItem('realmforge_active_override',raw);
    alert('Save imported successfully. Reloading Realmforge now.');
-   location.replace(location.pathname+'?v=214&imported=1');
+   location.replace(location.pathname+'?v=215&imported=1');
   }catch(e){alert('Import stopped. Nothing was changed. '+e.message)}
  };
  reader.onerror=function(){alert('The save file could not be read. Nothing was changed.')};
