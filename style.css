@@ -108,3 +108,6 @@
 /* V206 lock battle canvas during touch dragging */
 #game{touch-action:none!important;overscroll-behavior:contain;-webkit-touch-callout:none}
 body:has(#battle.active){overscroll-behavior:none}
+
+/* V206 lock battle canvas during tower drag */
+#game{touch-action:none!important;overscroll-behavior:contain;-webkit-user-drag:none}
