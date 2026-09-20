@@ -436,7 +436,45 @@ window.getCombatLevel=combatLevel;
 function resetBattle(keepBoss=false){towers=[];enemies=[];shots=[];wave=0;lives=20;battleCoins=maps[currentMap].start;waveRunning=false;spawnPending=0;mapFinished=false;bossKilled=false;if(!keepBoss)bossMode=null;hud()}function hud(){document.querySelector('#wave').textContent=wave;livesEl.textContent=lives;battleCoinsEl.textContent=battleCoins}const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
 function nearRoad(x,y){const path=battlePath();for(let i=1;i<path.length;i++){let [x1,y1]=path[i-1],[x2,y2]=path[i],dx=x2-x1,dy=y2-y1,t=Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/(dx*dx+dy*dy)));if(Math.hypot(x-(x1+t*dx),y-(y1+t*dy))<38)return true}return false}
-canvas.addEventListener('pointerdown',e=>{if(!selected)return;let r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*canvas.width/r.width,y=(e.clientY-r.top)*canvas.height/r.height,t=types[selected];if(battleCoins<t.cost||nearRoad(x,y)||(window.RealmforgeMaps&&!window.RealmforgeMaps.canBuild(currentMap,dungeonMode,x,y))||towers.some(a=>Math.hypot(a.x-x,a.y-y)<45))return;battleCoins-=t.cost;towers.push({x,y,type:selected,last:0});hud()});
+let towerDrag=null;
+function canvasPoint(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
+function validTowerPosition(x,y,ignore){
+ if(x<24||x>canvas.width-24||y<24||y>canvas.height-24)return false;
+ if(nearRoad(x,y))return false;
+ if(window.RealmforgeMaps&&!window.RealmforgeMaps.canBuild(currentMap,dungeonMode,x,y))return false;
+ if(towers.some(function(a){return a!==ignore&&Math.hypot(a.x-x,a.y-y)<45}))return false;
+ return true
+}
+canvas.addEventListener('pointerdown',function(e){
+ let p=canvasPoint(e),existing=null,best=42;
+ towers.forEach(function(t){let d=Math.hypot(t.x-p.x,t.y-p.y);if(d<best){best=d;existing=t}});
+ if(existing){
+  towerDrag={tower:existing,oldX:existing.x,oldY:existing.y,x:p.x,y:p.y,valid:true,moved:false};
+  existing.dragging=true;canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);e.preventDefault();return
+ }
+ if(!selected)return;
+ let t=types[selected];if(battleCoins<t.cost)return;
+ towerDrag={tower:null,type:selected,x:p.x,y:p.y,valid:validTowerPosition(p.x,p.y,null),moved:true};
+ canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);e.preventDefault()
+});
+canvas.addEventListener('pointermove',function(e){
+ if(!towerDrag)return;let p=canvasPoint(e);towerDrag.x=p.x;towerDrag.y=p.y;
+ if(towerDrag.tower){if(Math.hypot(p.x-towerDrag.oldX,p.y-towerDrag.oldY)>5)towerDrag.moved=true;towerDrag.tower.x=p.x;towerDrag.tower.y=p.y}
+ towerDrag.valid=validTowerPosition(p.x,p.y,towerDrag.tower);e.preventDefault()
+});
+function finishTowerDrag(e){
+ if(!towerDrag)return;
+ if(towerDrag.tower){
+  towerDrag.tower.dragging=false;
+  if(towerDrag.valid){towerDrag.tower.x=towerDrag.x;towerDrag.tower.y=towerDrag.y}
+  else{towerDrag.tower.x=towerDrag.oldX;towerDrag.tower.y=towerDrag.oldY}
+ }else if(towerDrag.valid){
+  let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0});hud()}
+ }
+ towerDrag=null;e&&e.preventDefault()
+}
+canvas.addEventListener('pointerup',finishTowerDrag);
+canvas.addEventListener('pointercancel',finishTowerDrag);
 startWave.onclick=()=>{let maxWave=dungeonMode?(dungeonType==='frozen'?20:15):bossMode?3:10;if(waveRunning||wave>=maxWave||mapFinished)return;wave++;waveRunning=true;let count=dungeonMode?(8+wave*3):bossMode?(wave<3?8+wave*3:12):5+wave*2,seq=[];for(let i=0;i<count;i++){let kinds=maps[currentMap].kinds;seq.push(kinds[(i+wave)%kinds.length])}if(dungeonMode){if(dungeonType==='frozen'){let dk=wave<=4?['icecrawler','frostwolf','iceraider']:wave<=9?['frostwolf','iceraider','frozengolem']:wave<=14?['iceraider','frozengolem','frostguard']:['frozengolem','frostguard','iceraider'];seq=[];for(let i=0;i<count;i++)seq.push(dk[(i+wave)%dk.length]);if(wave===5){seq=seq.slice(0,18);seq.push('frozengolem');seq.push('frozengolem')}if(wave===10){seq=seq.slice(0,22);seq.push('frostguard');seq.push('frostguard');seq.push('frozengolem')}if(wave===15){seq=seq.slice(0,26);seq.push('frostguard');seq.push('frostguard');seq.push('frostguard');seq.push('frozengolem')}if(wave===20){seq=seq.slice(0,28);seq.push('cryptking')}}else{let dk=wave<=4?['rat','goblin','wolf']:wave<=9?['goblin','scout','brute','cave']:['scout','brute','cave'];seq=[];for(let i=0;i<count;i++)seq.push(dk[(i+wave)%dk.length]);if(wave===5){seq=seq.slice(0,16);seq.push('brute')}if(wave===10){seq=seq.slice(0,20);seq.push('brute');seq.push('brute')}if(wave===15){seq=seq.slice(0,24);seq.push('rootwarden')}}}else if(bossMode&&wave===3){seq=seq.slice(0,10);seq.push(bossMode)}else if(maps[currentMap].boss&&wave===10){seq=seq.slice(0,16);seq.push(maps[currentMap].boss)}spawnPending=seq.length;lastSpawnCheck=performance.now();seq.forEach((kind,i)=>setTimeout(()=>{spawn(kind);spawnPending--},i*600));hud()};
 function spawn(kind){const path=battlePath();let d=enemyDB[kind],scale=dungeonMode?(dungeonType==='frozen'?(1.35+wave*.16):(1.15+wave*.14)):maps[currentMap].mult*(1+wave*.13)*(bossMode?1.08:1);enemies.push({kind,x:path[0][0],y:path[0][1],seg:1,hp:d.hp*scale,max:d.hp*scale,speed:d.speed,reward:Math.round(d.reward*maps[currentMap].mult),dead:false})}
 function checkBossMilestones(kind){let kills=kind==='warlord'?save.campaign.bossKills:kind==='tyrant'?save.campaign.ashenBossKills:save.campaign.frostBossKills,arr=save.bossHunt.milestones[kind];[10,25,50,100,250].forEach(m=>{if(kills>=m&&!arr.includes(m)){arr.push(m);let reward=m*25;save.coins+=reward;save.drops.push((kind==='warlord'?'Warlord':kind==='tyrant'?'Ember Tyrant':'Frost Wyrm')+' '+m+' kills milestone: +'+reward+' coins')}})}
@@ -548,7 +586,7 @@ function drawTowerCharacter(t) {
   ctx.fillStyle = 'white'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(t.type[0].toUpperCase(), t.x, t.y + 4);
 }
-function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
+function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);if(towerDrag){ctx.save();ctx.beginPath();ctx.arc(towerDrag.x,towerDrag.y,31,0,Math.PI*2);ctx.fillStyle=towerDrag.valid?'rgba(58,190,82,.18)':'rgba(220,54,54,.20)';ctx.fill();ctx.strokeStyle=towerDrag.valid?'#45e36a':'#ff4747';ctx.lineWidth=5;ctx.stroke();if(!towerDrag.tower){ctx.globalAlpha=.72;drawTowerCharacter({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0})}ctx.restore()}enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
  const d=enemyDB[e.kind];
  const visualHeight=window.GreenvaleEnemies?window.GreenvaleEnemies.draw(e,ctx):0;
  if(!visualHeight){ctx.beginPath();ctx.fillStyle=d.color;ctx.arc(e.x,e.y,['warlord','tyrant','rootwarden','frostwyrm'].includes(e.kind)?24:['brute','ashgolem','flameguard'].includes(e.kind)?17:13,0,Math.PI*2);ctx.fill();}
