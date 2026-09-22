@@ -293,20 +293,30 @@ window.startArtisan=startArtisan;
 const stopBeforeCooking=stopGathering;stopGathering=function(show=true){stopBeforeCooking(show);if(cookingKey)stopCooking(show)};window.stopGathering=stopGathering;
 const stopGatherBase=stopGathering;stopGathering=function(show=true){stopGatherBase(show);if(artisanKey)stopArtisan(show)};window.stopGathering=stopGathering;
 function renderArtisan(){
- var fletching=document.querySelector('#fletchingGrid');
- var crafting=document.querySelector('#craftingGrid');
+ var fletching=document.querySelector('#fletchingGrid'),crafting=document.querySelector('#craftingGrid');
  if(!fletching||!crafting)return;
- function cardsFor(skill){
-  return Object.entries(artisanRecipes).filter(function(entry){return entry[1].skill===skill}).map(function(entry){
-   var k=entry[0],r=entry[1],actualXp=Math.round(r.xp*3);
-   var costs=Object.entries(r.cost),hasMaterials=costs.every(function(cost){return (save.bank[cost[0]]||0)>=cost[1]}),hasLevel=save.skills[r.skill].lvl>=r.level;return '<div class="card tier2 '+(hasMaterials?'':'missingMaterials')+'"><b>'+r.name+'</b><span class="materialStatus '+(hasMaterials?'ready':'missing')+'">'+(hasMaterials?'✓ MATERIALS READY':'! MISSING MATERIALS')+'</span><p>'+r.skill+' Lv '+r.level+' • '+actualXp+' XP • '+(r.time/1000).toFixed(1)+' sec</p><small>'+costs.map(function(cost){var owned=save.bank[cost[0]]||0,ok=owned>=cost[1];return '<span class="materialLine '+(ok?'haveMaterial':'needMaterial')+'">'+(ok?'✓ ':'✕ ')+cost[1]+' '+cost[0]+' ('+owned+' owned)</span>'}).join(' + ')+'</small><br><button '+(!hasLevel||!hasMaterials?'disabled':'')+' data-artisan="'+k+'">Auto-'+(r.skill==='Fletching'?'fletch':'craft')+'</button></div>'
-  }).join('')
+ var rangerKeys=new Set(['rhood','rbody','lboots','lgloves','aboots','agloves','fwboots','fwgloves','lchaps','achaps','fwchaps','mirehood','mirebody']);
+ var mageKeys=new Set(['charm','scrapguard','oakstaff','ironstaff','mcowl','mrobe','cboots','cgloves','aslip','ahand','fwslip','fwhand','clegs','alegwraps','fwlegwraps','aspell','ashenbook','winterorb','rotstaff','mirecowl','mirerobe']);
+ var utilityKeys=new Set(['copperband','greenamulet','greencloak','ironsignet','ashenamulet','ashenmantle','frostring','frostheart','frostcape']);
+ function recipeCard(entry){
+  var k=entry[0],r=entry[1],actualXp=Math.round(r.xp*3),costs=Object.entries(r.cost);
+  var hasMaterials=costs.every(function(cost){return (save.bank[cost[0]]||0)>=cost[1]}),hasLevel=save.skills[r.skill].lvl>=r.level;
+  return '<div class="card tier2 '+(hasMaterials?'':'missingMaterials')+'"><b>'+r.name+'</b><span class="materialStatus '+(hasMaterials?'ready':'missing')+'">'+(hasMaterials?'✓ MATERIALS READY':'! MISSING MATERIALS')+'</span><p>'+r.skill+' Lv '+r.level+' • '+actualXp+' XP • '+(r.time/1000).toFixed(1)+' sec</p><small>'+costs.map(function(cost){var owned=save.bank[cost[0]]||0,ok=owned>=cost[1];return '<span class="materialLine '+(ok?'haveMaterial':'needMaterial')+'">'+(ok?'✓ ':'✕ ')+cost[1]+' '+cost[0]+' ('+owned+' owned)</span>'}).join(' + ')+'</small><br><button '+(!hasLevel||!hasMaterials?'disabled':'')+' data-artisan="'+k+'">Auto-'+(r.skill==='Fletching'?'fletch':'craft')+'</button></div>';
  }
- fletching.innerHTML=cardsFor('Fletching');
- crafting.innerHTML=cardsFor('Crafting');
- [fletching,crafting].forEach(function(grid){
-  grid.querySelectorAll('[data-artisan]').forEach(function(btn){btn.onclick=function(){startArtisan(btn.getAttribute('data-artisan'))}})
- })
+ function group(title,entries,open){
+  entries.sort(function(x,y){return x[1].level-y[1].level||x[1].name.localeCompare(y[1].name)});
+  return '<details class="artisanCategory" '+(open?'open':'')+'><summary><span>'+title+'</span><b>'+entries.length+' recipes</b></summary><div class="grid artisanCategoryGrid">'+entries.map(recipeCard).join('')+'</div></details>';
+ }
+ var all=Object.entries(artisanRecipes);
+ var fletch=all.filter(function(e){return e[1].skill==='Fletching'});
+ var rangerFletch=fletch.filter(function(e){return e[0]!=='arrows'});
+ var utilityFletch=fletch.filter(function(e){return e[0]==='arrows'});
+ fletching.innerHTML=group('🏹 Ranger Equipment',rangerFletch,true)+(utilityFletch.length?group('🪶 Ranger Supplies',utilityFletch,false):'');
+ var craft=all.filter(function(e){return e[1].skill==='Crafting'}),used=new Set();
+ function take(set){return craft.filter(function(e){if(set.has(e[0])){used.add(e[0]);return true}return false})}
+ var ranger=take(rangerKeys),mage=take(mageKeys),utility=take(utilityKeys),other=craft.filter(function(e){return !used.has(e[0])});
+ crafting.innerHTML=group('🏹 Ranger Equipment',ranger,true)+group('🔮 Mage Equipment',mage,true)+(utility.length?group('💍 Shared Accessories',utility,false):'')+(other.length?group('📦 Other Crafting',other,false):'');
+ [fletching,crafting].forEach(function(grid){grid.querySelectorAll('[data-artisan]').forEach(function(btn){btn.onclick=function(){startArtisan(btn.getAttribute('data-artisan'))}})})
 }
 
 const hunterTasks=[{kind:'rat',name:'Rats',min:18,max:30,level:1,xp:80,points:4},{kind:'goblin',name:'Goblins',min:20,max:35,level:1,xp:100,points:5},{kind:'wolf',name:'Wolves',min:18,max:30,level:3,xp:120,points:6},{kind:'scout',name:'Goblin Scouts',min:20,max:32,level:5,xp:150,points:7},{kind:'brute',name:'Goblin Brutes',min:15,max:25,level:7,xp:180,points:8},{kind:'emberling',name:'Emberlings',min:25,max:40,level:10,xp:240,points:10},{kind:'cinderhound',name:'Cinder Hounds',min:20,max:35,level:12,xp:280,points:12},{kind:'ashgolem',name:'Ash Golems',min:12,max:22,level:15,xp:360,points:15},{kind:'flameguard',name:'Flameguards',min:10,max:18,level:20,xp:450,points:18}];
