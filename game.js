@@ -152,8 +152,18 @@ function openRealmChest(id){
  if(chest.id==='heroic'||chest.id==='mythic')save.market.chestPity=legendary?0:Math.min(50,(Number(save.market.chestPity)||0)+1);
  rewards.forEach(function(x){save.drops.push(chest.name+': '+(x.qty>1?x.qty+' × ':'')+x.name+' ['+x.rarity.toUpperCase()+']')});
  persist();
- alert(chest.name+' opened!\n\n'+rewards.map(function(x){return x.rarity.toUpperCase()+': '+(x.qty>1?x.qty+' × ':'')+x.name}).join('\n')+(legendary?'\n\nLEGENDARY!':''))
+ showChestResults(chest,rewards,legendary)
 }
+function showChestResults(chest,rewards,legendary){
+ var modal=document.querySelector('#chestResultsModal'),title=document.querySelector('#chestResultTitle'),cost=document.querySelector('#chestResultCost'),list=document.querySelector('#chestResultRewards');
+ if(!modal||!title||!list)return;
+ title.textContent=legendary?'LEGENDARY FIND!':chest.name.toUpperCase();
+ if(cost)cost.textContent=chest.cost.toLocaleString()+' COINS SPENT';
+ list.innerHTML=rewards.map(function(x){return '<div class="chestRewardRow '+x.rarity+'"><span class="chestRarity">'+x.rarity.toUpperCase()+'</span><b>'+(x.qty>1?x.qty+' × ':'')+x.name+'</b></div>'}).join('');
+ modal.classList.add('show');modal.setAttribute('aria-hidden','false')
+}
+function closeChestResults(){var m=document.querySelector('#chestResultsModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+window.closeChestResults=closeChestResults;
 function renderRealmChests(){
  var g=document.querySelector('#realmChestGrid'),p=document.querySelector('#chestPity');if(!g)return;
  if(p)p.textContent=(Number(save.market.chestPity)||0)+' / 50';
