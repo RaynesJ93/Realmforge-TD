@@ -77,3 +77,28 @@ input,select,textarea{max-width:100%;min-height:44px;background:#1d1c17;color:va
 #bosses .bossMilestones span{padding:3px 6px;background:#25221b;border:1px solid #62543f;border-radius:3px;color:var(--muted)}
 #bosses .bossMilestones .complete{background:#29402a;color:#bfe3b4;border-color:#56784d}
 #bosses .bossCard.locked{opacity:.75}
+
+/* V231: compact dungeon selection and expandable supply management. */
+#dungeons #dungeonGrid{grid-template-columns:minmax(0,1fr);gap:9px}
+#dungeons .dungeonCard{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 10px;padding:12px;align-items:center}
+#dungeons .dungeonCard h3{grid-column:1 / -1;font-size:19px;line-height:1.2;margin:0}
+#dungeons .dungeonMeta{grid-column:1 / -1;color:var(--muted);font-size:12px;margin-bottom:3px}
+#dungeons .dungeonStats{font-size:12px;display:flex;flex-wrap:wrap;gap:3px 12px;color:var(--muted)}
+#dungeons .dungeonStats b{color:var(--ivory)}
+#dungeons .dungeonEnter{margin:0;min-height:44px;max-width:145px;padding:8px 10px;font-size:12px}
+#dungeons .dungeonDetails{grid-column:1 / -1;border-top:1px solid #76654a66;margin-top:4px}
+#dungeons .dungeonDetails summary{padding:10px 0;font-size:12px;color:var(--gold);cursor:pointer;line-height:24px}
+#dungeons .dungeonDetails p,#dungeons .dungeonSupplies>p{font-size:12px;line-height:1.45;color:var(--muted);margin:4px 0 8px}
+#dungeons .dungeonMilestones{display:flex;flex-wrap:wrap;gap:4px;font-size:10px}
+#dungeons .dungeonMilestones span{padding:3px 6px;border:1px solid #62543f;border-radius:3px;color:var(--muted)}
+#dungeons .dungeonMilestones .complete{background:#29402a;color:#bfe3b4;border-color:#56784d}
+#dungeons .dungeonCard.locked{opacity:.75}
+#dungeons .dungeonSupplies{border:1px solid var(--rim);border-radius:4px;padding:0 12px;background:#24211b}
+#dungeons .dungeonSupplies>summary{padding:12px 0;cursor:pointer;color:var(--gold);font-size:15px;line-height:22px}
+#dungeons .dungeonSupplies>summary b{float:right;font-size:12px;color:var(--ivory)}
+#dungeons summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#dungeons .dungeonFood{border-top:1px solid #76654a66;padding:10px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:7px}
+#dungeons .dungeonFood b{font-size:13px}
+#dungeons .dungeonFood small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+#dungeons .dungeonFoodActions{display:flex;gap:5px}
+#dungeons .dungeonFoodActions button{font-size:11px;min-height:44px;margin:0;padding:8px 12px}
