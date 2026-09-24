@@ -274,6 +274,7 @@ const equipmentArtwork={
   "Cloth Robe": "assets/equipment/cloth-robe.webp"
 };
 Object.assign(equipmentArtwork,{"Bogiron Sword":"assets/equipment/bogiron-sword-v240.webp","Bogiron Helm":"assets/equipment/bogiron-helm-v240.webp","Bogiron Armour":"assets/equipment/bogiron-armour-v240.webp","Rotwood Bow":"assets/equipment/rotwood-bow-v240.webp","Mireweave Hood":"assets/equipment/mireweave-hood-v240.webp","Mireweave Body":"assets/equipment/mireweave-body-v240.webp","Rotwood Staff":"assets/equipment/rotwood-staff-v240.webp","Mireweave Cowl":"assets/equipment/mireweave-cowl-v240.webp","Mireweave Robe":"assets/equipment/mireweave-robe-v240.webp","Mirefang Greatblade":"assets/equipment/mirefang-greatblade-v240.webp","Venomwood Bow":"assets/equipment/venomwood-bow-v240.webp","Plaguebloom Staff":"assets/equipment/plaguebloom-staff-v240.webp","Mire Queen Crown":"assets/equipment/mire-queen-crown-v240.webp","Colossus Cleaver":"assets/equipment/colossus-cleaver-v240.webp","Drowned Recurve":"assets/equipment/drowned-recurve-v240.webp","Temple Hexstaff":"assets/equipment/temple-hexstaff-v240.webp","Bogheart Talisman":"assets/equipment/bogheart-talisman-v240.webp","Copper Band":"assets/equipment/copper-band-v240.webp","Ironvale Signet":"assets/equipment/ironvale-signet-v240.webp","Frostsilver Ring":"assets/equipment/frostsilver-ring-v240.webp","Greenvale Amulet":"assets/equipment/greenvale-amulet-v240.webp","Ashen Amulet":"assets/equipment/ashen-amulet-v240.webp","Frostheart Amulet":"assets/equipment/frostheart-amulet-v240.webp","Greenvale Cloak":"assets/equipment/greenvale-cloak-v240.webp","Ashen Mantle":"assets/equipment/ashen-mantle-v240.webp","Frostmere Cape":"assets/equipment/frostmere-cape-v240.webp","Hunter Ring":"assets/equipment/hunter-ring-v240.webp","Hunter Gloves":"assets/equipment/hunter-gloves-v240.webp","Master Hunter Amulet":"assets/equipment/master-hunter-amulet-v240.webp","Hunter Cape":"assets/equipment/hunter-cape-v240.webp","Master Hunter Armour":"assets/equipment/master-hunter-armour-v240.webp"});
+Object.assign(equipmentArtwork,{"Infernal Greatblade":"assets/equipment/infernal-greatblade-v241.webp","Ashfall Recurve":"assets/equipment/ashfall-recurve-v241.webp","Cinderheart Staff":"assets/equipment/cinderheart-staff-v241.webp","Infernal Warden Mask":"assets/equipment/infernal-warden-mask-v241.webp"});
 const icons=new Map(),towerCache=new Map();
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
@@ -282,9 +283,9 @@ function portrait(cls){tower(cls);const entry=towerCache.get(cls);if(!entry.url)
 function drawTower(t){const a=t.attackVisual,phase=a?1-a.life/a.duration:0;const art=tower(t.type,phase);const h=103,w=h*art.width/art.height;ctx.drawImage(art,Math.max(0,Math.min(canvas.width-w,t.x-w/2)),Math.max(0,Math.min(canvas.height-h,t.y+17-h)),w,h)}
 function decorate(){
  // Text labels and all existing controls remain authoritative and accessible.
- for(const root of ['bankGrid','craftGrid','artisanGrid','collectionGrid','hunterShop']){
+ for(const root of ['bankGrid','craftGrid','artisanGrid','collectionGrid','hunterShop','generalStoreGrid','blacksmithStoreGrid','merchantStoreGrid','enhancementGrid']){
   const el=document.getElementById(root);if(!el)continue;
-  el.querySelectorAll('.card').forEach(card=>{const b=card.querySelector('b');if(!b)return;const name=b.textContent.replace(/ \+\d+$/,'');if(!itemDB[name]||card.querySelector('.gearIcon'))return;const im=document.createElement('img');im.className='gearIcon';im.width=48;im.height=48;im.alt='';im.src=icon(name);card.insertBefore(im,card.firstChild);});
+  el.querySelectorAll('.card').forEach(card=>{const b=card.querySelector('b');if(!b)return;let name=b.textContent.replace(/ \+\d+$/,'');if(root==='hunterShop'){const reward=hunterShop.find(x=>x.name===name);if(reward&&reward.item)name=reward.item;}const resource=skillingArtwork[name];if((!itemDB[name]&&!resource)||card.querySelector('.gearIcon')||card.querySelector('.menuItemIcon')||card.querySelector('img'))return;const im=document.createElement('img');im.className='gearIcon';im.width=48;im.height=48;im.alt='';im.src=resource||icon(name);card.insertBefore(im,card.firstChild);});
  }
  for(const root of ['craftingGrid','fletchingGrid']){
   const el=document.getElementById(root);if(!el)continue;
@@ -300,5 +301,6 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
 
