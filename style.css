@@ -138,3 +138,7 @@ body:has(#battle.active){overscroll-behavior:none}
 .chestPityNote{text-align:center;color:#8f8b77;font-size:11px;margin:13px 0 5px}
 .chestContinue{display:block;width:100%;font-size:18px;font-weight:1000;color:#f5e9bd;background:linear-gradient(#536b35,#304520);border:3px solid #8f934b;border-radius:11px;padding:13px;margin-top:10px}
 @media(max-width:560px){.chestResultsModal{padding:8px}.chestResultsCard{padding:20px 11px 13px}.chestRewardRow{grid-template-columns:78px 1fr;padding:10px 8px}.chestRewardRow b{font-size:14px}}
+
+/* V238: direct touch drag from tower purchase buttons */
+.towerbar .tower{touch-action:none;-webkit-user-select:none;user-select:none}
+.towerbar .tower img{pointer-events:none;-webkit-user-drag:none}
