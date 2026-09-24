@@ -1,7 +1,7 @@
 /* V179: approved Greenvale artwork with distance-driven four-pose walk cycles.
    Visual state is kept outside enemy/save objects and cannot affect combat. */
 (function(){
- const config={emberling:{size:60,height:120,stride:30,version:226},cinderhound:{size:82,height:98,stride:46,version:226},ashgolem:{size:88,height:111,stride:40,version:226},flameguard:{size:83,height:105,stride:35,version:226},tyrant:{size:122,height:120,stride:42,version:226},rat:{size:58,height:63,stride:25},wolf:{size:74,height:78,stride:44},goblin:{size:61,height:120,stride:31},scout:{size:64,height:120,stride:35},brute:{size:80,height:117,stride:38},cave:{size:88,height:91,stride:39},warlord:{size:105,height:120,stride:33},rootwarden:{size:116,height:120,stride:36}};
+ const config={icecrawler:{size:60,height:80,stride:30,version:227},frostwolf:{size:82,height:88,stride:46,version:227},iceraider:{size:80,height:120,stride:35,version:227},frozengolem:{size:90,height:116,stride:40,version:227},frostguard:{size:90,height:120,stride:36,version:227},frostwyrm:{size:130,height:120,stride:46,version:227},emberling:{size:60,height:120,stride:30,version:226},cinderhound:{size:82,height:98,stride:46,version:226},ashgolem:{size:88,height:111,stride:40,version:226},flameguard:{size:83,height:105,stride:35,version:226},tyrant:{size:122,height:120,stride:42,version:226},rat:{size:58,height:63,stride:25},wolf:{size:74,height:78,stride:44},goblin:{size:61,height:120,stride:31},scout:{size:64,height:120,stride:35},brute:{size:80,height:117,stride:38},cave:{size:88,height:91,stride:39},warlord:{size:105,height:120,stride:33},rootwarden:{size:116,height:120,stride:36}};
  const sheets={},motion=new WeakMap();let seed=0;
  for(const kind of Object.keys(config)){const img=new Image();img.src='assets/enemy-'+kind+'-walk-v'+(config[kind].version||179)+'.webp';sheets[kind]=img;}
  function walkState(e){
@@ -26,4 +26,5 @@
  }
  window.GreenvaleEnemies={draw,config,walkState};
 })();
+
 
