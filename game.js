@@ -75,21 +75,36 @@ function refreshMerchant(){
  var pool=merchantPool.slice(),stock=[];while(pool.length&&stock.length<3){var i=Math.floor(Math.random()*pool.length);stock.push(pool.splice(i,1)[0].name)}
  save.market.merchantDay=day;save.market.merchantStock=stock;writeSave(false)
 }
-function buyMarketItem(shop,name){
+function buyMarketItem(shop,name,amount){
  var list=shop==='general'?generalStore:shop==='blacksmith'?blacksmithStore:merchantPool;
  var entry=list.find(function(x){return x.name===name});if(!entry)return;
  if(shop==='merchant'&&!save.market.merchantStock.includes(name))return;
- if(save.coins<entry.price){alert('You need '+entry.price.toLocaleString()+' coins to buy '+name+'.');return}
- save.coins-=entry.price;save.bank[name]=(save.bank[name]||0)+1;save.drops.push('Marketplace: bought '+name+' for '+entry.price+' coins');persist()
+ amount=Math.max(1,Math.floor(Number(amount)||1));
+ var total=entry.price*amount;
+ if(save.coins<total){alert('You need '+total.toLocaleString()+' coins to buy '+amount+' × '+name+'.');return}
+ save.coins-=total;save.bank[name]=(save.bank[name]||0)+amount;
+ save.drops.push('Marketplace: bought '+amount+' × '+name+' for '+total.toLocaleString()+' coins');persist()
+}
+function marketBuySelected(shop,name){
+ var id='marketQty-'+shop+'-'+name.replace(/[^a-z0-9]/gi,'_'),el=document.getElementById(id);
+ buyMarketItem(shop,name,el?el.value:1)
 }
 function renderMarketplace(){
  var g=document.querySelector('#generalStoreGrid'),b=document.querySelector('#blacksmithStoreGrid'),m=document.querySelector('#merchantStoreGrid'),c=document.querySelector('#marketCoins');if(!g||!b||!m)return;
  refreshMerchant();if(c)c.textContent=save.coins.toLocaleString();
- function cards(list,shop){return list.map(function(x){var locked=shop==='merchant'&&!save.market.merchantStock.includes(x.name);if(locked)return '';return '<div class="card marketItem"><b>'+x.name+'</b><div class="marketPrice">'+x.price.toLocaleString()+' coins</div><small>Owned: '+(save.bank[x.name]||0)+'</small><br><button '+(save.coins<x.price?'disabled':'')+' onclick="buyMarketItem(\''+shop+'\',\''+x.name+'\')">Buy 1</button></div>'}).join('')}
+ function cards(list,shop){return list.map(function(x){
+  var locked=shop==='merchant'&&!save.market.merchantStock.includes(x.name);if(locked)return '';
+  var max=Math.floor(save.coins/x.price),id='marketQty-'+shop+'-'+x.name.replace(/[^a-z0-9]/gi,'_');
+  return '<div class="card marketItem"><b>'+x.name+'</b><div class="marketPrice">'+x.price.toLocaleString()+' coins each</div><small>Owned: '+(save.bank[x.name]||0)+'</small><div class="marketBulk"><label>Qty</label><input id="'+id+'" type="number" inputmode="numeric" min="1" value="1"><button '+(max<1?'disabled':'')+' data-market-shop="'+shop+'" data-market-name="'+x.name+'">Buy</button></div><div class="marketQuick"><button '+(max<5?'disabled':'')+' data-market-quick="5" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x5</button><button '+(max<10?'disabled':'')+' data-market-quick="10" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x10</button><button '+(max<50?'disabled':'')+' data-market-quick="50" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x50</button><button '+(max<1?'disabled':'')+' data-market-quick="'+max+'" data-market-shop="'+shop+'" data-market-name="'+x.name+'">MAX</button></div></div>'
+ }).join('')}
  g.innerHTML=cards(generalStore,'general');b.innerHTML=cards(blacksmithStore,'blacksmith');m.innerHTML=cards(merchantPool.filter(function(x){return save.market.merchantStock.includes(x.name)}),'merchant');
+ [g,b,m].forEach(function(grid){
+  grid.querySelectorAll('[data-market-name]:not([data-market-quick])').forEach(function(btn){btn.onclick=function(){marketBuySelected(btn.dataset.marketShop,btn.dataset.marketName)}});
+  grid.querySelectorAll('[data-market-quick]').forEach(function(btn){btn.onclick=function(){buyMarketItem(btn.dataset.marketShop,btn.dataset.marketName,btn.dataset.marketQuick)}})
+ });
  var day=document.querySelector('#merchantRefresh');if(day)day.textContent='Stock changes daily • '+save.market.merchantDay
 }
-window.buyMarketItem=buyMarketItem;
+window.buyMarketItem=buyMarketItem;window.marketBuySelected=marketBuySelected;
 const perkTaskPool=[
 {id:'mine100',name:'Rock Solid',desc:'Mine 100 ores',type:'mine',amount:100,xp:12,tier:'Standard',points:1},
 {id:'mine250',name:'Deep Delver',desc:'Mine 250 ores',type:'mine',amount:250,xp:25,tier:'Hard',points:2},
