@@ -773,7 +773,35 @@ if(window.collectionGrid){let uniques=[['Warlord Cleaver','Goblin Warlord','4%']
 function loadFrostmereTestSave(){if(testMode){alert('You are already using the separate test account.');return}if(!confirm('Switch to the separate Frostmere test account? Your normal save will remain untouched.'))return;writeSave(false);localStorage.setItem(KEY,JSON.stringify(save));var stored=safeParse(localStorage.getItem(TEST_KEY));var t=validSave(stored)?stored:JSON.parse(JSON.stringify(base()));t.coins=Math.max(t.coins||0,12000);['Attack','Strength','Defence','Ranged','Magic'].forEach(function(n){t.skills[n].lvl=Math.max(t.skills[n].lvl,24)});t.skills.Hitpoints.lvl=Math.max(t.skills.Hitpoints.lvl,28);t.campaign.cleared=[0,1,2,3,4,5,6,7,8,9];t.campaign.unlocked=Math.max(t.campaign.unlocked||1,11);t.items['Emberfang Blade']=Math.max(1,t.items['Emberfang Blade']||0);t.items['Cinderbow']=Math.max(1,t.items['Cinderbow']||0);t.items['Ember Staff']=Math.max(1,t.items['Ember Staff']||0);t.equipment.warrior.weapon='Emberfang Blade';t.equipment.ranger.weapon='Cinderbow';t.equipment.mage.weapon='Ember Staff';save=t;testMode=true;migrateSave();localStorage.setItem(TEST_KEY,JSON.stringify(save));currentMap=10;resetBattle();renderUI();alert('TEST ACCOUNT ACTIVE. Your normal save is separate and untouched. Use Return to Normal Save when finished.')}
 function returnToNormalSave(){if(testMode)localStorage.setItem(TEST_KEY,JSON.stringify(save));var primaryNormal=safeParse(localStorage.getItem(KEY));var backupNormal=safeParse(localStorage.getItem(BACKUP_KEY));var normal=null;if(validSave(primaryNormal)&&validSave(backupNormal))normal=progressScore(backupNormal)>progressScore(primaryNormal)?backupNormal:primaryNormal;else normal=validSave(primaryNormal)?primaryNormal:backupNormal;if(!validSave(normal)){alert('No valid normal or backup save could be found. Your current account has not been changed.');return}save=normal;testMode=false;migrateSave();localStorage.setItem(KEY,JSON.stringify(save));currentMap=0;resetBattle();renderUI();alert('Normal account restored. The game checked both your main save and automatic backup and loaded the one with the most progress.')}
 window.loadFrostmereTestSave=loadFrostmereTestSave;window.returnToNormalSave=returnToNormalSave;
-const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hunterTaskBtn.addEventListener('click',getHunterTask);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));let target=document.querySelector('#'+b.dataset.screen);if(target)target.classList.add('active')});document.querySelectorAll('.tower').forEach(b=>b.onclick=()=>{selected=b.dataset.type;document.querySelectorAll('.tower').forEach(x=>x.classList.toggle('selected',x===b))});const newGameEl=document.querySelector('#newGame');if(newGameEl)newGameEl.onclick=()=>{if(confirm('This permanently resets your Realmforge save. Continue?')&&confirm('Final warning: reset ALL progress?')){save=base();currentMap=0;persist();resetBattle()}};
+const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hunterTaskBtn.addEventListener('click',getHunterTask);document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));let target=document.querySelector('#'+b.dataset.screen);if(target)target.classList.add('active')});document.querySelectorAll('.tower').forEach(function(b){
+ b.onclick=function(){selected=b.dataset.type;document.querySelectorAll('.tower').forEach(x=>x.classList.toggle('selected',x===b))};
+ b.addEventListener('pointerdown',function(e){
+  const type=b.dataset.type,t=types[type];if(!t||battleCoins<t.cost)return;
+  const r=canvas.getBoundingClientRect();
+  // Start a new tower drag directly from its purchase button. The preview is lifted
+  // above the finger so mobile players can see the exact placement point.
+  towerDrag={tower:null,type:type,x:canvas.width/2,y:canvas.height-70,valid:false,moved:true,fromButton:true,pointerId:e.pointerId};
+  selected=null;document.querySelectorAll('.tower').forEach(x=>x.classList.remove('selected'));
+  b.setPointerCapture&&b.setPointerCapture(e.pointerId);e.preventDefault();
+ });
+ b.addEventListener('pointermove',function(e){
+  if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
+  const r=canvas.getBoundingClientRect();
+  let x=(e.clientX-r.left)*canvas.width/r.width;
+  let y=(e.clientY-r.top)*canvas.height/r.height-82*canvas.height/r.height;
+  towerDrag.x=Math.max(24,Math.min(canvas.width-24,x));
+  towerDrag.y=Math.max(24,Math.min(canvas.height-24,y));
+  towerDrag.valid=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom&&validTowerPosition(towerDrag.x,towerDrag.y,null);
+  e.preventDefault();
+ });
+ function finishButtonTowerDrag(e){
+  if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
+  if(towerDrag.valid){let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0});hud()}}
+  towerDrag=null;e.preventDefault();
+ }
+ b.addEventListener('pointerup',finishButtonTowerDrag);
+ b.addEventListener('pointercancel',finishButtonTowerDrag);
+});const newGameEl=document.querySelector('#newGame');if(newGameEl)newGameEl.onclick=()=>{if(confirm('This permanently resets your Realmforge save. Continue?')&&confirm('Final warning: reset ALL progress?')){save=base();currentMap=0;persist();resetBattle()}};
 window.getCombatLevel=combatLevel;
 function resetBattle(keepBoss=false){blackfenPoison=0;mireQueenEnraged=false;towers=[];enemies=[];shots=[];wave=0;lives=20;battleCoins=maps[currentMap].start;waveRunning=false;spawnPending=0;mapFinished=false;bossKilled=false;if(!keepBoss)bossMode=null;hud()}function hud(){document.querySelector('#wave').textContent=wave;livesEl.textContent=lives;battleCoinsEl.textContent=battleCoins}const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
