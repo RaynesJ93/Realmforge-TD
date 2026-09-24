@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Realmforge TD</title><link rel="stylesheet" href="style.css?v=227"><style>.missingMaterials{opacity:.78;border-color:#8f4037!important}.materialStatus{display:inline-block;margin:5px 0 3px 8px;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:800}.materialStatus.ready{background:#244b31;color:#b9efc6}.materialStatus.missing{background:#5a2925;color:#ffd0c9}.haveMaterial{color:#9fe0aa}.needMaterial{color:#ff9b8e;font-weight:700}.missingMaterials button:disabled{opacity:.45}</style><style>.artisanCategory{margin:10px 0;border:1px solid rgba(190,160,90,.35);border-radius:10px;overflow:hidden}.artisanCategory>summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-weight:800;background:rgba(30,25,18,.45)}.artisanCategory>summary b{font-size:12px;opacity:.75}.artisanCategoryGrid{padding:10px}</style><link rel="stylesheet" href="realm-theme.css?v=233"><style>.marketBulk{display:flex;gap:6px;align-items:center;margin-top:10px}.marketBulk label{font-size:12px;font-weight:800}.marketBulk input{min-width:0;width:68px;padding:8px;border-radius:7px}.marketBulk button{flex:1}.marketQuick{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}.marketQuick button{padding:7px 3px;font-size:11px}</style><style>.cloudPanel{margin:12px 0;padding:12px;border:1px solid rgba(120,180,220,.35);border-radius:10px;background:rgba(20,38,52,.45)}.cloudPanel h3{margin:0 0 8px}.cloudBeta{font-size:10px;padding:2px 5px;border-radius:5px;background:#355b75}.cloudStatus{font-weight:800;margin:5px 0}.cloudStatus.online{color:#9fe0aa}.cloudStatus.offline{color:#d8b18b}.cloudStatus.working{color:#9ccce8}.cloudLogin{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.cloudLogin input{min-width:0;padding:9px;border-radius:7px}.cloudActions{display:flex;flex-wrap:wrap;gap:6px}.cloudActions button{flex:1 1 120px}</style></head><body class="atTitle"><section id="titleScreen" class="titleScreen" aria-labelledby="titleHeading">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Realmforge TD</title><link rel="stylesheet" href="style.css?v=228"><style>.missingMaterials{opacity:.78;border-color:#8f4037!important}.materialStatus{display:inline-block;margin:5px 0 3px 8px;padding:3px 7px;border-radius:6px;font-size:11px;font-weight:800}.materialStatus.ready{background:#244b31;color:#b9efc6}.materialStatus.missing{background:#5a2925;color:#ffd0c9}.haveMaterial{color:#9fe0aa}.needMaterial{color:#ff9b8e;font-weight:700}.missingMaterials button:disabled{opacity:.45}</style><style>.artisanCategory{margin:10px 0;border:1px solid rgba(190,160,90,.35);border-radius:10px;overflow:hidden}.artisanCategory>summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;font-weight:800;background:rgba(30,25,18,.45)}.artisanCategory>summary b{font-size:12px;opacity:.75}.artisanCategoryGrid{padding:10px}</style><link rel="stylesheet" href="realm-theme.css?v=233"><style>.marketBulk{display:flex;gap:6px;align-items:center;margin-top:10px}.marketBulk label{font-size:12px;font-weight:800}.marketBulk input{min-width:0;width:68px;padding:8px;border-radius:7px}.marketBulk button{flex:1}.marketQuick{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}.marketQuick button{padding:7px 3px;font-size:11px}</style><style>.cloudPanel{margin:12px 0;padding:12px;border:1px solid rgba(120,180,220,.35);border-radius:10px;background:rgba(20,38,52,.45)}.cloudPanel h3{margin:0 0 8px}.cloudBeta{font-size:10px;padding:2px 5px;border-radius:5px;background:#355b75}.cloudStatus{font-weight:800;margin:5px 0}.cloudStatus.online{color:#9fe0aa}.cloudStatus.offline{color:#d8b18b}.cloudStatus.working{color:#9ccce8}.cloudLogin{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.cloudLogin input{min-width:0;padding:9px;border-radius:7px}.cloudActions{display:flex;flex-wrap:wrap;gap:6px}.cloudActions button{flex:1 1 120px}</style></head><body class="atTitle"><section id="titleScreen" class="titleScreen" aria-labelledby="titleHeading">
  <div class="titleCard">
   <img class="titleBanner" src="assets/title-banner-v233.webp" alt="" width="1024" height="250">
   <h1 id="titleHeading" class="titleSrOnly">Realmforge TD</h1>
@@ -26,7 +26,7 @@
    window.__realmforgeSaveDiagnostic={primary:p,backup:bk};
  }catch(e){show('Save read error: '+e.message)}
 })();
-</script><script src="gear-art.js?v=227-characters"></script><script src="greenvale-enemies.js?v=227"></script><script src="greenvale-maps.js?v=227"></script><script src="game.js?v=227"></script><script>
+</script><script src="gear-art.js?v=228-characters"></script><script src="greenvale-enemies.js?v=228"></script><script src="greenvale-maps.js?v=228"></script><script src="game.js?v=228"></script><script>
 function forceRecoverNormalSave(){
  try{
   var p=JSON.parse(localStorage.getItem('realmforge_v01')||'null');
@@ -66,7 +66,7 @@ function restoreExactRealmforgeSave(key){
  localStorage.setItem('realmforge_recovery_safety_selected',JSON.stringify(x));
  localStorage.removeItem('realmforge_test_v01');
  alert('Selected save restored to BOTH normal and backup slots so the startup loader cannot replace it. Reloading now.');
- location.href=location.pathname+'?v=227&recovered=1';
+ location.href=location.pathname+'?v=228&recovered=1';
 }
 </script><script>
 function buildKnownRecoverySave(){
@@ -113,10 +113,10 @@ function activateJamesRecoveryNow(){
   localStorage.setItem('realmforge_active_override',JSON.stringify(x));
   localStorage.removeItem('realmforge_test_v01');
   alert('Recovery activated. The page will reload once.');
-  location.replace(location.pathname+'?v=227&forceRecovery=1');
+  location.replace(location.pathname+'?v=228&forceRecovery=1');
  }catch(e){alert('Activation stopped safely: '+e.message)}
 }
-</script><script src="workshop.js?v=227"></script><script src="xp-feedback.js?v=227"></script><script>
+</script><script src="workshop.js?v=228"></script><script src="xp-feedback.js?v=228"></script><script>
 function exportRealmforgeSave(){
  try{
   var raw=localStorage.getItem('realmforge_v01');
@@ -148,13 +148,13 @@ function handleRealmforgeImport(event){
    localStorage.setItem('realmforge_backup',raw);
    localStorage.setItem('realmforge_active_override',raw);
    alert('Save imported successfully. Reloading Realmforge now.');
-   location.replace(location.pathname+'?v=227&imported=1');
+   location.replace(location.pathname+'?v=228&imported=1');
   }catch(e){alert('Import stopped. Nothing was changed. '+e.message)}
  };
  reader.onerror=function(){alert('The save file could not be read. Nothing was changed.')};
  reader.readAsText(file);
 }
-</script><div id="bossResultsModal" class="bossResultsModal" aria-hidden="true"><div class="bossResultsCard"><button class="bossResultsX" onclick="closeBossResults()">×</button><div class="bossVictory">BOSS DEFEATED!</div><h2 id="bossResultName">Boss</h2><p id="bossResultFlavor"></p><div class="bossResultColumns"><section><h3>REWARDS</h3><div id="bossResultRewards"></div></section><section><h3>XP EARNED</h3><div id="bossResultXp"></div></section></div><div class="bossResultStats"><div><small>CLEAR TIME</small><b id="bossResultTime">--</b></div><div><small>WAVES COMPLETED</small><b id="bossResultWaves">--</b></div></div><button class="bossContinue" onclick="closeBossResults()">CONTINUE</button></div></div><script src="realm-theme.js?v=227"></script><script src="title-screen.js?v=233"></script></body></html>
+</script><div id="bossResultsModal" class="bossResultsModal" aria-hidden="true"><div class="bossResultsCard"><button class="bossResultsX" onclick="closeBossResults()">×</button><div class="bossVictory">BOSS DEFEATED!</div><h2 id="bossResultName">Boss</h2><p id="bossResultFlavor"></p><div class="bossResultColumns"><section><h3>REWARDS</h3><div id="bossResultRewards"></div></section><section><h3>XP EARNED</h3><div id="bossResultXp"></div></section></div><div class="bossResultStats"><div><small>CLEAR TIME</small><b id="bossResultTime">--</b></div><div><small>WAVES COMPLETED</small><b id="bossResultWaves">--</b></div></div><button class="bossContinue" onclick="closeBossResults()">CONTINUE</button></div></div><script src="realm-theme.js?v=228"></script><script src="title-screen.js?v=233"></script></body></html>
 
 
 
