@@ -50,7 +50,7 @@ function safeParse(raw){try{return raw?JSON.parse(raw):null}catch(e){return null
 function validSave(s){return !!(s&&typeof s==='object'&&s.skills&&s.bank)}
 function writeSave(makeBackup=true){save.saveVersion=SAVE_VERSION;if(testMode){localStorage.setItem(TEST_KEY,JSON.stringify(save));return}const current=localStorage.getItem(KEY);if(makeBackup&&current){const parsed=safeParse(current);if(validSave(parsed))localStorage.setItem(BACKUP_KEY,current)}localStorage.setItem(KEY,JSON.stringify(save))}
 // V226 Cloud Save foundation. Local saves remain authoritative until a cloud backend is configured.
-const CLOUD_CONFIG={url:'',anonKey:''};
+const CLOUD_CONFIG={url:'https://pvdvtnnmyveywyrpixhs.supabase.co',anonKey:'sb_publishable_Hh9aRCXB5g3-E_QhLdG6JQ_V1QYnFYR'};
 const CLOUD_DEVICE_KEY='realmforge_cloud_device_v01';
 let cloudSession=null,cloudBusy=false,cloudLastSync=localStorage.getItem('realmforge_cloud_last_sync')||'';
 function cloudConfigured(){return !!(CLOUD_CONFIG.url&&CLOUD_CONFIG.anonKey)}
