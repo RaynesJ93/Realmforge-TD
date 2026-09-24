@@ -199,7 +199,7 @@ function renderPerks(){
  owned.querySelectorAll('[data-perk-toggle]').forEach(function(btn){btn.onclick=function(){togglePerk(btn.getAttribute('data-perk-toggle'))}})
 }
 window.claimPerkTask=claimPerkTask;window.togglePerk=togglePerk;
-const enhancementCosts=[0,25,75,175,400,900];
+const enhancementCosts=[0,250,750,1750,4000,9000];
 const salvageUniqueNames=['Warlord Cleaver','Warlord Crest','Emberfang Blade','Ashguard Helm','Cinderbow','Ember Staff','Wyrmfrost Blade','Glacier Bow','Wintercore Staff','Wyrmscale Crown','Cryptfang Greatsword','Glacial Recurve','Soulfrost Sceptre','Crown of the Crypt','Mirefang Greatblade','Venomwood Bow','Plaguebloom Staff','Mire Queen Crown','Colossus Cleaver','Drowned Recurve','Temple Hexstaff','Bogheart Talisman'];
 function enhancementLevel(name){return Math.max(0,Math.min(5,Number(save.enhancements&&save.enhancements[name])||0))}
 function enhancementCost(name){var l=enhancementLevel(name);return l>=5?0:enhancementCosts[l+1]}
