@@ -802,3 +802,9 @@ window.getRealmforgeActiveSkill=function(){
 
 
 
+
+/* Title screen bridge: continues the existing account, without replacing saves. */
+window.RealmforgeSession={
+ summary:function(){return {test:!!testMode,level:combatLevel(),coins:Math.floor(Number(save.coins)||0),cleared:(save.campaign.cleared||[]).length,totalLevel:Object.values(save.skills).reduce(function(n,s){return n+(Number(s.lvl)||0)},0)}},
+ saveNow:function(){writeSave(false);return this.summary()}
+};
