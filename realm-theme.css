@@ -59,3 +59,21 @@ input,select,textarea{max-width:100%;min-height:44px;background:#1d1c17;color:va
 #skilling :is(#craftingGrid,#fletchingGrid) .card>br{display:none}
 #skilling .card.missingMaterials{opacity:1}
 #skilling .materialLine{display:inline-block;margin-right:3px}
+
+/* V230: compact boss hunts with existing in-game portraits. */
+#bosses #bossGrid{grid-template-columns:minmax(0,1fr);gap:9px}
+#bosses .bossCard{display:grid;grid-template-columns:80px minmax(0,1fr);gap:8px 12px;padding:11px;align-items:center;min-width:0}
+#bosses .bossPortrait{display:block;width:80px;height:80px;background-size:400% 100%;background-repeat:no-repeat;background-position:left top;border-radius:4px;background-color:#1d1c17}
+#bosses .bossOverview{min-width:0}
+#bosses .bossOverview h3{font-size:19px;line-height:1.2;margin:0 0 5px}
+#bosses .bossStats{display:flex;flex-wrap:wrap;gap:3px 14px;font-size:12px;color:var(--muted);margin-bottom:6px}
+#bosses .bossStats b{color:var(--ivory)}
+#bosses .bossOverview button{margin:0;padding:8px 12px;min-height:44px;font-size:12px;width:100%;max-width:250px}
+#bosses .bossDetails{grid-column:1 / -1;border-top:1px solid #76654a66;padding-top:2px;min-width:0}
+#bosses .bossDetails summary{cursor:pointer;padding:9px 0;font-size:12px;color:var(--gold);min-height:24px;line-height:24px}
+#bosses .bossDetails summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+#bosses .bossDropList{display:flex;flex-wrap:wrap;gap:5px 12px;padding:3px 0 8px;font-size:11px;color:var(--muted)}
+#bosses .bossMilestones{display:flex;flex-wrap:wrap;gap:4px;font-size:10px;padding-bottom:4px}
+#bosses .bossMilestones span{padding:3px 6px;background:#25221b;border:1px solid #62543f;border-radius:3px;color:var(--muted)}
+#bosses .bossMilestones .complete{background:#29402a;color:#bfe3b4;border-color:#56784d}
+#bosses .bossCard.locked{opacity:.75}
