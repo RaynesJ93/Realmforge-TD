@@ -807,7 +807,7 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
   if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
   const r=canvas.getBoundingClientRect();
   const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
-  const p=snapTowerPosition(dragPoint(e),null);
+  const p=towerPlacementPoint(dragPoint(e),null);
   towerDrag.x=p.x;towerDrag.y=p.y;
   towerDrag.valid=inside&&p.valid;
   e.preventDefault();
@@ -841,22 +841,17 @@ function placementTerrain(){
  if(!placementTerrainCache.has(key)){const points=[];for(let y=24;y<=canvas.height-24;y+=6)for(let x=24;x<=canvas.width-24;x+=6){if(!nearRoad(x,y)&&(!window.RealmforgeMaps||window.RealmforgeMaps.canBuild(currentMap,dungeonMode,x,y)))points.push({x,y});}placementTerrainCache.set(key,points);}
  return placementTerrainCache.get(key);
 }
-function snapTowerPosition(p,ignore){
- if(validTowerPosition(p.x,p.y,ignore))return {...p,valid:true};
- let best=null,distance=48*48;
- for(const q of placementTerrain()){const d=(q.x-p.x)**2+(q.y-p.y)**2;if(d<distance&&towers.every(t=>t===ignore||Math.hypot(t.x-q.x,t.y-q.y)>=36)){best=q;distance=d;}}
- return best?{...best,valid:true}:{...p,valid:false};
-}
+function towerPlacementPoint(p,ignore){return {...p,valid:validTowerPosition(p.x,p.y,ignore)};}
 function drawPlacementGuide(){
  if(!selected&&!towerDrag)return;
  const ignore=towerDrag&&towerDrag.tower,occupied=towers.filter(t=>t!==ignore),key=currentMap+'|'+dungeonMode+'|'+dungeonType+'|'+occupied.map(t=>t.x+','+t.y).join(';');
  if(!placementOverlayCache||placementOverlayCache.key!==key){const layer=document.createElement('canvas');layer.width=canvas.width;layer.height=canvas.height;const c=layer.getContext('2d');c.fillStyle='rgba(73,240,128,.42)';for(const p of placementTerrain()){if(occupied.every(t=>Math.hypot(t.x-p.x,t.y-p.y)>=36))c.fillRect(p.x-2,p.y-2,4,4);}placementOverlayCache={key,layer};}
  ctx.drawImage(placementOverlayCache.layer,0,0);
- ctx.save();ctx.fillStyle='rgba(15,25,17,.88)';ctx.fillRect(260,7,380,27);ctx.fillStyle='#baffcb';ctx.textAlign='center';ctx.font='14px sans-serif';ctx.fillText('Green ground = build here • nearby spots snap into place',450,26);ctx.restore();
+ ctx.save();ctx.fillStyle='rgba(15,25,17,.88)';ctx.fillRect(260,7,380,27);ctx.fillStyle='#baffcb';ctx.textAlign='center';ctx.font='14px sans-serif';ctx.fillText('Green ground = build here',450,26);ctx.restore();
 }
 
 canvas.addEventListener('pointerdown',function(e){
- let touch=canvasPoint(e),p=snapTowerPosition(dragPoint(e),null),existing=null,best=48;
+ let touch=canvasPoint(e),p=towerPlacementPoint(dragPoint(e),null),existing=null,best=48;
  towers.forEach(function(t){let d=Math.hypot(t.x-touch.x,t.y-touch.y);if(d<best){best=d;existing=t}});
  if(existing){
   towerDrag={tower:existing,oldX:existing.x,oldY:existing.y,x:existing.x,y:existing.y,valid:true,moved:false};
@@ -868,7 +863,7 @@ canvas.addEventListener('pointerdown',function(e){
  canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);e.preventDefault()
 });
 canvas.addEventListener('pointermove',function(e){
- if(!towerDrag)return;let p=snapTowerPosition(dragPoint(e),towerDrag.tower);towerDrag.x=p.x;towerDrag.y=p.y;
+ if(!towerDrag)return;let p=towerPlacementPoint(dragPoint(e),towerDrag.tower);towerDrag.x=p.x;towerDrag.y=p.y;
  if(towerDrag.tower){if(Math.hypot(p.x-towerDrag.oldX,p.y-towerDrag.oldY)>5)towerDrag.moved=true;towerDrag.tower.x=towerDrag.x;towerDrag.tower.y=towerDrag.y}
  towerDrag.valid=validTowerPosition(towerDrag.x,towerDrag.y,towerDrag.tower);e.preventDefault()
 });
