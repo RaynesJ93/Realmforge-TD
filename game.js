@@ -706,7 +706,7 @@ function showDungeonResults(type,elapsed){
 }
 function closeBossResults(){var m=document.querySelector('#bossResultsModal');if(m)m.classList.remove('show')}window.closeBossResults=closeBossResults;
 function startBossHunt(kind){if(!bossUnlocked(kind)){alert('Defeat this boss in the campaign first.');return}bossRunStart=snapshotBossRun();bossMode=kind;currentMap=kind==='warlord'?4:kind==='tyrant'?9:14;resetBattle(true);bossMode=kind;bossStart=performance.now();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelector('#battle').classList.add('active');renderUI()}window.startBossHunt=startBossHunt;
-function openMap(i){bossMode=null;if(i>=save.campaign.unlocked)return;if(maps[i].req&&combatLevel()<maps[i].req){alert(maps[i].name+' requires Combat Level '+maps[i].req+'.');return}currentMap=i;resetBattle();bossRunStart=snapshotBossRun();bossStart=performance.now();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));battle.classList.add('active');renderUI()}window.openMap=openMap;
+function openMap(i){bossMode=null;dungeonMode=false;dungeonType='greenvale';dungeonBossKilled=false;if(i>=save.campaign.unlocked)return;if(maps[i].req&&combatLevel()<maps[i].req){alert(maps[i].name+' requires Combat Level '+maps[i].req+'.');return}currentMap=i;resetBattle();bossRunStart=snapshotBossRun();bossStart=performance.now();document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));battle.classList.add('active');renderUI()}window.openMap=openMap;
 function renderSmithingTiers(){
  const root=document.getElementById('craftGrid');if(!root)return;
  const initialized=root.dataset.smithingGrouped==='true';
