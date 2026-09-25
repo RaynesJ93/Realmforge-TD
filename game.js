@@ -806,11 +806,10 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
  b.addEventListener('pointermove',function(e){
   if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
   const r=canvas.getBoundingClientRect();
-  let x=(e.clientX-r.left)*canvas.width/r.width;
-  let y=(e.clientY-r.top)*canvas.height/r.height-82*canvas.height/r.height;
-  towerDrag.x=Math.max(24,Math.min(canvas.width-24,x));
-  towerDrag.y=Math.max(24,Math.min(canvas.height-24,y));
-  towerDrag.valid=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom&&validTowerPosition(towerDrag.x,towerDrag.y,null);
+  const inside=e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;
+  const p=snapTowerPosition(dragPoint(e),null);
+  towerDrag.x=p.x;towerDrag.y=p.y;
+  towerDrag.valid=inside&&p.valid;
   e.preventDefault();
  });
  function finishButtonTowerDrag(e){
@@ -819,24 +818,45 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
   towerDrag=null;e.preventDefault();
  }
  b.addEventListener('pointerup',finishButtonTowerDrag);
- b.addEventListener('pointercancel',finishButtonTowerDrag);
+ b.addEventListener('pointercancel',function(e){if(towerDrag&&towerDrag.fromButton&&towerDrag.pointerId===e.pointerId){towerDrag=null;e.preventDefault();}});
 });const newGameEl=document.querySelector('#newGame');if(newGameEl)newGameEl.onclick=()=>{if(confirm('This permanently resets your Realmforge save. Continue?')&&confirm('Final warning: reset ALL progress?')){save=base();currentMap=0;persist();resetBattle()}};
 window.getCombatLevel=combatLevel;
 function resetBattle(keepBoss=false){blackfenPoison=0;mireQueenEnraged=false;towers=[];enemies=[];shots=[];wave=0;lives=20;battleCoins=maps[currentMap].start;waveRunning=false;spawnPending=0;mapFinished=false;bossKilled=false;if(!keepBoss)bossMode=null;hud()}function hud(){document.querySelector('#wave').textContent=wave;livesEl.textContent=lives;battleCoinsEl.textContent=battleCoins}const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
-function nearRoad(x,y){const path=battlePath();for(let i=1;i<path.length;i++){let [x1,y1]=path[i-1],[x2,y2]=path[i],dx=x2-x1,dy=y2-y1,t=Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/(dx*dx+dy*dy)));if(Math.hypot(x-(x1+t*dx),y-(y1+t*dy))<38)return true}return false}
+function nearRoad(x,y){const path=battlePath(),clearance=!dungeonMode&&currentMap>=5&&currentMap<15?30:38;for(let i=1;i<path.length;i++){let [x1,y1]=path[i-1],[x2,y2]=path[i],dx=x2-x1,dy=y2-y1,t=Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/(dx*dx+dy*dy)));if(Math.hypot(x-(x1+t*dx),y-(y1+t*dy))<clearance)return true}return false}
 let towerDrag=null;
 function canvasPoint(e){let r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height}}
-function dragPoint(e){let p=canvasPoint(e),r=canvas.getBoundingClientRect(),lift=58*canvas.height/r.height;return{x:p.x,y:Math.max(0,p.y-lift)}}
+function dragPoint(e){const p=canvasPoint(e),r=canvas.getBoundingClientRect();p.x=Math.max(24,Math.min(canvas.width-24,p.x));p.y=Math.max(24,Math.min(canvas.height-24,p.y));if(e.pointerType!=='mouse'){const lift=Math.min(58*canvas.height/r.height,canvas.height*.25),fraction=(p.y-24)/(canvas.height-48);p.y-=lift*Math.sin(Math.PI*fraction);}return p;}
 function validTowerPosition(x,y,ignore){
  if(x<24||x>canvas.width-24||y<24||y>canvas.height-24)return false;
  if(nearRoad(x,y))return false;
  if(window.RealmforgeMaps&&!window.RealmforgeMaps.canBuild(currentMap,dungeonMode,x,y))return false;
- if(towers.some(function(a){return a!==ignore&&Math.hypot(a.x-x,a.y-y)<45}))return false;
+ if(towers.some(function(a){return a!==ignore&&Math.hypot(a.x-x,a.y-y)<36}))return false;
  return true
 }
+
+const placementTerrainCache=new Map();let placementOverlayCache=null;
+function placementTerrain(){
+ const key=currentMap+'|'+dungeonMode+'|'+dungeonType;
+ if(!placementTerrainCache.has(key)){const points=[];for(let y=24;y<=canvas.height-24;y+=6)for(let x=24;x<=canvas.width-24;x+=6){if(!nearRoad(x,y)&&(!window.RealmforgeMaps||window.RealmforgeMaps.canBuild(currentMap,dungeonMode,x,y)))points.push({x,y});}placementTerrainCache.set(key,points);}
+ return placementTerrainCache.get(key);
+}
+function snapTowerPosition(p,ignore){
+ if(validTowerPosition(p.x,p.y,ignore))return {...p,valid:true};
+ let best=null,distance=48*48;
+ for(const q of placementTerrain()){const d=(q.x-p.x)**2+(q.y-p.y)**2;if(d<distance&&towers.every(t=>t===ignore||Math.hypot(t.x-q.x,t.y-q.y)>=36)){best=q;distance=d;}}
+ return best?{...best,valid:true}:{...p,valid:false};
+}
+function drawPlacementGuide(){
+ if(!selected&&!towerDrag)return;
+ const ignore=towerDrag&&towerDrag.tower,occupied=towers.filter(t=>t!==ignore),key=currentMap+'|'+dungeonMode+'|'+dungeonType+'|'+occupied.map(t=>t.x+','+t.y).join(';');
+ if(!placementOverlayCache||placementOverlayCache.key!==key){const layer=document.createElement('canvas');layer.width=canvas.width;layer.height=canvas.height;const c=layer.getContext('2d');c.fillStyle='rgba(73,240,128,.42)';for(const p of placementTerrain()){if(occupied.every(t=>Math.hypot(t.x-p.x,t.y-p.y)>=36))c.fillRect(p.x-2,p.y-2,4,4);}placementOverlayCache={key,layer};}
+ ctx.drawImage(placementOverlayCache.layer,0,0);
+ ctx.save();ctx.fillStyle='rgba(15,25,17,.88)';ctx.fillRect(260,7,380,27);ctx.fillStyle='#baffcb';ctx.textAlign='center';ctx.font='14px sans-serif';ctx.fillText('Green ground = build here • nearby spots snap into place',450,26);ctx.restore();
+}
+
 canvas.addEventListener('pointerdown',function(e){
- let touch=canvasPoint(e),p=dragPoint(e),existing=null,best=48;
+ let touch=canvasPoint(e),p=snapTowerPosition(dragPoint(e),null),existing=null,best=48;
  towers.forEach(function(t){let d=Math.hypot(t.x-touch.x,t.y-touch.y);if(d<best){best=d;existing=t}});
  if(existing){
   towerDrag={tower:existing,oldX:existing.x,oldY:existing.y,x:existing.x,y:existing.y,valid:true,moved:false};
@@ -848,7 +868,7 @@ canvas.addEventListener('pointerdown',function(e){
  canvas.setPointerCapture&&canvas.setPointerCapture(e.pointerId);e.preventDefault()
 });
 canvas.addEventListener('pointermove',function(e){
- if(!towerDrag)return;let p=canvasPoint(e);towerDrag.x=p.x;towerDrag.y=Math.max(42,p.y-58);
+ if(!towerDrag)return;let p=snapTowerPosition(dragPoint(e),towerDrag.tower);towerDrag.x=p.x;towerDrag.y=p.y;
  if(towerDrag.tower){if(Math.hypot(p.x-towerDrag.oldX,p.y-towerDrag.oldY)>5)towerDrag.moved=true;towerDrag.tower.x=towerDrag.x;towerDrag.tower.y=towerDrag.y}
  towerDrag.valid=validTowerPosition(towerDrag.x,towerDrag.y,towerDrag.tower);e.preventDefault()
 });
@@ -864,7 +884,7 @@ function finishTowerDrag(e){
  towerDrag=null;e&&e.preventDefault()
 }
 canvas.addEventListener('pointerup',finishTowerDrag);
-canvas.addEventListener('pointercancel',finishTowerDrag);
+canvas.addEventListener('pointercancel',function(e){if(towerDrag)towerDrag.valid=false;const old=towerDrag;if(old&&!old.tower){towerDrag=null;return;}finishTowerDrag(e);});
 canvas.addEventListener('touchstart',function(e){if(e.cancelable)e.preventDefault()},{passive:false});
 canvas.addEventListener('touchmove',function(e){if(e.cancelable)e.preventDefault()},{passive:false});
 canvas.addEventListener('touchend',function(e){if(e.cancelable)e.preventDefault()},{passive:false});
@@ -984,7 +1004,7 @@ function drawTowerCharacter(t) {
   ctx.fillStyle = 'white'; ctx.font = '12px sans-serif'; ctx.textAlign = 'center';
   ctx.fillText(t.type[0].toUpperCase(), t.x, t.y + 4);
 }
-function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);if(towerDrag){ctx.save();ctx.beginPath();ctx.arc(towerDrag.x,towerDrag.y,48,0,Math.PI*2);ctx.fillStyle=towerDrag.valid?'rgba(58,190,82,.18)':'rgba(220,54,54,.20)';ctx.fill();ctx.strokeStyle=towerDrag.valid?'#45e36a':'#ff4747';ctx.lineWidth=7;ctx.stroke();if(!towerDrag.tower){ctx.globalAlpha=.72;drawTowerCharacter({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0})}ctx.restore()}enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
+function draw(){let m=currentMap;const path=battlePath();ctx.clearRect(0,0,900,520);if(!(window.RealmforgeMaps&&window.RealmforgeMaps.draw(ctx,m,dungeonMode))){ctx.fillStyle=m>=10?'#b7d7df':m>=5?'#5a392f':m===3?'#596451':m===4?'#59633d':'#6f8757';ctx.fillRect(0,0,900,520);ctx.strokeStyle=m>=10?'#dceff2':m>=5?'#8a4c34':m===3?'#625e54':m===4?'#735b42':'#8d7555';ctx.lineWidth=55;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();path.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.fillStyle=m===3?'#343a35':'#3c4b31';for(let i=0;i<18;i++)ctx.fillRect((i*137)%880,(i*83)%500,8,8);}drawPlacementGuide();towers.slice().sort((a,b)=>a.y-b.y).forEach(drawTowerCharacter);if(towerDrag){ctx.save();ctx.beginPath();ctx.arc(towerDrag.x,towerDrag.y,48,0,Math.PI*2);ctx.fillStyle=towerDrag.valid?'rgba(58,190,82,.18)':'rgba(220,54,54,.20)';ctx.fill();ctx.strokeStyle=towerDrag.valid?'#45e36a':'#ff4747';ctx.lineWidth=7;ctx.stroke();if(!towerDrag.tower){ctx.globalAlpha=.72;drawTowerCharacter({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0})}ctx.restore()}enemies.slice().sort((a,b)=>a.y-b.y).forEach(e=>{
  const d=enemyDB[e.kind];
  if(['venomfang','mirewitch','mirequeen'].includes(e.kind)){ctx.save();ctx.globalAlpha=e.kind==='mirequeen'?.28:.16;ctx.fillStyle='#79b94a';ctx.beginPath();ctx.arc(e.x,e.y,e.kind==='mirequeen'?32:22,0,Math.PI*2);ctx.fill();ctx.restore()}
  const visualHeight=window.GreenvaleEnemies?window.GreenvaleEnemies.draw(e,ctx):0;
@@ -1017,4 +1037,5 @@ window.RealmforgeSession={
 };
 
 window.addEventListener('load',initCloudSave);
+
 

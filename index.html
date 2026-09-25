@@ -26,7 +26,7 @@
    window.__realmforgeSaveDiagnostic={primary:p,backup:bk};
  }catch(e){show('Save read error: '+e.message)}
 })();
-</script><script src="gear-art.js?v=241-menu-art"></script><script src="greenvale-enemies.js?v=237"></script><script src="greenvale-maps.js?v=243-build-space"></script><script src="game.js?v=242-smithing"></script><script>
+</script><script src="gear-art.js?v=241-menu-art"></script><script src="greenvale-enemies.js?v=237"></script><script src="greenvale-maps.js?v=244-placement"></script><script src="game.js?v=244-placement"></script><script>
 function forceRecoverNormalSave(){
  try{
   var p=JSON.parse(localStorage.getItem('realmforge_v01')||'null');
@@ -155,6 +155,7 @@ function handleRealmforgeImport(event){
  reader.readAsText(file);
 }
 </script><div id="chestResultsModal" class="chestResultsModal" aria-hidden="true"><div class="chestResultsCard"><button class="chestResultsX" onclick="closeChestResults()">×</button><div class="chestBrand">REALMFORGE TD</div><div class="chestOpened">CHEST OPENED</div><h2 id="chestResultTitle">REALM CHEST</h2><p id="chestResultCost"></p><div class="chestRewardHeading">REWARDS</div><div id="chestResultRewards"></div><div class="chestPityNote">Legendary pity progresses from eligible Heroic and Mythic chests.</div><button class="chestContinue" onclick="closeChestResults()">CLAIM REWARDS</button></div></div><div id="bossResultsModal" class="bossResultsModal" aria-hidden="true"><div class="bossResultsCard"><button class="bossResultsX" onclick="closeBossResults()">×</button><div class="bossVictory">BOSS DEFEATED!</div><h2 id="bossResultName">Boss</h2><p id="bossResultFlavor"></p><div class="bossResultColumns"><section><h3>REWARDS</h3><div id="bossResultRewards"></div></section><section><h3>XP EARNED</h3><div id="bossResultXp"></div></section></div><div class="bossResultStats"><div><small>CLEAR TIME</small><b id="bossResultTime">--</b></div><div><small>WAVES COMPLETED</small><b id="bossResultWaves">--</b></div></div><button class="bossContinue" onclick="closeBossResults()">CONTINUE</button></div></div><script src="realm-theme.js?v=237"></script><script src="title-screen.js?v=237"></script></body></html>
+
 
 
 
