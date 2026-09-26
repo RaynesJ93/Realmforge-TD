@@ -838,7 +838,7 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
  });
  function finishButtonTowerDrag(e){
   if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
-  if(towerDrag.valid){let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0});hud()}}
+  if(towerDrag.valid){let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;const summonKind=towerDrag.type==='summoner'?selectedSummon:null,summonCost=summonKind?(summonDB[summonKind]?.cost||0):0;if(battleCoins>=t.cost+summonCost){battleCoins-=summonCost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0,summonKind:summonKind});hud()}}}
   towerDrag=null;e.preventDefault();
  }
  b.addEventListener('pointerup',finishButtonTowerDrag);
@@ -849,7 +849,7 @@ function resetBattle(keepBoss=false){blackfenPoison=0;pendingPoison=[];mireQueen
 function updateSummonerBattleStats(){
  const box=document.querySelector('#summonerBattleStats');if(!box)return;const count=towers.filter(t=>t.type==='summoner').length;
  if(!count){box.style.display='none';box.innerHTML='';return}
- const st=spiritWolfStats();box.style.display='block';box.innerHTML='<b>Spirit Wolf • Level '+st.level+'</b><br><small>Summoners: '+count+' • Damage: '+st.damage.toFixed(1)+' • Attack: '+(st.rate/1000).toFixed(2)+'s • Territory: '+st.leash+' • Movement: '+st.speed+'</small>'
+ const st=summonStats(selectedSummon);box.style.display='block';box.innerHTML='<b>'+st.name+' • Summoning '+st.level+'</b><br><small>Summoners: '+count+' • Damage: '+st.damage.toFixed(1)+' • Attack: '+(st.rate/1000).toFixed(2)+'s • Territory: '+st.leash+' • Movement: '+st.speed+'</small>'
 }const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
 function nearestPathPoint(x,y){
@@ -872,35 +872,58 @@ function pointAtPathProgress(progress){
  for(const s of m.segments){if(q<=s.start+s.len){const a=m.path[s.i-1],b=m.path[s.i],t=s.len?(q-s.start)/s.len:0;return{x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t}}}
  const e=m.path[m.path.length-1];return{x:e[0],y:e[1]}
 }
-function ensureSpiritWolf(t){
- if(t.type!=='summoner')return null;
- const p=nearestPathPoint(t.x,t.y),homeProgress=nearestPathProgress(t.x,t.y);
- if(!t.summon)t.summon={kind:'spiritwolf',x:p.x,y:p.y,homeX:p.x,homeY:p.y,homeProgress:homeProgress,last:0,attackUntil:0,targetX:p.x,targetY:p.y,state:'patrol',patrolPhase:Math.random()*Math.PI*2,facing:1};
- t.summon.homeX=p.x;t.summon.homeY=p.y;t.summon.homeProgress=homeProgress;return t.summon
+const summonDB={
+ spiritwolf:{name:'Spirit Wolf',level:1,cost:0,damage:9,rate:760,leash:230,speed:155,style:'melee'},
+ stonegolem:{name:'Stone Golem',level:15,cost:25,damage:22,rate:1350,leash:205,speed:82,style:'melee'},
+ spirithawk:{name:'Spirit Hawk',level:30,cost:45,damage:15,rate:520,leash:275,speed:190,style:'ranged'},
+ frostbear:{name:'Frost Bear',level:45,cost:70,damage:30,rate:1100,leash:225,speed:120,style:'slow'},
+ emberdrake:{name:'Ember Drake',level:60,cost:100,damage:27,rate:900,leash:300,speed:150,style:'splash'},
+ voidwraith:{name:'Void Wraith',level:75,cost:140,damage:38,rate:850,leash:310,speed:175,style:'magic'},
+ behemoth:{name:'Ancient Behemoth',level:90,cost:200,damage:62,rate:1250,leash:250,speed:100,style:'melee'}
+};
+let selectedSummon='spiritwolf';
+function summonStats(kind){
+ const d=summonDB[kind]||summonDB.spiritwolf,level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;
+ const dmgBonus=bonus('summoner','damage'),rangeBonus=bonus('summoner','range'),speedBonus=Math.max(0,Math.min(.45,bonus('summoner','speed')));
+ return{kind:kind,name:d.name,level:level,unlock:d.level,cost:d.cost,style:d.style,damage:(d.damage+dmgBonus)*(1+(level-1)*.035),rate:d.rate*(1-speedBonus),leash:d.leash+rangeBonus,speed:d.speed}
 }
-function spiritWolfStats(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;return{level:level,range:105,leash:230,rate:760,damage:9*(1+(level-1)*.035),speed:155}}
+function chooseSummon(kind){
+ const d=summonDB[kind],level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;if(!d||level<d.level)return;
+ selectedSummon=kind;document.querySelectorAll('[data-summon]').forEach(b=>b.classList.toggle('selected',b.dataset.summon===kind));updateSummonerBattleStats()
+}
+window.chooseSummon=chooseSummon;
+function ensureSpiritWolf(t){
+ if(t.type!=='summoner')return null;const kind=t.summonKind||selectedSummon,d=summonDB[kind]||summonDB.spiritwolf,p=nearestPathPoint(t.x,t.y),homeProgress=nearestPathProgress(t.x,t.y);
+ if(!t.summon)t.summon={kind:kind,x:p.x,y:p.y,homeX:p.x,homeY:p.y,homeProgress:homeProgress,last:0,attackUntil:0,targetX:p.x,targetY:p.y,state:'patrol',patrolPhase:Math.random()*Math.PI*2,facing:1};
+ t.summon.kind=kind;t.summon.homeX=p.x;t.summon.homeY=p.y;t.summon.homeProgress=homeProgress;return t.summon
+}
+function spiritWolfStats(){return summonStats(selectedSummon)}
 function moveWolf(w,x,y,step){const dx=x-w.x,dy=y-w.y,d=Math.hypot(dx,dy);if(d<1)return;w.facing=dx<0?-1:1;const n=Math.min(step,d);w.x+=dx/d*n;w.y+=dy/d*n}
 function updateSpiritWolf(t,now,dt){
- const w=ensureSpiritWolf(t);if(!w)return;const st=spiritWolfStats(),anchor={x:w.homeX,y:w.homeY};
+ const w=ensureSpiritWolf(t);if(!w)return;const st=summonStats(w.kind),anchor={x:w.homeX,y:w.homeY};
  let target=enemies.filter(e=>!e.dead&&Math.hypot(e.x-anchor.x,e.y-anchor.y)<=st.leash).sort((a,b)=>Math.hypot(a.x-w.x,a.y-w.y)-Math.hypot(b.x-w.x,b.y-w.y))[0];
  if(target){
-  w.state='chase';w.targetX=target.x;w.targetY=target.y;const d=Math.hypot(target.x-w.x,target.y-w.y);
-  if(d>24)moveWolf(w,target.x,target.y,st.speed*dt);
-  else if(now-w.last>=st.rate){w.last=now;w.attackUntil=now+190;w.state='attack';target.hp-=st.damage;addXP('Summoning',2);addXP('Hitpoints',1);if(target.hp<=0&&!target.dead)killEnemyFromTower(target)}
- }else{
-  w.state='patrol';w.patrolPhase+=dt*1.15;const roadTarget=pointAtPathProgress(w.homeProgress+Math.sin(w.patrolPhase)*95);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.85*dt)
- }
+  w.state='chase';w.targetX=target.x;w.targetY=target.y;const ranged=st.style==='ranged'||st.style==='splash'||st.style==='magic',attackDistance=ranged?Math.min(125,st.leash*.55):28,d=Math.hypot(target.x-w.x,target.y-w.y);
+  if(d>attackDistance)moveWolf(w,target.x,target.y,st.speed*dt);
+  else if(now-w.last>=st.rate){
+   w.last=now;w.attackUntil=now+210;w.state='attack';let damage=st.damage;
+   if(st.style==='magic')damage*=1.08;target.hp-=damage;
+   if(st.style==='splash')enemies.forEach(e=>{if(e!==target&&!e.dead&&Math.hypot(e.x-target.x,e.y-target.y)<55)e.hp-=damage*.35});
+   if(st.style==='slow')target.summonSlowUntil=now+1200;
+   addXP('Summoning',2+Math.floor(st.unlock/20));addXP('Hitpoints',1);
+   if(target.hp<=0&&!target.dead)killEnemyFromTower(target)
+  }
+ }else{w.state='patrol';w.patrolPhase+=dt*1.15;const roadTarget=pointAtPathProgress(w.homeProgress+Math.sin(w.patrolPhase)*95);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.85*dt)}
 }
 function drawSpiritWolf(w){
- ctx.save();const attacking=w.attackUntil>(performance.now()*battleSpeed),lunge=attacking?5:0;ctx.translate(w.x+(w.facing||1)*lunge,w.y);ctx.scale(w.facing||1,1);ctx.globalAlpha=.92;
- ctx.shadowColor='#8ff1d2';ctx.shadowBlur=12;ctx.fillStyle='#9fead6';
- ctx.beginPath();ctx.ellipse(0,1,15,9,0,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.arc(12,-6,7,0,Math.PI*2);ctx.fill();
- ctx.beginPath();ctx.moveTo(8,-12);ctx.lineTo(10,-20);ctx.lineTo(14,-12);ctx.fill();ctx.beginPath();ctx.moveTo(14,-12);ctx.lineTo(19,-19);ctx.lineTo(19,-9);ctx.fill();
- ctx.strokeStyle='#9fead6';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-13,0);ctx.quadraticCurveTo(-23,-8,-20,-16);ctx.stroke();
- ctx.fillStyle='#183a34';ctx.beginPath();ctx.arc(14,-7,1.5,0,Math.PI*2);ctx.fill();
- if(attacking){ctx.strokeStyle='#d8fff4';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(17,-3);ctx.lineTo(25,-1);ctx.stroke()}
- ctx.shadowBlur=0;ctx.fillStyle='#d8fff4';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('SPIRIT WOLF',0,24);ctx.restore()
+ const st=summonStats(w.kind),attacking=w.attackUntil>(performance.now()*battleSpeed),lunge=attacking&&st.style==='melee'?6:0;
+ const palette={spiritwolf:'#9fead6',stonegolem:'#a69b83',spirithawk:'#d8f3ff',frostbear:'#c8efff',emberdrake:'#ffad65',voidwraith:'#c99cff',behemoth:'#e5c07b'},col=palette[w.kind]||'#9fead6';
+ ctx.save();ctx.translate(w.x+(w.facing||1)*lunge,w.y);ctx.scale(w.facing||1,1);ctx.globalAlpha=.94;ctx.shadowColor=col;ctx.shadowBlur=12;ctx.fillStyle=col;
+ const big=w.kind==='behemoth'?1.45:w.kind==='stonegolem'||w.kind==='frostbear'?1.25:w.kind==='spirithawk'?.8:1;ctx.scale(big,big);
+ if(w.kind==='spirithawk'){ctx.beginPath();ctx.moveTo(-17,0);ctx.lineTo(0,-10);ctx.lineTo(17,0);ctx.lineTo(0,6);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(9,-3,5,0,Math.PI*2);ctx.fill()}
+ else{ctx.beginPath();ctx.ellipse(0,1,15,9,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(12,-6,7,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(8,-12);ctx.lineTo(10,-20);ctx.lineTo(14,-12);ctx.fill();ctx.beginPath();ctx.moveTo(14,-12);ctx.lineTo(19,-19);ctx.lineTo(19,-9);ctx.fill()}
+ if(attacking&&(st.style==='ranged'||st.style==='splash'||st.style==='magic')){ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(18,-4);ctx.lineTo(42,-4);ctx.stroke()}
+ ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.fillText(st.name.toUpperCase(),0,25);ctx.restore()
 }
 function nearRoad(x,y){const path=battlePath(),clearance=!dungeonMode&&currentMap>=5&&currentMap<15?30:38;for(let i=1;i<path.length;i++){let [x1,y1]=path[i-1],[x2,y2]=path[i],dx=x2-x1,dy=y2-y1,t=Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/(dx*dx+dy*dy)));if(Math.hypot(x-(x1+t*dx),y-(y1+t*dy))<clearance)return true}return false}
 let towerDrag=null;
