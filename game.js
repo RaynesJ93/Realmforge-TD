@@ -845,7 +845,12 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
  b.addEventListener('pointercancel',function(e){if(towerDrag&&towerDrag.fromButton&&towerDrag.pointerId===e.pointerId){towerDrag=null;e.preventDefault();}});
 });const newGameEl=document.querySelector('#newGame');if(newGameEl)newGameEl.onclick=()=>{if(confirm('This permanently resets your Realmforge save. Continue?')&&confirm('Final warning: reset ALL progress?')){save=base();currentMap=0;persist();resetBattle()}};
 window.getCombatLevel=combatLevel;
-function resetBattle(keepBoss=false){blackfenPoison=0;pendingPoison=[];mireQueenEnraged=false;towers=[];enemies=[];shots=[];wave=0;lives=20;battleCoins=maps[currentMap].start;waveRunning=false;spawnPending=0;mapFinished=false;bossKilled=false;if(!keepBoss)bossMode=null;hud()}function hud(){document.querySelector('#wave').textContent=wave;livesEl.textContent=lives;battleCoinsEl.textContent=battleCoins}const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
+function resetBattle(keepBoss=false){blackfenPoison=0;pendingPoison=[];mireQueenEnraged=false;towers=[];enemies=[];shots=[];wave=0;lives=20;battleCoins=maps[currentMap].start;waveRunning=false;spawnPending=0;mapFinished=false;bossKilled=false;if(!keepBoss)bossMode=null;hud()}function hud(){document.querySelector('#wave').textContent=wave;livesEl.textContent=lives;battleCoinsEl.textContent=battleCoins;updateSummonerBattleStats()}
+function updateSummonerBattleStats(){
+ const box=document.querySelector('#summonerBattleStats');if(!box)return;const count=towers.filter(t=>t.type==='summoner').length;
+ if(!count){box.style.display='none';box.innerHTML='';return}
+ const st=spiritWolfStats();box.style.display='block';box.innerHTML='<b>Spirit Wolf • Level '+st.level+'</b><br><small>Summoners: '+count+' • Damage: '+st.damage.toFixed(1)+' • Attack: '+(st.rate/1000).toFixed(2)+'s • Territory: '+st.leash+' • Movement: '+st.speed+'</small>'
+}const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
 function nearestPathPoint(x,y){
  const p=battlePath();let best={x:p[0][0],y:p[0][1],d:Infinity};
