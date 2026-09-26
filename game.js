@@ -857,11 +857,26 @@ function nearestPathPoint(x,y){
  for(let i=1;i<p.length;i++){let x1=p[i-1][0],y1=p[i-1][1],x2=p[i][0],y2=p[i][1],dx=x2-x1,dy=y2-y1,len=dx*dx+dy*dy,t=len?Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/len)):0,px=x1+t*dx,py=y1+t*dy,d=Math.hypot(x-px,y-py);if(d<best.d)best={x:px,y:py,d:d}}
  return best
 }
+function pathMetrics(){
+ const p=battlePath(),segments=[];let total=0;
+ for(let i=1;i<p.length;i++){const dx=p[i][0]-p[i-1][0],dy=p[i][1]-p[i-1][1],len=Math.hypot(dx,dy);segments.push({i:i,start:total,len:len});total+=len}
+ return{path:p,segments:segments,total:total}
+}
+function nearestPathProgress(x,y){
+ const m=pathMetrics();let best={progress:0,d:Infinity};
+ for(const s of m.segments){const a=m.path[s.i-1],b=m.path[s.i],dx=b[0]-a[0],dy=b[1]-a[1],den=dx*dx+dy*dy,t=den?Math.max(0,Math.min(1,((x-a[0])*dx+(y-a[1])*dy)/den)):0,px=a[0]+t*dx,py=a[1]+t*dy,d=Math.hypot(x-px,y-py);if(d<best.d)best={progress:s.start+s.len*t,d:d}}
+ return best.progress
+}
+function pointAtPathProgress(progress){
+ const m=pathMetrics(),q=Math.max(0,Math.min(m.total,progress));
+ for(const s of m.segments){if(q<=s.start+s.len){const a=m.path[s.i-1],b=m.path[s.i],t=s.len?(q-s.start)/s.len:0;return{x:a[0]+(b[0]-a[0])*t,y:a[1]+(b[1]-a[1])*t}}}
+ const e=m.path[m.path.length-1];return{x:e[0],y:e[1]}
+}
 function ensureSpiritWolf(t){
  if(t.type!=='summoner')return null;
- const p=nearestPathPoint(t.x,t.y);
- if(!t.summon)t.summon={kind:'spiritwolf',x:p.x,y:p.y,homeX:p.x,homeY:p.y,last:0,attackUntil:0,targetX:p.x,targetY:p.y,state:'patrol',patrolPhase:Math.random()*Math.PI*2,facing:1};
- t.summon.homeX=p.x;t.summon.homeY=p.y;return t.summon
+ const p=nearestPathPoint(t.x,t.y),homeProgress=nearestPathProgress(t.x,t.y);
+ if(!t.summon)t.summon={kind:'spiritwolf',x:p.x,y:p.y,homeX:p.x,homeY:p.y,homeProgress:homeProgress,last:0,attackUntil:0,targetX:p.x,targetY:p.y,state:'patrol',patrolPhase:Math.random()*Math.PI*2,facing:1};
+ t.summon.homeX=p.x;t.summon.homeY=p.y;t.summon.homeProgress=homeProgress;return t.summon
 }
 function spiritWolfStats(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;return{level:level,range:105,leash:230,rate:760,damage:9*(1+(level-1)*.035),speed:155}}
 function moveWolf(w,x,y,step){const dx=x-w.x,dy=y-w.y,d=Math.hypot(dx,dy);if(d<1)return;w.facing=dx<0?-1:1;const n=Math.min(step,d);w.x+=dx/d*n;w.y+=dy/d*n}
@@ -873,7 +888,7 @@ function updateSpiritWolf(t,now,dt){
   if(d>24)moveWolf(w,target.x,target.y,st.speed*dt);
   else if(now-w.last>=st.rate){w.last=now;w.attackUntil=now+190;w.state='attack';target.hp-=st.damage;addXP('Summoning',2);addXP('Hitpoints',1);if(target.hp<=0&&!target.dead)killEnemyFromTower(target)}
  }else{
-  w.state='patrol';w.patrolPhase+=dt*.9;const roadTarget=nearestPathPoint(anchor.x+Math.cos(w.patrolPhase)*75,anchor.y+Math.sin(w.patrolPhase)*75);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.7*dt)
+  w.state='patrol';w.patrolPhase+=dt*1.15;const roadTarget=pointAtPathProgress(w.homeProgress+Math.sin(w.patrolPhase)*95);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.85*dt)
  }
 }
 function drawSpiritWolf(w){
