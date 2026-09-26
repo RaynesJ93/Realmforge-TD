@@ -849,7 +849,7 @@ function resetBattle(keepBoss=false){blackfenPoison=0;pendingPoison=[];mireQueen
 function updateSummonerBattleStats(){
  refreshSummonPicker();const box=document.querySelector('#summonerBattleStats');if(!box)return;const count=towers.filter(t=>t.type==='summoner').length;
  if(!count){box.style.display='none';box.innerHTML='';return}
- const st=summonStats(selectedSummon);box.style.display='block';box.innerHTML='<b>'+st.name+' • Summoning '+st.level+'</b><br><small>Summoners: '+count+' • Damage: '+st.damage.toFixed(1)+' • Attack: '+(st.rate/1000).toFixed(2)+'s • Territory: '+st.leash+' • Movement: '+st.speed+'</small>'
+ const st=summonStats(selectedSummon);box.style.display='block';box.innerHTML='<b>'+count+' Summoner'+(count===1?'':'s')+'</b> • '+st.name+' • DMG '+st.damage.toFixed(1)+' • '+(st.rate/1000).toFixed(2)+'s • Range '+st.leash
 }const livesEl=document.querySelector('#lives'),battleCoinsEl=document.querySelector('#battleCoins');
 function battlePath(){return window.RealmforgeMaps?window.RealmforgeMaps.pathFor(currentMap,dungeonMode,path):path}
 function nearestPathPoint(x,y){
@@ -888,10 +888,10 @@ function summonStats(kind){
  return{kind:kind,name:d.name,level:level,unlock:d.level,cost:d.cost,style:d.style,damage:(d.damage+dmgBonus)*(1+(level-1)*.035),rate:d.rate*(1-speedBonus),leash:d.leash+rangeBonus,speed:d.speed}
 }
 function chooseSummon(kind){
- const d=summonDB[kind],level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;if(!d)return;if(level<d.level){alert(d.name+' requires Summoning level '+d.level+'.');return}
- selectedSummon=kind;document.querySelectorAll('[data-summon]').forEach(b=>b.classList.toggle('selected',b.dataset.summon===kind));updateSummonerBattleStats()
+ const d=summonDB[kind],level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;if(!d)return;if(level<d.level){alert(d.name+' requires Summoning level '+d.level+'.');const s=document.querySelector('#summonSelect');if(s)s.value=selectedSummon;return}
+ selectedSummon=kind;const s=document.querySelector('#summonSelect');if(s)s.value=kind;updateSummonerBattleStats()
 }
-function refreshSummonPicker(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;document.querySelectorAll('[data-summon]').forEach(b=>{const d=summonDB[b.dataset.summon];if(!d)return;b.disabled=level<d.level;b.title=level<d.level?'Requires Summoning '+d.level:'';b.classList.toggle('selected',b.dataset.summon===selectedSummon)})}
+function refreshSummonPicker(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1,s=document.querySelector('#summonSelect');if(s){Array.from(s.options).forEach(o=>{const d=summonDB[o.value];o.disabled=!!d&&level<d.level});s.value=selectedSummon}const hint=document.querySelector('#summonCostHint'),d=summonDB[selectedSummon]||summonDB.spiritwolf;if(hint)hint.textContent='Total: '+(types.summoner.cost+d.cost)}
 window.chooseSummon=chooseSummon;
 function ensureSpiritWolf(t){
  if(t.type!=='summoner')return null;const kind=t.summonKind||selectedSummon,d=summonDB[kind]||summonDB.spiritwolf,p=nearestPathPoint(t.x,t.y),homeProgress=nearestPathProgress(t.x,t.y);
