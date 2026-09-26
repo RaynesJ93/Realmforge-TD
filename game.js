@@ -935,15 +935,28 @@ function updateSpiritWolf(t,now,dt){
   }
  }else{w.state='patrol';w.patrolPhase+=dt*1.15;const roadTarget=pointAtPathProgress(w.homeProgress+Math.sin(w.patrolPhase)*95);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.85*dt)}
 }
+// V261: approved summon artwork, loaded once and shared by all summoners.
+const summonSprites = {};
+for (const kind of Object.keys(summonDB)) {
+ const image = new Image();
+ image.src = 'assets/summon-' + kind + '-v261.webp';
+ summonSprites[kind] = image;
+}
 function drawSpiritWolf(w){
  const st=summonStats(w.kind),attacking=w.attackUntil>(performance.now()*battleSpeed),lunge=attacking&&st.style==='melee'?6:0;
  const palette={spiritwolf:'#9fead6',stonegolem:'#a69b83',spirithawk:'#d8f3ff',frostbear:'#c8efff',emberdrake:'#ffad65',voidwraith:'#c99cff',behemoth:'#e5c07b'},col=palette[w.kind]||'#9fead6';
  ctx.save();ctx.translate(w.x+(w.facing||1)*lunge,w.y);ctx.scale(w.facing||1,1);ctx.globalAlpha=.94;ctx.shadowColor=col;ctx.shadowBlur=12;ctx.fillStyle=col;
  const big=w.kind==='behemoth'?1.45:w.kind==='stonegolem'||w.kind==='frostbear'?1.25:w.kind==='spirithawk'?.8:1;ctx.scale(big,big);
- if(w.kind==='spirithawk'){ctx.beginPath();ctx.moveTo(-17,0);ctx.lineTo(0,-10);ctx.lineTo(17,0);ctx.lineTo(0,6);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(9,-3,5,0,Math.PI*2);ctx.fill()}
+ const image=summonSprites[w.kind];
+ if(image&&image.complete&&image.naturalWidth){
+  const width=60,height=width*image.naturalHeight/image.naturalWidth;
+  ctx.globalAlpha=1;ctx.shadowBlur=3;
+  ctx.drawImage(image,-width/2,10-height,width,height);
+ }
+ else if(w.kind==='spirithawk'){ctx.beginPath();ctx.moveTo(-17,0);ctx.lineTo(0,-10);ctx.lineTo(17,0);ctx.lineTo(0,6);ctx.closePath();ctx.fill();ctx.beginPath();ctx.arc(9,-3,5,0,Math.PI*2);ctx.fill()}
  else{ctx.beginPath();ctx.ellipse(0,1,15,9,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(12,-6,7,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(8,-12);ctx.lineTo(10,-20);ctx.lineTo(14,-12);ctx.fill();ctx.beginPath();ctx.moveTo(14,-12);ctx.lineTo(19,-19);ctx.lineTo(19,-9);ctx.fill()}
  if(attacking&&(st.style==='ranged'||st.style==='splash'||st.style==='magic')){ctx.strokeStyle=col;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(18,-4);ctx.lineTo(42,-4);ctx.stroke()}
- ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.fillText(st.name.toUpperCase(),0,25);ctx.restore()
+ ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='9px sans-serif';ctx.textAlign='center';ctx.scale(w.facing||1,1);ctx.fillText(st.name.toUpperCase(),0,25);ctx.restore()
 }
 function nearRoad(x,y){const path=battlePath(),clearance=!dungeonMode&&currentMap>=5&&currentMap<15?30:38;for(let i=1;i<path.length;i++){let [x1,y1]=path[i-1],[x2,y2]=path[i],dx=x2-x1,dy=y2-y1,t=Math.max(0,Math.min(1,((x-x1)*dx+(y-y1)*dy)/(dx*dx+dy*dy)));if(Math.hypot(x-(x1+t*dx),y-(y1+t*dy))<clearance)return true}return false}
 let towerDrag=null;
