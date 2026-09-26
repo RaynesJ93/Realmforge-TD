@@ -863,7 +863,7 @@ function ensureSpiritWolf(t){
  if(!t.summon)t.summon={kind:'spiritwolf',x:p.x,y:p.y,homeX:p.x,homeY:p.y,last:0,attackUntil:0,targetX:p.x,targetY:p.y,state:'patrol',patrolPhase:Math.random()*Math.PI*2,facing:1};
  t.summon.homeX=p.x;t.summon.homeY=p.y;return t.summon
 }
-function spiritWolfStats(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;return{level:level,range:105,leash:145,rate:760,damage:9*(1+(level-1)*.035),speed:92}}
+function spiritWolfStats(){const level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;return{level:level,range:105,leash:230,rate:760,damage:9*(1+(level-1)*.035),speed:155}}
 function moveWolf(w,x,y,step){const dx=x-w.x,dy=y-w.y,d=Math.hypot(dx,dy);if(d<1)return;w.facing=dx<0?-1:1;const n=Math.min(step,d);w.x+=dx/d*n;w.y+=dy/d*n}
 function updateSpiritWolf(t,now,dt){
  const w=ensureSpiritWolf(t);if(!w)return;const st=spiritWolfStats(),anchor={x:w.homeX,y:w.homeY};
@@ -873,7 +873,7 @@ function updateSpiritWolf(t,now,dt){
   if(d>24)moveWolf(w,target.x,target.y,st.speed*dt);
   else if(now-w.last>=st.rate){w.last=now;w.attackUntil=now+190;w.state='attack';target.hp-=st.damage;addXP('Summoning',2);addXP('Hitpoints',1);if(target.hp<=0&&!target.dead)killEnemyFromTower(target)}
  }else{
-  w.state='patrol';w.patrolPhase+=dt*1.25;const px=anchor.x+Math.cos(w.patrolPhase)*22,py=anchor.y+Math.sin(w.patrolPhase)*10;moveWolf(w,px,py,st.speed*.55*dt)
+  w.state='patrol';w.patrolPhase+=dt*.9;const roadTarget=nearestPathPoint(anchor.x+Math.cos(w.patrolPhase)*75,anchor.y+Math.sin(w.patrolPhase)*75);moveWolf(w,roadTarget.x,roadTarget.y,st.speed*.7*dt)
  }
 }
 function drawSpiritWolf(w){
