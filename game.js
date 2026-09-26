@@ -838,7 +838,7 @@ const hunterTaskBtn=document.querySelector('#newHunterTask');if(hunterTaskBtn)hu
  });
  function finishButtonTowerDrag(e){
   if(!towerDrag||!towerDrag.fromButton||towerDrag.pointerId!==e.pointerId)return;
-  if(towerDrag.valid){let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;const summonKind=towerDrag.type==='summoner'?selectedSummon:null,summonCost=summonKind?(summonDB[summonKind]?.cost||0):0;if(battleCoins>=t.cost+summonCost){battleCoins-=summonCost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0,summonKind:summonKind});hud()}}}
+  if(towerDrag.valid){let t=types[towerDrag.type],summonKind=towerDrag.type==='summoner'?selectedSummon:null,summonCost=summonKind?(summonDB[summonKind]?.cost||0):0,totalCost=t.cost+summonCost;if(battleCoins>=totalCost){battleCoins-=totalCost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0,summonKind:summonKind});hud()}}
   towerDrag=null;e.preventDefault();
  }
  b.addEventListener('pointerup',finishButtonTowerDrag);
@@ -977,7 +977,8 @@ function finishTowerDrag(e){
   if(towerDrag.valid){towerDrag.tower.x=towerDrag.x;towerDrag.tower.y=towerDrag.y}
   else{towerDrag.tower.x=towerDrag.oldX;towerDrag.tower.y=towerDrag.oldY}
  }else if(towerDrag.valid){
-  let t=types[towerDrag.type];if(battleCoins>=t.cost){battleCoins-=t.cost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0});hud()}
+  let t=types[towerDrag.type],summonKind=towerDrag.type==='summoner'?selectedSummon:null,summonCost=summonKind?(summonDB[summonKind]?.cost||0):0,totalCost=t.cost+summonCost;
+  if(battleCoins>=totalCost){battleCoins-=totalCost;towers.push({x:towerDrag.x,y:towerDrag.y,type:towerDrag.type,last:0,summonKind:summonKind});hud()}
  }
  towerDrag=null;e&&e.preventDefault()
 }
