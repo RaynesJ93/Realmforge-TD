@@ -155,3 +155,6 @@ body:has(#battle.active){overscroll-behavior:none}
 #realmChestGrid .realmChestCard>button{float:none;position:static;display:block;width:100%;margin:6px 0 0;margin-top:auto;padding:10px 5px;min-height:42px}
 .chestResultArtwork{display:block;object-fit:contain;width:104px;height:72px;margin:0 auto 5px}
 @media(max-width:420px){#realmChestGrid{gap:8px}#realmChestGrid .realmChestCard{padding:9px;gap:5px}.realmChestArtwork{height:85px}.realmChestCard>b{font-size:15px}.realmChestCard .marketPrice{font-size:13px}}
+
+/* V281 collection log */
+.collectionCategory{margin:14px 0}.collectionCategory>h3{display:flex;justify-content:space-between;align-items:center;margin:8px 4px}.collectionCategory>h3 small{opacity:.75}.collectionSource{margin:7px 0}.collectionSource>summary{padding:12px 14px;cursor:pointer}.collectionSource>summary::after{content:''}.collectionSource .grid{padding:8px}.collectionTick{color:#55d66b;font-size:1.15em;text-shadow:0 0 6px rgba(85,214,107,.35)}.collectionComplete>summary{border-left:3px solid #55d66b}.collectionSource .collection{min-height:0;margin:4px 0;padding:10px}.collectionSource .collection small{display:block;margin-top:4px}
