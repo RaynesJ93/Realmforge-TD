@@ -969,32 +969,27 @@ bossGrid.innerHTML=bd.map(([k,n,mi,kills,loot])=>{
 }).join('');
 }
 if(window.collectionGrid){
- const collectionSections=[
-  {name:'Boss Drops',items:[
-   ['Warlord Cleaver','Goblin Warlord','4%'],['Warlord Crest','Goblin Warlord','6%'],
-   ['Emberfang Blade','Ember Tyrant','3%'],['Ashguard Helm','Ember Tyrant','4%'],['Cinderbow','Ember Tyrant','4%'],['Ember Staff','Ember Tyrant','4%'],
-   ['Wyrmfrost Blade','Frost Wyrm','2.5%'],['Glacier Bow','Frost Wyrm','2.5%'],['Wintercore Staff','Frost Wyrm','2.5%'],['Wyrmscale Crown','Frost Wyrm','3%'],
-   ['Mirefang Greatblade','Mire Queen','2.5%'],['Venomwood Bow','Mire Queen','2.5%'],['Plaguebloom Staff','Mire Queen','2.5%'],['Mire Queen Crown','Mire Queen','1.5%']
-  ]},
-  {name:'Dungeon Uniques',items:[
-   ['Verdant Edge','Greenvale Depths','2.5%'],['Thornshot Bow','Greenvale Depths','2.5%'],['Rootbinder Staff','Greenvale Depths','2.5%'],
-   ['Infernal Greatblade','Ashen Falls','3%'],['Ashfall Recurve','Ashen Falls','3%'],['Cinderheart Staff','Ashen Falls','3%'],['Infernal Warden Mask','Ashen Falls','1%'],
-   ['Cryptfang Greatsword','Frozen Crypt','3%'],['Glacial Recurve','Frozen Crypt','3%'],['Soulfrost Sceptre','Frozen Crypt','3%'],['Crown of the Crypt','Frozen Crypt','1%'],
-   ['Colossus Cleaver','Drowned Temple','3%'],['Drowned Recurve','Drowned Temple','3%'],['Temple Hexstaff','Drowned Temple','3%'],['Bogheart Talisman','Drowned Temple','1%']
-  ]},
-  {name:'Raid Uniques',items:[
-   ['Citadel Greatblade','Shattered Citadel','Raid chest / 120 tokens'],['Riftpiercer Bow','Shattered Citadel','Raid chest / 120 tokens'],['Shatterspell Staff','Shattered Citadel','Raid chest / 120 tokens'],['Citadel Spirit Idol','Shattered Citadel','Raid chest / 120 tokens'],['Shattered Crown','Shattered Citadel','Raid chest / 150 tokens']
-  ]}
+ const collectionGroups=[
+  {category:'Bosses',name:'Goblin Warlord',items:[['Warlord Cleaver','4%'],['Warlord Crest','6%']]},
+  {category:'Bosses',name:'Ember Tyrant',items:[['Emberfang Blade','3%'],['Ashguard Helm','4%'],['Cinderbow','4%'],['Ember Staff','4%']]},
+  {category:'Bosses',name:'Frost Wyrm',items:[['Wyrmfrost Blade','2.5%'],['Glacier Bow','2.5%'],['Wintercore Staff','2.5%'],['Wyrmscale Crown','3%']]},
+  {category:'Bosses',name:'Mire Queen',items:[['Mirefang Greatblade','2.5%'],['Venomwood Bow','2.5%'],['Plaguebloom Staff','2.5%'],['Mire Queen Crown','1.5%']]},
+  {category:'Dungeons',name:'Greenvale Depths',items:[['Verdant Edge','2.5%'],['Thornshot Bow','2.5%'],['Rootbinder Staff','2.5%']]},
+  {category:'Dungeons',name:'Ashen Falls',items:[['Infernal Greatblade','3%'],['Ashfall Recurve','3%'],['Cinderheart Staff','3%'],['Infernal Warden Mask','1%']]},
+  {category:'Dungeons',name:'Frozen Crypt',items:[['Cryptfang Greatsword','3%'],['Glacial Recurve','3%'],['Soulfrost Sceptre','3%'],['Crown of the Crypt','1%']]},
+  {category:'Dungeons',name:'Drowned Temple',items:[['Colossus Cleaver','3%'],['Drowned Recurve','3%'],['Temple Hexstaff','3%'],['Bogheart Talisman','1%']]},
+  {category:'Raids',name:'Shattered Citadel',items:[['Citadel Greatblade','Raid chest / 120 tokens'],['Riftpiercer Bow','Raid chest / 120 tokens'],['Shatterspell Staff','Raid chest / 120 tokens'],['Citadel Spirit Idol','Raid chest / 120 tokens'],['Shattered Crown','Raid chest / 150 tokens']]}
  ];
- const allCollectionItems=collectionSections.reduce(function(a,s){return a.concat(s.items)},[]);
- // Backfill collection credit for uniques already owned before the expanded log existed.
- allCollectionItems.forEach(function(entry){var n=entry[0];if((save.items&&save.items[n]>0)||(save.bank&&save.bank[n]>0))save.collection[n]=true});
- const totalObtained=allCollectionItems.filter(function(x){return !!save.collection[x[0]]}).length;
+ const allCollectionItems=collectionGroups.reduce(function(a,g){return a.concat(g.items.map(function(x){return x[0]}))},[]);
+ allCollectionItems.forEach(function(n){if((save.items&&save.items[n]>0)||(save.bank&&save.bank[n]>0))save.collection[n]=true});
+ const totalObtained=allCollectionItems.filter(function(n){return !!save.collection[n]}).length;
+ function collectionGroupHtml(g){
+  var got=g.items.filter(function(x){return !!save.collection[x[0]]}).length,complete=got===g.items.length;
+  return '<details class="bankCategory collectionSource '+(complete?'collectionComplete':'')+'"><summary><b>'+g.name+'</b><span style="float:right">'+got+'/'+g.items.length+(complete?' <strong class="collectionTick">✓</strong>':'')+'</span></summary><div class="grid">'+g.items.map(function(entry){var n=entry[0],rate=entry[1],owned=!!save.collection[n];return '<div class="card collection '+(owned?'obtained':'missing')+'"><b>'+(owned?n:'???')+'</b><small>'+rate+' • '+(owned?'OBTAINED ✓':'Not obtained')+'</small></div>'}).join('')+'</div></details>'
+ }
+ const cats=['Bosses','Dungeons','Raids'];
  collectionGrid.innerHTML='<article class="card"><h3>Collection Log</h3><strong>'+totalObtained+' / '+allCollectionItems.length+' uniques obtained</strong><div class="progress"><i style="width:'+(allCollectionItems.length?Math.round(totalObtained/allCollectionItems.length*100):0)+'%"></i></div></article>'+
- collectionSections.map(function(section){
-  var got=section.items.filter(function(x){return !!save.collection[x[0]]}).length;
-  return '<details class="bankCategory" open><summary><b>'+section.name+'</b> — '+got+' / '+section.items.length+'</summary><div class="grid">'+section.items.map(function(entry){var n=entry[0],source=entry[1],rate=entry[2],owned=!!save.collection[n];return '<div class="card collection '+(owned?'obtained':'missing')+'"><b>'+(owned?n:'???')+'</b><div>'+source+'</div><small>'+rate+' • '+(owned?'OBTAINED':'Not obtained')+'</small></div>'}).join('')+'</div></details>'
- }).join('')
+ cats.map(function(cat){var groups=collectionGroups.filter(function(g){return g.category===cat}),got=groups.reduce(function(n,g){return n+g.items.filter(function(x){return !!save.collection[x[0]]}).length},0),total=groups.reduce(function(n,g){return n+g.items.length},0);return '<section class="collectionCategory"><h3>'+cat+' <small>'+got+'/'+total+'</small></h3>'+groups.map(collectionGroupHtml).join('')+'</section>'}).join('')
 }dropLog.textContent=save.drops.length?save.drops.slice(-5).reverse().join(' • '):'No equipment drops yet.';renderSmithingTiers();if(window.RealmforgeGear)window.RealmforgeGear.decorate();}
 function loadFrostmereTestSave(){if(testMode){alert('You are already using the separate test account.');return}if(!confirm('Switch to the separate Frostmere test account? Your normal save will remain untouched.'))return;writeSave(false);localStorage.setItem(KEY,JSON.stringify(save));var stored=safeParse(localStorage.getItem(TEST_KEY));var t=validSave(stored)?stored:JSON.parse(JSON.stringify(base()));t.coins=Math.max(t.coins||0,12000);['Attack','Strength','Defence','Ranged','Magic'].forEach(function(n){t.skills[n].lvl=Math.max(t.skills[n].lvl,24)});t.skills.Hitpoints.lvl=Math.max(t.skills.Hitpoints.lvl,28);t.campaign.cleared=[0,1,2,3,4,5,6,7,8,9];t.campaign.unlocked=Math.max(t.campaign.unlocked||1,11);t.items['Emberfang Blade']=Math.max(1,t.items['Emberfang Blade']||0);t.items['Cinderbow']=Math.max(1,t.items['Cinderbow']||0);t.items['Ember Staff']=Math.max(1,t.items['Ember Staff']||0);t.equipment.warrior.weapon='Emberfang Blade';t.equipment.ranger.weapon='Cinderbow';t.equipment.mage.weapon='Ember Staff';save=t;testMode=true;migrateSave();localStorage.setItem(TEST_KEY,JSON.stringify(save));currentMap=10;resetBattle();renderUI();alert('TEST ACCOUNT ACTIVE. Your normal save is separate and untouched. Use Return to Normal Save when finished.')}
 function returnToNormalSave(){if(testMode)localStorage.setItem(TEST_KEY,JSON.stringify(save));var primaryNormal=safeParse(localStorage.getItem(KEY));var backupNormal=safeParse(localStorage.getItem(BACKUP_KEY));var normal=null;if(validSave(primaryNormal)&&validSave(backupNormal))normal=progressScore(backupNormal)>progressScore(primaryNormal)?backupNormal:primaryNormal;else normal=validSave(primaryNormal)?primaryNormal:backupNormal;if(!validSave(normal)){alert('No valid normal or backup save could be found. Your current account has not been changed.');return}save=normal;testMode=false;migrateSave();localStorage.setItem(KEY,JSON.stringify(save));currentMap=0;resetBattle();renderUI();alert('Normal account restored. The game checked both your main save and automatic backup and loaded the one with the most progress.')}
