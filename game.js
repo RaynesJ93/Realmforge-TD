@@ -194,6 +194,7 @@ function showChestResults(chest,rewards,legendary){
  var modal=document.querySelector('#chestResultsModal'),title=document.querySelector('#chestResultTitle'),cost=document.querySelector('#chestResultCost'),list=document.querySelector('#chestResultRewards');
  if(!modal||!title||!list)return;
  title.textContent=legendary?'LEGENDARY FIND!':chest.name.toUpperCase();
+ var art=document.querySelector('#chestResultArtwork');if(art)art.src='assets/chest-'+chest.id+'-v272.webp';
  if(cost)cost.textContent=chest.cost.toLocaleString()+' COINS SPENT';
  list.innerHTML=rewards.map(function(x){return '<div class="chestRewardRow '+x.rarity+'"><span class="chestRarity">'+x.rarity.toUpperCase()+'</span><b>'+menuItemArt(x.name)+(x.qty>1?x.qty+' × ':'')+x.name+'</b></div>'}).join('');
  modal.classList.add('show');modal.setAttribute('aria-hidden','false')
@@ -203,7 +204,7 @@ window.closeChestResults=closeChestResults;
 function renderRealmChests(){
  var g=document.querySelector('#realmChestGrid'),p=document.querySelector('#chestPity');if(!g)return;
  if(p)p.textContent=(Number(save.market.chestPity)||0)+' / 50';
- g.innerHTML=realmChests.map(function(x){return '<div class="card marketItem"><b>'+x.name+'</b><div class="marketPrice">'+x.cost.toLocaleString()+' coins</div><small>'+x.rolls+' reward rolls • loot improves with campaign progress</small><button '+(save.coins<x.cost?'disabled':'')+' data-chest-open="'+x.id+'">Open Chest</button></div>'}).join('');
+ g.innerHTML=realmChests.map(function(x){return '<div class="card marketItem realmChestCard"><img class="realmChestArtwork" src="assets/chest-'+x.id+'-v272.webp" alt="" width="160" height="104" loading="lazy"><b>'+x.name+'</b><div class="marketPrice"><img class="coinArtwork" src="assets/coins-v272.webp" alt="" width="24" height="24"><span>'+x.cost.toLocaleString()+' coins</span></div><small>'+x.rolls+' reward rolls • loot improves with campaign progress</small><button '+(save.coins<x.cost?'disabled':'')+' data-chest-open="'+x.id+'">Open Chest</button></div>'}).join('');
  g.querySelectorAll('[data-chest-open]').forEach(function(b){b.onclick=function(){openRealmChest(b.dataset.chestOpen)}})
 }
 window.openRealmChest=openRealmChest;
