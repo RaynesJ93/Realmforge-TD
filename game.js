@@ -913,8 +913,21 @@ Object.entries(save.bank).forEach(function(entry){
  resourceGroups[cat].push([n,q])
 });
 function bankResourceCard(entry){var n=entry[0],q=entry[1];return '<div class="card bankCompactCard">'+(skillingArtwork[n]?'<img src="'+skillingArtwork[n]+'" alt="" width="40" height="40">':'')+'<div><b>'+n+'</b><small>Owned: '+q+'</small></div></div>'}
+const bankResourceOrder={
+ 'Copper ore':1,'Tin ore':2,'Ironvale ore':10,'Frostsilver ore':25,'Bogiron ore':38,
+ 'Bronze bar':1,'Ironvale bar':12,'Frostsilver bar':27,'Bogiron bar':40,
+ 'Logs':1,'Oakheart logs':10,'Frostpine logs':25,'Rotwood logs':38,
+ 'Raw Minnow':1,'Cooked Minnow':2,'Raw Trout':8,'Cooked Trout':9,'Raw Pike':18,'Cooked Pike':19,'Raw Frostscale Salmon':30,'Cooked Frostscale Salmon':31,
+ 'Goblin scrap':1,'Ashweave Cloth':10,'Golem Core':15,'Flameguard Sigil':20,'Ember Core':25,'Frostweave Cloth':25,'Wyrm Essence':35,'Mireweave Cloth':38,'Mire Essence':45,'Spirit Shard':50,'Ancient Spirit Core':60
+};
+function bankResourceLevel(entry){return bankResourceOrder[entry[0]]==null?999:bankResourceOrder[entry[0]]}
+function bankGearLevel(entry){var i=itemDB[entry[0]],req=i&&i.req?Object.values(i.req):[];return req.length?Math.max.apply(null,req.map(function(v){return Number(v)||0})):1}
+function bankSortEntries(groups,isGear){
+ Object.keys(groups).forEach(function(k){groups[k].sort(function(a,b){var al=isGear?bankGearLevel(a):bankResourceLevel(a),bl=isGear?bankGearLevel(b):bankResourceLevel(b);if(al!==bl)return al-bl;if(isGear){var ai=itemDB[a[0]]||{},bi=itemDB[b[0]]||{},classOrder={warrior:1,ranger:2,mage:3,summoner:4,all:5};var ac=classOrder[ai.class]||9,bc=classOrder[bi.class]||9;if(ac!==bc)return ac-bc}return a[0].localeCompare(b[0])})})
+}
+bankSortEntries(resourceGroups,false);
 let gearGroups={Weapons:[],Armour:[],Offhands:[],Accessories:[]};
-Object.entries(save.items).filter(function(entry){return entry[1]>0&&itemDB[entry[0]]}).forEach(function(entry){var slot=itemDB[entry[0]].slot,cat=slot==='weapon'?'Weapons':slot==='offhand'?'Offhands':['ring','amulet','cape'].includes(slot)?'Accessories':'Armour';gearGroups[cat].push(entry)});
+Object.entries(save.items).filter(function(entry){return entry[1]>0&&itemDB[entry[0]]}).forEach(function(entry){var slot=itemDB[entry[0]].slot,cat=slot==='weapon'?'Weapons':slot==='offhand'?'Offhands':['ring','amulet','cape'].includes(slot)?'Accessories':'Armour';gearGroups[cat].push(entry)});bankSortEntries(gearGroups,true);
 function bankGearCard(entry){
  var n=entry[0],q=entry[1],i=itemDB[n];
  var classes=i.class==='all'?['warrior','ranger','mage','summoner']:[i.class];
