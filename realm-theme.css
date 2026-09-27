@@ -159,3 +159,6 @@ body.atTitle main.app{display:none}
 #skilling .workshopTabs button[data-workshop="fletching"]{--frame-size:470.542636% 602.325581%;--frame-position:35.355649% 73.240741%}
 #skilling .workshopTabs button[data-workshop="crafting"]{--frame-size:470.542636% 602.325581%;--frame-position:64.748954% 73.240741%}
 #skilling .workshopTabs button[data-workshop="smithing"]{--frame-size:491.497976% 634.803922%;--frame-position:93.795243% 73.052246%}
+
+/* Thread ingredients stay compact alongside quantities and owned counts. */
+#skilling .materialLine .menuItemIcon{display:inline-block;width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px}
