@@ -158,3 +158,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* V281 collection log */
 .collectionCategory{margin:14px 0}.collectionCategory>h3{display:flex;justify-content:space-between;align-items:center;margin:8px 4px}.collectionCategory>h3 small{opacity:.75}.collectionSource{margin:7px 0}.collectionSource>summary{padding:12px 14px;cursor:pointer}.collectionSource>summary::after{content:''}.collectionSource .grid{padding:8px}.collectionTick{color:#55d66b;font-size:1.15em;text-shadow:0 0 6px rgba(85,214,107,.35)}.collectionComplete>summary{border-left:3px solid #55d66b}.collectionSource .collection{min-height:0;margin:4px 0;padding:10px}.collectionSource .collection small{display:block;margin-top:4px}
+
+/* V283 compact collection summary */
+.collectionOverall{grid-column:1/-1;margin:0 0 12px;padding:0 4px}.collectionOverall>strong{display:block;margin-bottom:7px;font-size:1rem}.collectionOverall .progress{max-width:100%}
