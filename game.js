@@ -751,11 +751,11 @@ const raidUniques=['Citadel Greatblade','Riftpiercer Bow','Shatterspell Staff','
 function awardRaidChest(){
  var tokens=8+Math.floor(Math.random()*5),coins=2500+Math.floor(Math.random()*2501),shards=8+Math.floor(Math.random()*9),unique=null;
  save.raid.tokens=(save.raid.tokens||0)+tokens;save.coins+=coins;save.bank['Spirit Shard']=(save.bank['Spirit Shard']||0)+shards;
- var chance=Math.min(.30,.08+(save.raid.pity||0)*.02);if(Math.random()<chance){unique=raidUniques[Math.floor(Math.random()*raidUniques.length)];save.bank[unique]=(save.bank[unique]||0)+1;save.raid.pity=0}else save.raid.pity=(save.raid.pity||0)+1;
+ var chance=Math.min(.30,.08+(save.raid.pity||0)*.02);if(Math.random()<chance){unique=raidUniques[Math.floor(Math.random()*raidUniques.length)];save.bank[unique]=(save.bank[unique]||0)+1;save.collection[unique]=true;save.raid.pity=0}else save.raid.pity=(save.raid.pity||0)+1;
  return{tokens:tokens,coins:coins,shards:shards,unique:unique,chance:chance}
 }
 function buyRaidReward(name){
- var costs={'Citadel Greatblade':120,'Riftpiercer Bow':120,'Shatterspell Staff':120,'Citadel Spirit Idol':120,'Shattered Crown':150},cost=costs[name];if(!cost||!raidUniques.includes(name))return;if((save.raid.tokens||0)<cost){alert('You need '+cost+' Raid Tokens.');return}if(!confirm('Spend '+cost+' Raid Tokens on '+name+'?'))return;save.raid.tokens-=cost;save.bank[name]=(save.bank[name]||0)+1;writeSave(true);renderRaid();renderUI()
+ var costs={'Citadel Greatblade':120,'Riftpiercer Bow':120,'Shatterspell Staff':120,'Citadel Spirit Idol':120,'Shattered Crown':150},cost=costs[name];if(!cost||!raidUniques.includes(name))return;if((save.raid.tokens||0)<cost){alert('You need '+cost+' Raid Tokens.');return}if(!confirm('Spend '+cost+' Raid Tokens on '+name+'?'))return;save.raid.tokens-=cost;save.bank[name]=(save.bank[name]||0)+1;save.collection[name]=true;writeSave(true);renderRaid();renderUI()
 }
 function raidRewardShopHtml(){var costs={'Citadel Greatblade':120,'Riftpiercer Bow':120,'Shatterspell Staff':120,'Citadel Spirit Idol':120,'Shattered Crown':150};return '<article class="card"><h3>Citadel Token Exchange</h3><p>'+menuItemArt('Raid Tokens')+'Raid Tokens: <b>'+(save.raid.tokens||0)+'</b> · Unique pity: <b>'+(save.raid.pity||0)+'</b> dry clears</p><div class="grid">'+raidUniques.map(function(n){return '<article class="card"><b>'+menuItemArt(n)+n+'</b><p>'+costs[n]+' Raid Tokens</p><button '+((save.raid.tokens||0)<costs[n]?'disabled':'')+' onclick="buyRaidReward(\''+n+'\')">Exchange</button></article>'}).join('')+'</div></article>'}
 window.buyRaidReward=buyRaidReward;
@@ -968,7 +968,34 @@ bossGrid.innerHTML=bd.map(([k,n,mi,kills,loot])=>{
  '<div class="bossMilestones" aria-label="Kill milestones">'+[10,25,50,100,250].map(x=>'<span class="'+(milestones.includes(x)?'complete':'')+'">'+(milestones.includes(x)?'✓ ':'')+x+' kills</span>').join('')+'</div></details></article>';
 }).join('');
 }
-if(window.collectionGrid){let uniques=[['Warlord Cleaver','Goblin Warlord','4%'],['Warlord Crest','Goblin Warlord','6%'],['Emberfang Blade','Ember Tyrant','3%'],['Ashguard Helm','Ember Tyrant','4%'],['Cinderbow','Ember Tyrant','4%'],['Ember Staff','Ember Tyrant','4%'],['Wyrmfrost Blade','Frost Wyrm','2.5%'],['Glacier Bow','Frost Wyrm','2.5%'],['Wintercore Staff','Frost Wyrm','2.5%'],['Wyrmscale Crown','Frost Wyrm','3%'],['Cryptfang Greatsword','Frozen Crypt','3%'],['Glacial Recurve','Frozen Crypt','3%'],['Soulfrost Sceptre','Frozen Crypt','3%'],['Crown of the Crypt','Frozen Crypt','1%']];collectionGrid.innerHTML=uniques.map(([n,b,r])=>'<div class="card collection '+(save.collection[n]?'obtained':'missing')+'"><b>'+(save.collection[n]?n:'???')+'</b><div>'+b+'</div><small>'+r+' drop rate • '+(save.collection[n]?'OBTAINED':'Not obtained')+'</small></div>').join('')}dropLog.textContent=save.drops.length?save.drops.slice(-5).reverse().join(' • '):'No equipment drops yet.';renderSmithingTiers();if(window.RealmforgeGear)window.RealmforgeGear.decorate();}
+if(window.collectionGrid){
+ const collectionSections=[
+  {name:'Boss Drops',items:[
+   ['Warlord Cleaver','Goblin Warlord','4%'],['Warlord Crest','Goblin Warlord','6%'],
+   ['Emberfang Blade','Ember Tyrant','3%'],['Ashguard Helm','Ember Tyrant','4%'],['Cinderbow','Ember Tyrant','4%'],['Ember Staff','Ember Tyrant','4%'],
+   ['Wyrmfrost Blade','Frost Wyrm','2.5%'],['Glacier Bow','Frost Wyrm','2.5%'],['Wintercore Staff','Frost Wyrm','2.5%'],['Wyrmscale Crown','Frost Wyrm','3%'],
+   ['Mirefang Greatblade','Mire Queen','2.5%'],['Venomwood Bow','Mire Queen','2.5%'],['Plaguebloom Staff','Mire Queen','2.5%'],['Mire Queen Crown','Mire Queen','1.5%']
+  ]},
+  {name:'Dungeon Uniques',items:[
+   ['Verdant Edge','Greenvale Depths','2.5%'],['Thornshot Bow','Greenvale Depths','2.5%'],['Rootbinder Staff','Greenvale Depths','2.5%'],
+   ['Infernal Greatblade','Ashen Falls','3%'],['Ashfall Recurve','Ashen Falls','3%'],['Cinderheart Staff','Ashen Falls','3%'],['Infernal Warden Mask','Ashen Falls','1%'],
+   ['Cryptfang Greatsword','Frozen Crypt','3%'],['Glacial Recurve','Frozen Crypt','3%'],['Soulfrost Sceptre','Frozen Crypt','3%'],['Crown of the Crypt','Frozen Crypt','1%'],
+   ['Colossus Cleaver','Drowned Temple','3%'],['Drowned Recurve','Drowned Temple','3%'],['Temple Hexstaff','Drowned Temple','3%'],['Bogheart Talisman','Drowned Temple','1%']
+  ]},
+  {name:'Raid Uniques',items:[
+   ['Citadel Greatblade','Shattered Citadel','Raid chest / 120 tokens'],['Riftpiercer Bow','Shattered Citadel','Raid chest / 120 tokens'],['Shatterspell Staff','Shattered Citadel','Raid chest / 120 tokens'],['Citadel Spirit Idol','Shattered Citadel','Raid chest / 120 tokens'],['Shattered Crown','Shattered Citadel','Raid chest / 150 tokens']
+  ]}
+ ];
+ const allCollectionItems=collectionSections.reduce(function(a,s){return a.concat(s.items)},[]);
+ // Backfill collection credit for uniques already owned before the expanded log existed.
+ allCollectionItems.forEach(function(entry){var n=entry[0];if((save.items&&save.items[n]>0)||(save.bank&&save.bank[n]>0))save.collection[n]=true});
+ const totalObtained=allCollectionItems.filter(function(x){return !!save.collection[x[0]]}).length;
+ collectionGrid.innerHTML='<article class="card"><h3>Collection Log</h3><strong>'+totalObtained+' / '+allCollectionItems.length+' uniques obtained</strong><div class="progress"><i style="width:'+(allCollectionItems.length?Math.round(totalObtained/allCollectionItems.length*100):0)+'%"></i></div></article>'+
+ collectionSections.map(function(section){
+  var got=section.items.filter(function(x){return !!save.collection[x[0]]}).length;
+  return '<details class="bankCategory" open><summary><b>'+section.name+'</b> — '+got+' / '+section.items.length+'</summary><div class="grid">'+section.items.map(function(entry){var n=entry[0],source=entry[1],rate=entry[2],owned=!!save.collection[n];return '<div class="card collection '+(owned?'obtained':'missing')+'"><b>'+(owned?n:'???')+'</b><div>'+source+'</div><small>'+rate+' • '+(owned?'OBTAINED':'Not obtained')+'</small></div>'}).join('')+'</div></details>'
+ }).join('')
+}dropLog.textContent=save.drops.length?save.drops.slice(-5).reverse().join(' • '):'No equipment drops yet.';renderSmithingTiers();if(window.RealmforgeGear)window.RealmforgeGear.decorate();}
 function loadFrostmereTestSave(){if(testMode){alert('You are already using the separate test account.');return}if(!confirm('Switch to the separate Frostmere test account? Your normal save will remain untouched.'))return;writeSave(false);localStorage.setItem(KEY,JSON.stringify(save));var stored=safeParse(localStorage.getItem(TEST_KEY));var t=validSave(stored)?stored:JSON.parse(JSON.stringify(base()));t.coins=Math.max(t.coins||0,12000);['Attack','Strength','Defence','Ranged','Magic'].forEach(function(n){t.skills[n].lvl=Math.max(t.skills[n].lvl,24)});t.skills.Hitpoints.lvl=Math.max(t.skills.Hitpoints.lvl,28);t.campaign.cleared=[0,1,2,3,4,5,6,7,8,9];t.campaign.unlocked=Math.max(t.campaign.unlocked||1,11);t.items['Emberfang Blade']=Math.max(1,t.items['Emberfang Blade']||0);t.items['Cinderbow']=Math.max(1,t.items['Cinderbow']||0);t.items['Ember Staff']=Math.max(1,t.items['Ember Staff']||0);t.equipment.warrior.weapon='Emberfang Blade';t.equipment.ranger.weapon='Cinderbow';t.equipment.mage.weapon='Ember Staff';save=t;testMode=true;migrateSave();localStorage.setItem(TEST_KEY,JSON.stringify(save));currentMap=10;resetBattle();renderUI();alert('TEST ACCOUNT ACTIVE. Your normal save is separate and untouched. Use Return to Normal Save when finished.')}
 function returnToNormalSave(){if(testMode)localStorage.setItem(TEST_KEY,JSON.stringify(save));var primaryNormal=safeParse(localStorage.getItem(KEY));var backupNormal=safeParse(localStorage.getItem(BACKUP_KEY));var normal=null;if(validSave(primaryNormal)&&validSave(backupNormal))normal=progressScore(backupNormal)>progressScore(primaryNormal)?backupNormal:primaryNormal;else normal=validSave(primaryNormal)?primaryNormal:backupNormal;if(!validSave(normal)){alert('No valid normal or backup save could be found. Your current account has not been changed.');return}save=normal;testMode=false;migrateSave();localStorage.setItem(KEY,JSON.stringify(save));currentMap=0;resetBattle();renderUI();alert('Normal account restored. The game checked both your main save and automatic backup and loaded the one with the most progress.')}
 window.loadFrostmereTestSave=loadFrostmereTestSave;window.returnToNormalSave=returnToNormalSave;
