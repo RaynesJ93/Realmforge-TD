@@ -167,3 +167,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* V289 restore World map artwork */
 .worldMapArtwork{display:block;width:100%;aspect-ratio:900/520;object-fit:cover;border-radius:6px;margin:0 0 12px;border:1px solid rgba(205,164,99,.42)}
+
+/* V290 class equipment clarity */
+.equipmentClassCard h3{margin-bottom:10px}.equipmentSlots{display:grid;gap:6px;margin:8px 0 12px}.equipmentSlot{display:flex;justify-content:space-between;gap:12px;padding:7px 9px;border:1px solid rgba(205,164,99,.28);border-radius:6px;background:rgba(0,0,0,.14)}.equipmentSlot span{color:#d8bb7b}.equipmentSlot b{text-align:right}.equipmentSlot.empty b{opacity:.45}.equippedBy{margin:5px 0;color:#72e58a}.notEquipped{margin:5px 0;opacity:.58}.currentlyEquipped{outline:2px solid rgba(82,220,111,.7);box-shadow:0 0 10px rgba(82,220,111,.18)}
