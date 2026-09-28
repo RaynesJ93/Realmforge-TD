@@ -192,3 +192,6 @@ body:has(#battle.active){overscroll-behavior:none}
  .equipmentSlot span{font-size:.66rem!important}
  .equipmentSlot b{font-size:.70rem!important;letter-spacing:-.01em}
 }
+
+/* V299 Lunara Stage 1 temporary styling */
+.worldRegion.lunara>summary{background:linear-gradient(90deg,rgba(64,42,86,.42),rgba(24,39,57,.24))}.mapcard.lunara{border-color:rgba(174,132,220,.48)}
