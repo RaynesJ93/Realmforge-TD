@@ -186,11 +186,11 @@ const realmChests=[
  {id:'mythic',name:'Mythic Chest',cost:225000,rolls:3,odds:[10,25,38,25,2]}
 ];
 const chestPools={
- common:['Copper ore','Tin ore','Logs','Cooked Minnow','Bronze Sword','Bronze Helm','Bronze Armour','Leather Hood','Leather Body','Cloth Hood','Apprentice Robe'],
- uncommon:['Oakheart logs','Ironvale ore','Ironvale bar','Cooked Trout','Ironvale Sword','Ironvale Helm','Oakheart Bow','Oakheart Staff','Leather Boots','Leather Gloves'],
- rare:['Ashweave Cloth','Frostsilver ore','Frostpine logs','Cooked Pike','Ironvale Armour','Ironvale Longbow','Ironvale Focus Staff','Ashweave Hood','Ashweave Cowl'],
- epic:['Frostsilver bar','Frostweave Cloth','Frostsilver Sword','Frostsilver Helm','Frostsilver Armour','Frostpine Bow','Frostpine Staff','Frostweave Robe','Greenvale Signet','Ashen Pendant','Frostbound Cape'],
- legendary:['Realmforged Greatsword','Gilded Longbow','Arcane Warstaff','Crown of Fortune','Adventurer\'s Ring']
+ common:['Copper ore','Tin ore','Logs','Cooked Minnow','Bronze Sword','Bronze Helm','Bronze Armour','Leather Hood','Leather Body','Cloth Hood','Apprentice Robe','Ash Thread','Spirit Shard'],
+ uncommon:['Oakheart logs','Ironvale ore','Ironvale bar','Cooked Trout','Ironvale Sword','Ironvale Helm','Oakheart Bow','Oakheart Staff','Leather Boots','Leather Gloves','Frost Thread','Mire Thread','Ember Core','Spiritcaller Staff','Summoner Hood','Summoner Robe'],
+ rare:['Ashweave Cloth','Frostsilver ore','Frostpine logs','Cooked Pike','Ironvale Armour','Ironvale Longbow','Ironvale Focus Staff','Ashweave Hood','Ashweave Cowl','Frostweave Cloth','Mireweave Cloth','Wyrm Essence','Mire Essence','Emberbond Focus','Spiritweave Hood'],
+ epic:['Frostsilver bar','Frostweave Cloth','Frostsilver Sword','Frostsilver Helm','Frostsilver Armour','Frostpine Bow','Frostpine Staff','Frostweave Robe','Greenvale Signet','Ashen Pendant','Frostbound Cape','Ancient Spirit Core','Frostbound Totem','Spiritweave Robe','Moonstone ore','Moonstone bar','Glowbark logs','Lunar Thread','Lunarweave Cloth','Moonfin','Citadel Meal','Moonstone Blade','Moonstone Helm','Moonstone Platebody','Moonstone Platelegs','Moonstone Shield','Mooncaller Sceptre','Lunarweave Veil','Lunarweave Vestment','Lunarweave Bindings','Moon Spirit Idol','Moonlit Grimoire'],
+ legendary:['Realmforged Greatsword','Gilded Longbow','Arcane Warstaff','Crown of Fortune','Adventurer\'s Ring','Voidcaller Sceptre','Behemoth Sigil','Citadel Greatblade','Riftpiercer Bow','Shatterspell Staff','Citadel Spirit Idol','Shattered Crown','Moonweaver Crescent','Starlight Recurve','Dreamweaver Staff','Moonweaver Crown','Nightmare Greatblade','Dreamshot Bow','Hollowmoon Staff','Dream Eater Mask']
 };
 Object.assign(itemDB,{
  'Realmforged Greatsword':{slot:'weapon',class:'warrior',damage:15,defence:3,req:{Attack:34}},
