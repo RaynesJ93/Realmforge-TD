@@ -296,8 +296,8 @@ function decorate(){
  const grid=document.getElementById('equipmentGrid');
  if(grid)Array.from(grid.children).forEach((card,i)=>{
   const cls=['warrior','ranger','mage','summoner'][i];if(!cls)return;
-  if(cls!=='summoner'){const preview=document.createElement('img');preview.className='equippedPreview';preview.alt=cls+' wearing currently equipped items';preview.width=160;preview.height=200;preview.src=portrait(cls);card.insertBefore(preview,card.children[1]||null);}
-  card.querySelectorAll(':scope > div').forEach(row=>{const label=row.querySelector('b');if(!label)return;const slot=label.textContent.replace(':','').trim(),name=save.equipment[cls][slot];row.classList.add('equipmentSlot');if(!name||name==='None')return;const img=document.createElement('img');img.className='gearSlotIcon';img.width=32;img.height=32;img.alt='';img.src=icon(name,cls);row.insertBefore(img,row.firstChild);});
+  const host=card.querySelector('[data-equipment-portrait]');
+  if(host){const preview=document.createElement('img');preview.className='equippedPreview';preview.alt=cls+' wearing currently equipped items';preview.width=160;preview.height=200;preview.src=portrait(cls);host.replaceChildren(preview)}
  });
  document.querySelectorAll('.tower[data-type]').forEach(button=>{const cls=button.dataset.type,img=button.querySelector('img');if(img){const key=signature(cls);if(img.dataset.gear!==key){img.src=portrait(cls);img.dataset.gear=key;}}});
 }
