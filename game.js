@@ -409,6 +409,26 @@ function completeGather(type){if(gathering!==type)return;let g=gatherDB[type];if
 function stopGathering(show=true){if(gatherTimer)clearInterval(gatherTimer);gatherTimer=null;gathering=null;if(window.activityName)activityName.textContent='Not currently gathering';if(window.activityText)activityText.textContent=show?'Gathering stopped.':'Choose a resource below.';if(window.stopGather)stopGather.disabled=true;if(window.activityProgress)activityProgress.querySelector('i').style.width='0%'}
 function renderGatherProgress(){if(!gathering)return;let g=gatherDB[gathering],pct=Math.min(100,(performance.now()-gatherStart)/g.time*100);if(window.activityProgress)activityProgress.querySelector('i').style.width=pct+'%';requestAnimationFrame(renderGatherProgress)}
 window.startGathering=startGathering;window.stopGathering=stopGathering;
+function skillingDisplayXp(skill,base){return Math.round(base*(skill==='Summoning'||['Attack','Strength','Defence','Ranged','Magic','Hitpoints'].includes(skill)?3.5:3))}
+function syncStaticSkillingCards(){
+ var panes={
+  mining:['copper','tin','ironore','frostsilver','bogiron'],
+  woodcutting:['logs','oak','frostpine','rotwood'],
+  smelting:['bronze','ironbar','frostbar','bogbar'],
+  fishing:['minnow','trout','pike','frostsalmon']
+ };
+ Object.keys(panes).forEach(function(pane){
+  var root=document.querySelector('#workshop-'+pane);if(!root)return;
+  var cards=root.querySelectorAll('.activityList>.card');
+  panes[pane].forEach(function(key,i){var g=gatherDB[key],card=cards[i];if(!g||!card)return;var p=card.querySelector('p');if(!p)return;
+   var xp=skillingDisplayXp(g.skill,g.xp),sec=(g.time/1000).toFixed(1).replace(/\.0$/,'');
+   if(pane==='smelting'){var cost=key==='bronze'?'1 Copper ore + 1 Tin ore':key==='ironbar'?'2 Ironvale ore':key==='frostbar'?'2 Frostsilver ore':'2 Bogiron ore';p.textContent=cost+' • Smithing Lv '+g.level+' • '+xp+' XP • '+sec+' sec'}
+   else p.textContent=g.skill+' Lv '+g.level+' • '+xp+' XP • '+sec+' sec'
+  })
+ });
+ var cookRoot=document.querySelector('#workshop-cooking');if(cookRoot){var cookKeys=['minnow','trout','pike','frostsalmon'],cookCards=cookRoot.querySelectorAll('.activityList>.card');cookKeys.forEach(function(key,i){var r=cookDB[key],card=cookCards[i];if(!r||!card)return;var p=card.querySelector('p');if(p)p.textContent='Cooking Lv '+r.level+' • '+skillingDisplayXp('Cooking',r.xp)+' XP • '+(r.time/1000).toFixed(1).replace(/\.0$/,'')+' sec'})}
+}
+syncStaticSkillingCards();
 let smithingKey=null,smithTimer=null,smithStart=0;
 function startSmithing(key){let r=recipes[key];if(!r)return;if(save.skills.Smithing.lvl<r.level){msg('You need Smithing level '+r.level+'.');return}if((save.bank[r.resource]||0)<r.bars){msg('You need '+r.bars+' '+r.resource+(r.bars>1?'s':'')+'.');return}stopGathering(false);stopSmithing(false);smithingKey=key;smithStart=performance.now();activityName.textContent='Smithing '+r.name;activityText.textContent='Producing automatically...';stopGather.disabled=false;smithTimer=setInterval(()=>completeSmithing(key),r.time*(hasPerk('quickhands')?.9:1));renderSmithProgress()}
 function completeSmithing(key){if(smithingKey!==key)return;let r=recipes[key];if((save.bank[r.resource]||0)<r.bars){msg('Smithing stopped: not enough '+r.resource+'.');stopSmithing();renderUI();return}save.bank[r.resource]-=r.bars;var smithQty=hasPerk('smith')&&Math.random()<.30?2:1;save.items[r.name]=(save.items[r.name]||0)+smithQty;for(var si=0;si<smithQty;si++)questCraft(r.name);addXP('Smithing',r.xp*smithQty);addPerkProgress('smith',smithQty);smithStart=performance.now();msg(smithQty===2?'EFFICIENT SMITH! 2 '+r.name+' + double XP.':'You smith 1 '+r.name+'.');renderUI()}
