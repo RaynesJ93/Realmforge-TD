@@ -36,7 +36,7 @@ const itemDB={'Rusty Sword':{slot:'weapon',class:'warrior',damage:0},'Bronze Swo
 'Summoner Hood':{slot:'head',class:'summoner',damage:3,range:8,defence:3,req:{Summoning:15}},
 'Summoner Robe':{slot:'body',class:'summoner',damage:5,range:10,defence:5,req:{Summoning:20}},
 'Spiritweave Hood':{slot:'head',class:'summoner',damage:7,range:14,defence:7,req:{Summoning:40}},
-'Spiritweave Robe':{slot:'body',class:'summoner',damage:11,range:18,defence:10,req:{Summoning:50}},'Citadel Greatblade':{slot:'weapon',class:'warrior',damage:26,defence:8,speed:.08,req:{Attack:55}},'Riftpiercer Bow':{slot:'weapon',class:'ranger',damage:21,range:52,speed:.06,req:{Ranged:55}},'Shatterspell Staff':{slot:'weapon',class:'mage',damage:27,range:38,speed:.05,req:{Magic:55}},'Citadel Spirit Idol':{slot:'offhand',class:'summoner',damage:17,range:30,defence:10,req:{Summoning:60}},'Shattered Crown':{slot:'head',class:'all',damage:9,range:14,defence:28,req:{Defence:55}},'Moonweaver Crescent':{slot:'weapon',class:'warrior',damage:30,defence:11,speed:.05,req:{Attack:58}},'Starlight Recurve':{slot:'weapon',class:'ranger',damage:25,range:64,speed:.07,req:{Ranged:58}},'Dreamweaver Staff':{slot:'weapon',class:'mage',damage:32,range:48,speed:.06,req:{Magic:58}},'Moonweaver Crown':{slot:'head',class:'all',damage:11,range:18,defence:32,req:{Defence:58}},
+'Spiritweave Robe':{slot:'body',class:'summoner',damage:11,range:18,defence:10,req:{Summoning:50}},'Citadel Greatblade':{slot:'weapon',class:'warrior',damage:26,defence:8,speed:.08,req:{Attack:55}},'Riftpiercer Bow':{slot:'weapon',class:'ranger',damage:21,range:52,speed:.06,req:{Ranged:55}},'Shatterspell Staff':{slot:'weapon',class:'mage',damage:27,range:38,speed:.05,req:{Magic:55}},'Citadel Spirit Idol':{slot:'offhand',class:'summoner',damage:17,range:30,defence:10,req:{Summoning:60}},'Shattered Crown':{slot:'head',class:'all',damage:9,range:14,defence:28,req:{Defence:55}},'Moonweaver Crescent':{slot:'weapon',class:'warrior',damage:30,defence:11,speed:.05,req:{Attack:58}},'Starlight Recurve':{slot:'weapon',class:'ranger',damage:25,range:64,speed:.07,req:{Ranged:58}},'Dreamweaver Staff':{slot:'weapon',class:'mage',damage:32,range:48,speed:.06,req:{Magic:58}},'Moonweaver Crown':{slot:'head',class:'all',damage:11,range:18,defence:32,req:{Defence:58}},'Nightmare Greatblade':{slot:'weapon',class:'warrior',damage:34,defence:13,speed:.06,req:{Attack:62}},'Dreamshot Bow':{slot:'weapon',class:'ranger',damage:29,range:70,speed:.08,req:{Ranged:62}},'Hollowmoon Staff':{slot:'weapon',class:'mage',damage:36,range:54,speed:.07,req:{Magic:62}},'Dream Eater Mask':{slot:'head',class:'all',damage:13,range:20,defence:36,req:{Defence:62}},
 'Moonstone Blade':{slot:'weapon',class:'warrior',damage:22,defence:7,req:{Attack:52}},
 'Moonstone Helm':{slot:'head',class:'warrior',damage:7,defence:24,req:{Defence:50}},
 'Moonstone Platebody':{slot:'body',class:'warrior',damage:10,defence:34,req:{Defence:54}},
@@ -970,15 +970,15 @@ function showDungeonResults(type,elapsed){
  Object.keys(save.bank).forEach(function(n){var d=(save.bank[n]||0)-(before.bank[n]||0);if(d>0)rewards.push([n,d])});
  Object.keys(save.items).forEach(function(n){var d=(save.items[n]||0)-(before.items[n]||0);if(d>0)rewards.push([n,d])});
  Object.entries(save.skills).forEach(function(entry){var n=entry[0],v=entry[1],b=before.xp[n];if(!b)return;var d=xpTotalAt(n,v)-xpTotalAt(n,b);if(d>0)xp.push([n,d])});
- var ashen=type==='ashenfalls',frozen=type==='frozen',drowned=type==='drowned';
- modal.style.setProperty('--boss-accent',drowned?'#72964b':frozen?'#73b9db':ashen?'#d76528':'#6f9b55');modal.style.setProperty('--boss-deep',drowned?'#182c20':frozen?'#132f43':ashen?'#401d12':'#1d3524');
+ var ashen=type==='ashenfalls',frozen=type==='frozen',drowned=type==='drowned',dreaming=type==='dreaming';
+ modal.style.setProperty('--boss-accent',dreaming?'#b68be0':drowned?'#72964b':frozen?'#73b9db':ashen?'#d76528':'#6f9b55');modal.style.setProperty('--boss-deep',dreaming?'#241633':drowned?'#182c20':frozen?'#132f43':ashen?'#401d12':'#1d3524');
  document.querySelector('.bossVictory').textContent='DUNGEON COMPLETE!';
- document.querySelector('#bossResultName').textContent=drowned?'THE DROWNED TEMPLE':frozen?'THE FROZEN CRYPT':ashen?'THE ASHEN FALLS':'GREENVALE DEPTHS';
- document.querySelector('#bossResultFlavor').textContent=drowned?'The Bog Colossus has fallen. The drowned vault yields its treasures.':frozen?'The Crypt King has fallen. The frozen vault yields its treasures.':ashen?'The Infernal Warden has fallen. The burning vault yields its treasures.':'The Root Warden has fallen. The depths surrender their treasures.';
+ document.querySelector('#bossResultName').textContent=dreaming?'THE DREAMING HOLLOW':drowned?'THE DROWNED TEMPLE':frozen?'THE FROZEN CRYPT':ashen?'THE ASHEN FALLS':'GREENVALE DEPTHS';
+ document.querySelector('#bossResultFlavor').textContent=dreaming?'The Dream Eater has fallen. The Hollow wakes and releases its lunar treasures.':drowned?'The Bog Colossus has fallen. The drowned vault yields its treasures.':frozen?'The Crypt King has fallen. The frozen vault yields its treasures.':ashen?'The Infernal Warden has fallen. The burning vault yields its treasures.':'The Root Warden has fallen. The depths surrender their treasures.';
  document.querySelector('#bossResultRewards').innerHTML=rewards.length?rewards.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+'</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No rewards</span></div>';
  document.querySelector('#bossResultXp').innerHTML=xp.length?xp.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+' XP</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No XP earned</span></div>';
  document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
- document.querySelector('#bossResultWaves').textContent=(ashen||frozen||drowned)?'20 / 20':'15 / 15';
+ document.querySelector('#bossResultWaves').textContent=(ashen||frozen||drowned||dreaming)?'20 / 20':'15 / 15';
  modal.classList.add('show');
 }
 function closeBossResults(){var m=document.querySelector('#bossResultsModal');if(m)m.classList.remove('show')}window.closeBossResults=closeBossResults;
@@ -1122,6 +1122,7 @@ if(window.collectionGrid){
   {category:'Dungeons',name:'Frozen Crypt',items:[['Cryptfang Greatsword','3%'],['Glacial Recurve','3%'],['Soulfrost Sceptre','3%'],['Crown of the Crypt','1%']]},
   {category:'Dungeons',name:'Drowned Temple',items:[['Colossus Cleaver','3%'],['Drowned Recurve','3%'],['Temple Hexstaff','3%'],['Bogheart Talisman','1%']]},
   {category:'Bosses',name:'Moonweaver',items:[['Moonweaver Crescent','2.5%'],['Starlight Recurve','2.5%'],['Dreamweaver Staff','2.5%'],['Moonweaver Crown','1.5%']]},
+  {category:'Dungeons',name:'Dreaming Hollow',items:[['Nightmare Greatblade','3%'],['Dreamshot Bow','3%'],['Hollowmoon Staff','3%'],['Dream Eater Mask','1%']]},
   {category:'Raids',name:'Shattered Citadel',items:[['Citadel Greatblade','Raid chest / 120 tokens'],['Riftpiercer Bow','Raid chest / 120 tokens'],['Shatterspell Staff','Raid chest / 120 tokens'],['Citadel Spirit Idol','Raid chest / 120 tokens'],['Shattered Crown','Raid chest / 150 tokens']]}
  ];
  const allCollectionItems=collectionGroups.reduce(function(a,g){return a.concat(g.items.map(function(x){return x[0]}))},[]);
