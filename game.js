@@ -559,11 +559,11 @@ function renderArtisan(){
  var fletch=all.filter(function(e){return e[1].skill==='Fletching'});
  var rangerFletch=fletch.filter(function(e){return e[0]!=='arrows'});
  var utilityFletch=fletch.filter(function(e){return e[0]==='arrows'});
- fletching.innerHTML=group('🏹 Ranger Equipment',rangerFletch,true)+(utilityFletch.length?group('🪶 Ranger Supplies',utilityFletch,false):'');
+ fletching.innerHTML=group('🏹 Ranger Equipment',rangerFletch,false)+(utilityFletch.length?group('🪶 Ranger Supplies',utilityFletch,false):'');
  var craft=all.filter(function(e){return e[1].skill==='Crafting'}),used=new Set();
  function take(set){return craft.filter(function(e){if(set.has(e[0])){used.add(e[0]);return true}return false})}
  var ranger=take(rangerKeys),mage=take(mageKeys),summoner=take(summonerKeys),utility=take(utilityKeys),other=craft.filter(function(e){return !used.has(e[0])});
- crafting.innerHTML=group('🏹 Ranger Equipment',ranger,true)+group('🔮 Mage Equipment',mage,true)+(summoner.length?group('◈ Summoner Equipment',summoner,true):'')+(utility.length?group('💍 Shared Accessories',utility,false):'')+(other.length?group('📦 Other Crafting',other,false):'');
+ crafting.innerHTML=group('🏹 Ranger Equipment',ranger,false)+group('🔮 Mage Equipment',mage,false)+(summoner.length?group('◈ Summoner Equipment',summoner,false):'')+(utility.length?group('💍 Shared Accessories',utility,false):'')+(other.length?group('📦 Other Crafting',other,false):'');
  [fletching,crafting].forEach(function(grid){grid.querySelectorAll('[data-artisan]').forEach(function(btn){btn.onclick=function(){startArtisan(btn.getAttribute('data-artisan'))}})})
 }
 
@@ -936,7 +936,7 @@ function renderSmithingTiers(){
  const card=function(entry){var k=entry[0],r=entry[1],owned=save.bank[r.resource]||0,hasMaterials=owned>=r.bars,hasLevel=save.skills.Smithing.lvl>=r.level;return '<div class="card '+(hasMaterials?'':'missingMaterials')+'"><b>'+r.name+'</b><span class="materialStatus '+(hasMaterials?'ready':'missing')+'">'+(hasMaterials?'✓ MATERIALS READY':'! MISSING MATERIALS')+'</span><p><span class="'+(hasMaterials?'haveMaterial':'needMaterial')+'">'+(hasMaterials?'✓ ':'✕ ')+menuItemArt(r.resource)+r.bars+' '+r.resource+(r.bars>1?'s':'')+' ('+owned+' owned)</span> • Smithing Lv '+r.level+' • '+Math.round(r.xp*3)+' XP • '+(r.time/1000).toFixed(1)+' sec</p><button '+(!hasLevel||!hasMaterials?'disabled':'')+' onclick="startSmithing(\''+k+'\')">Auto-smith</button></div>'};
  root.innerHTML=tiers.map((tier,index)=>{
   const name=tier.resource.replace(/ bar$/i,''),key=encodeURIComponent(tier.resource);
-  const opened=initialized?openTiers.has(key):index===0;
+  const opened=initialized?openTiers.has(key):false;
   return '<details class="artisanCategory smithingTier" data-smithing-tier="'+key+'"'+(opened?' open':'')+'><summary><span>'+name+' <small>Lv '+tier.level+'+</small></span><b>'+tier.entries.length+' recipes</b></summary><div class="grid artisanCategoryGrid">'+tier.entries.map(card).join('')+'</div></details>';
  }).join('');
  root.dataset.smithingGrouped='true';
