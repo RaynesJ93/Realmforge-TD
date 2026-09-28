@@ -195,3 +195,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* V299 Lunara Stage 1 temporary styling */
 .worldRegion.lunara>summary{background:linear-gradient(90deg,rgba(64,42,86,.42),rgba(24,39,57,.24))}.mapcard.lunara{border-color:rgba(174,132,220,.48)}
+
+/* V302 Lunara skilling placeholders - artwork intentionally deferred */
+.lunaraPlaceholder .placeholderIcon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:30px;color:#c9a7ef;text-shadow:0 0 10px rgba(178,125,230,.55)}
