@@ -177,3 +177,18 @@ body:has(#battle.active){overscroll-behavior:none}
 /* V297 compact visual equipment */
 #equipmentGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.equipmentClassCard{padding:0;overflow:hidden}.equipmentClassCard>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;cursor:pointer}.equipmentClassCard>summary>b{font-family:Georgia,serif;font-size:1.2rem;color:#e6c776}.equipmentClassCard>summary>span{font-size:.72rem;opacity:.7;text-align:right}.equipmentClassBody{padding:0 12px 14px}.equipmentPortrait{display:flex;justify-content:center;align-items:center;min-height:150px;margin-bottom:8px}.equipmentPortrait .equippedPreview{width:128px;height:160px;object-fit:contain}.equipmentSlots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.equipmentSlot{min-width:0;display:grid;grid-template-columns:auto 28px minmax(0,1fr);align-items:center;gap:6px;padding:7px}.equipmentSlot .menuItemIcon{width:28px;height:28px;object-fit:contain;margin:0}.equipmentSlot span{font-size:.75rem}.equipmentSlot b{font-size:.78rem;overflow-wrap:anywhere;text-align:left}.equipmentSlot.empty{grid-template-columns:auto 1fr}.equipmentClassBody>small{display:block;margin-top:10px}
 @media(max-width:700px){#equipmentGrid{grid-template-columns:1fr}.equipmentClassCard>summary>b{font-size:1.08rem}.equipmentClassCard>summary>span{font-size:.68rem}.equipmentSlots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* V298 equipment slot text/layout fix */
+.equipmentSlot{grid-template-columns:auto 34px minmax(0,1fr)!important;column-gap:7px!important;padding:8px 7px!important}
+.equipmentSlot .menuItemIcon{width:32px!important;height:32px!important;flex:none}
+.equipmentSlot span{font-size:.72rem!important;white-space:nowrap}
+.equipmentSlot b{font-size:.76rem!important;line-height:1.18!important;overflow-wrap:normal!important;word-break:normal!important;hyphens:none!important;min-width:0}
+.equipmentSlot.empty{grid-template-columns:auto minmax(0,1fr)!important}
+@media(max-width:430px){
+ .equipmentClassBody{padding-left:8px!important;padding-right:8px!important}
+ .equipmentSlots{gap:5px!important}
+ .equipmentSlot{grid-template-columns:auto 30px minmax(0,1fr)!important;column-gap:5px!important;padding:7px 5px!important}
+ .equipmentSlot .menuItemIcon{width:28px!important;height:28px!important}
+ .equipmentSlot span{font-size:.66rem!important}
+ .equipmentSlot b{font-size:.70rem!important;letter-spacing:-.01em}
+}
