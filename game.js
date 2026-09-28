@@ -941,14 +941,18 @@ function renderSmithingTiers(){
 }
 
 function captureMenuState(){
- var open=Array.from(document.querySelectorAll('details[open]')).map(function(d){return d.id||d.getAttribute('data-bank-category')||d.getAttribute('data-dungeon-detail')||d.getAttribute('data-collection-detail')||d.querySelector('summary')&&d.querySelector('summary').textContent.trim()}).filter(Boolean);
- var active=document.querySelector('.screen.active'),work=document.querySelector('.workshopPane.active');
- return{open:open,screen:active&&active.id,work:work&&work.id,scrollY:window.scrollY}
+ var details=Array.from(document.querySelectorAll('details')).map(function(d){return !!d.open});
+ var active=document.querySelector('.screen.active'),work=document.querySelector('.workshopPane:not([hidden])');
+ return{details:details,screen:active&&active.id,work:work&&work.id,scrollY:window.scrollY}
 }
 function restoreMenuState(s){
  if(!s)return;
- document.querySelectorAll('details').forEach(function(d){var k=d.id||d.getAttribute('data-bank-category')||d.getAttribute('data-dungeon-detail')||d.getAttribute('data-collection-detail')||d.querySelector('summary')&&d.querySelector('summary').textContent.trim();if(k&&s.open.includes(k))d.open=true});
- if(s.work){document.querySelectorAll('.workshopPane').forEach(function(p){p.classList.toggle('active',p.id===s.work)})}
+ var details=Array.from(document.querySelectorAll('details'));
+ details.forEach(function(d,i){if(i<s.details.length)d.open=!!s.details[i]});
+ if(s.work){
+  document.querySelectorAll('.workshopPane').forEach(function(p){p.hidden=p.id!==s.work});
+  document.querySelectorAll('[data-workshop]').forEach(function(b){b.setAttribute('aria-pressed',String('workshop-'+b.dataset.workshop===s.work))})
+ }
  requestAnimationFrame(function(){window.scrollTo(0,s.scrollY||0)})
 }
 function renderUIPreservingMenus(){var state=captureMenuState();renderUI();restoreMenuState(state)}
