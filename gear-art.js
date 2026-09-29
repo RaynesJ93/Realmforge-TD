@@ -278,6 +278,7 @@ Object.assign(equipmentArtwork,{"Infernal Greatblade":"assets/equipment/infernal
 // Approved Summoner and Shattered Citadel inventory artwork.
 Object.assign(equipmentArtwork,{"Spiritcaller Staff": "assets/equipment/spiritcaller-staff-art-20260927.webp", "Emberbond Focus": "assets/equipment/emberbond-focus-art-20260927.webp", "Frostbound Totem": "assets/equipment/frostbound-totem-art-20260927.webp", "Voidcaller Sceptre": "assets/equipment/voidcaller-sceptre-art-20260927.webp", "Behemoth Sigil": "assets/equipment/behemoth-sigil-art-20260927.webp", "Summoner Hood": "assets/equipment/summoner-hood-art-20260927.webp", "Summoner Robe": "assets/equipment/summoner-robe-art-20260927.webp", "Spiritweave Hood": "assets/equipment/spiritweave-hood-art-20260927.webp", "Spiritweave Robe": "assets/equipment/spiritweave-robe-art-20260927.webp", "Citadel Greatblade": "assets/equipment/citadel-greatblade-art-20260927.webp", "Riftpiercer Bow": "assets/equipment/riftpiercer-bow-art-20260927.webp", "Shatterspell Staff": "assets/equipment/shatterspell-staff-art-20260927.webp", "Citadel Spirit Idol": "assets/equipment/citadel-spirit-idol-art-20260927.webp", "Shattered Crown": "assets/equipment/shattered-crown-art-20260927.webp"});
 const icons=new Map(),towerCache=new Map();
+equipmentArtwork['Moonstone Blade']='assets/equipment/moonstone-blade-20260929.webp';
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
@@ -303,6 +304,5 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
-
 
 
