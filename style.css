@@ -198,3 +198,8 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* V302 Lunara skilling placeholders - artwork intentionally deferred */
 .lunaraPlaceholder .placeholderIcon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:30px;color:#c9a7ef;text-shadow:0 0 10px rgba(178,125,230,.55)}
+
+/* Compact approved skill art; preserve the existing card grid and XP bars. */
+:is(#skillGrid,#combatStats) .skillCardHeading{display:flex;align-items:center;gap:7px;min-height:36px;margin-bottom:4px;line-height:1.15}
+.skillCardIcon{display:block;width:36px;height:36px;flex:0 0 36px;object-fit:contain}
+.skillCardHeading span{min-width:0;overflow-wrap:normal}
