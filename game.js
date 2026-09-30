@@ -625,7 +625,8 @@ function renderArtisan(){
  var rangerKeys=new Set(['rifthood','riftbody','riftchaps','riftquiver','rhood','rbody','lboots','lgloves','aboots','agloves','fwboots','fwgloves','lchaps','achaps','fwchaps','mirehood','mirebody','lunarhood','lunarbody','lunarchaps','lunarquiver']);
  var mageKeys=new Set(['shattercowl','shatterrobe','shatterlegs','shatterbook','charm','scrapguard','oakstaff','ironstaff','mcowl','mrobe','cboots','cgloves','aslip','ahand','fwslip','fwhand','clegs','alegwraps','fwlegwraps','aspell','ashenbook','winterorb','rotstaff','mirecowl','mirerobe','moonstaff','lunarcowl','lunarrobe','lunarwraps','moongrimoire']);
  var summonerKeys=new Set(['spiritboundhood','spiritboundrobe','spiritboundlegs','spiritstaff','summonhood','summonrobe','emberfocus','spirithood','spiritrobe','frosttotem','voidsceptre','behemothsigil','mooncaller','lunarveil','lunarvest','lunarbindings','moonidol']);
- var utilityKeys=new Set(['citadelbody','citadellegs','citadeldef','citadelcape','riftstonering','copperband','greenamulet','greencloak','ironsignet','ashenamulet','ashenmantle','frostring','frostheart','frostcape']);
+ var warriorKeys=new Set(['citadelbody','citadellegs','citadeldef']);
+ var utilityKeys=new Set(['citadelcape','riftstonering','copperband','greenamulet','greencloak','ironsignet','ashenamulet','ashenmantle','frostring','frostheart','frostcape']);
  function recipeCard(entry){
   var k=entry[0],r=entry[1],actualXp=Math.round(r.xp*3),costs=Object.entries(r.cost);
   var hasMaterials=costs.every(function(cost){return (save.bank[cost[0]]||0)>=cost[1]}),hasLevel=save.skills[r.skill].lvl>=r.level;
@@ -642,8 +643,8 @@ function renderArtisan(){
  fletching.innerHTML=group('🏹 Ranger Equipment',rangerFletch,false)+(utilityFletch.length?group('🪶 Ranger Supplies',utilityFletch,false):'');
  var craft=all.filter(function(e){return e[1].skill==='Crafting'}),used=new Set();
  function take(set){return craft.filter(function(e){if(set.has(e[0])){used.add(e[0]);return true}return false})}
- var ranger=take(rangerKeys),mage=take(mageKeys),summoner=take(summonerKeys),utility=take(utilityKeys),other=craft.filter(function(e){return !used.has(e[0])});
- crafting.innerHTML=group('🏹 Ranger Equipment',ranger,false)+group('🔮 Mage Equipment',mage,false)+(summoner.length?group('◈ Summoner Equipment',summoner,false):'')+(utility.length?group('💍 Shared Accessories',utility,false):'')+(other.length?group('📦 Other Crafting',other,false):'');
+ var warrior=take(warriorKeys),ranger=take(rangerKeys),mage=take(mageKeys),summoner=take(summonerKeys),utility=take(utilityKeys),other=craft.filter(function(e){return !used.has(e[0])});
+ crafting.innerHTML=(warrior.length?group('⚔️ Warrior Equipment',warrior,false):'')+group('🏹 Ranger Equipment',ranger,false)+group('🔮 Mage Equipment',mage,false)+(summoner.length?group('◈ Summoner Equipment',summoner,false):'')+(utility.length?group('💍 Shared Accessories',utility,false):'')+(other.length?group('📦 Other Crafting',other,false):'');
  [fletching,crafting].forEach(function(grid){grid.querySelectorAll('[data-artisan]').forEach(function(btn){btn.onclick=function(){startArtisan(btn.getAttribute('data-artisan'))}})})
 }
 
