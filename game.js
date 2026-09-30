@@ -1079,6 +1079,7 @@ mapGrid.innerHTML=worldRegions.map(function(r){
 }).join('');battleMapName.textContent=raidMode&&raidRun()?raidRooms[raidRun().room].name:maps[currentMap].name;battleMapDesc.textContent=raidMode&&raidRun()?raidRooms[raidRun().room].desc:maps[currentMap].desc;waveMax.textContent=raidMode?(raidBossKind?1:5):dungeonMode?(['ashenfalls','frozen','drowned'].includes(dungeonType)?20:15):bossMode?3:10;skillGrid.innerHTML=Object.entries(save.skills).map(([n,s])=>'<div class="card">'+skillCardHeading(n)+'<div>Level '+s.lvl+'</div><small>'+s.xp+'/'+xpNeed(s.lvl)+' XP</small><div class="xp"><i style="width:'+Math.min(100,s.xp/xpNeed(s.lvl)*100)+'%"></i></div></div>').join('');let resourceGroups={Ores:[],Bars:[],Wood:[],Food:[],Materials:[]};
 Object.entries(save.bank).forEach(function(entry){
  var n=entry[0],q=entry[1],cat='Materials';
+ if(itemDB[n])return;
  if(/ ore$/i.test(n))cat='Ores';
  else if(n.includes('bar'))cat='Bars';
  else if(n==='Logs'||n.includes('logs'))cat='Wood';
@@ -1100,7 +1101,7 @@ function bankSortEntries(groups,isGear){
 }
 bankSortEntries(resourceGroups,false);
 let gearGroups={Weapons:[],Armour:[],Offhands:[],Accessories:[]};
-Object.entries(save.items).filter(function(entry){return entry[1]>0&&itemDB[entry[0]]}).forEach(function(entry){var slot=itemDB[entry[0]].slot,cat=slot==='weapon'?'Weapons':slot==='offhand'?'Offhands':['ring','amulet','cape'].includes(slot)?'Accessories':'Armour';gearGroups[cat].push(entry)});bankSortEntries(gearGroups,true);
+var gearInventory={};Object.entries(save.items).forEach(function(entry){if(entry[1]>0&&itemDB[entry[0]])gearInventory[entry[0]]=(gearInventory[entry[0]]||0)+entry[1]});Object.entries(save.bank).forEach(function(entry){if(entry[1]>0&&itemDB[entry[0]])gearInventory[entry[0]]=(gearInventory[entry[0]]||0)+entry[1]});Object.entries(gearInventory).forEach(function(entry){var slot=itemDB[entry[0]].slot,cat=slot==='weapon'?'Weapons':slot==='offhand'?'Offhands':['ring','amulet','cape'].includes(slot)?'Accessories':'Armour';gearGroups[cat].push(entry)});bankSortEntries(gearGroups,true);
 function bankGearCard(entry){
  var n=entry[0],q=entry[1],i=itemDB[n];
  var classes=i.class==='all'?['warrior','ranger','mage','summoner']:[i.class];
