@@ -5,6 +5,7 @@ Object.assign(skillingArtwork,{"Spirit Shard": "assets/skilling/spirit-shard-art
 // Shared by bank, shops, crafting and all item reward modals.
 Object.assign(skillingArtwork,{'Moonstone ore':'assets/skilling/moonstone-ore-20260929.webp','Moonstone bar':'assets/skilling/moonstone-bar-20260929.webp','Dreamwood logs':'assets/skilling/dreamwood-logs-20260929.webp','Cooked Moonfin':'assets/skilling/cooked-moonfin-20260929.webp'});
 Object.assign(skillingArtwork,{"Ash Thread": "assets/skilling/ash-thread-20260927.webp", "Frost Thread": "assets/skilling/frost-thread-20260927.webp", "Mire Thread": "assets/skilling/mire-thread-20260927.webp"});
+Object.assign(skillingArtwork,{"Citadel Shard":"assets/skilling/raid-tokens-art-20260927.webp","Ancient Alloy":"assets/skilling/citadel-ore-art-20260927.webp","Riftstone":"assets/skilling/spirit-shard-art-20260927.webp","Shatterweave Cloth":"assets/skilling/frostweave-cloth-v241.webp","Bound Spirit Essence":"assets/skilling/ancient-spirit-core-art-20260927.webp"});
 const existingSkillArtwork={"Mining":"assets/skills/mining-v228.webp","Woodcutting":"assets/skills/woodcutting-v228.webp","Fishing":"assets/skills/fishing-v228.webp","Cooking":"assets/skills/cooking-v228.webp","Smithing":"assets/skills/smithing-v228.webp","Smelting":"assets/skills/smelting-v228.webp","Fletching":"assets/skills/fletching-v228.webp","Crafting":"assets/skills/crafting-v228.webp"};
 const utilityArtwork={"Coins":"assets/coins-v272.webp"};
 function menuItemArt(name){const src=utilityArtwork[name]||existingSkillArtwork[name]||skillingArtwork[name]||(itemDB[name]&&window.RealmforgeGear?window.RealmforgeGear.icon(name):null);return src?'<img class="menuItemIcon" src="'+src+'" alt="" width="32" height="32" loading="lazy">':'';}
@@ -37,7 +38,7 @@ const itemDB={'Rusty Sword':{slot:'weapon',class:'warrior',damage:0},'Bronze Swo
 'Summoner Hood':{slot:'head',class:'summoner',damage:3,range:8,defence:3,req:{Summoning:15}},
 'Summoner Robe':{slot:'body',class:'summoner',damage:5,range:10,defence:5,req:{Summoning:20}},
 'Spiritweave Hood':{slot:'head',class:'summoner',damage:7,range:14,defence:7,req:{Summoning:40}},
-'Spiritweave Robe':{slot:'body',class:'summoner',damage:11,range:18,defence:10,req:{Summoning:50}},'Citadel Greatblade':{slot:'weapon',class:'warrior',damage:26,defence:8,speed:.08,req:{Attack:55}},'Riftpiercer Bow':{slot:'weapon',class:'ranger',damage:21,range:52,speed:.06,req:{Ranged:55}},'Shatterspell Staff':{slot:'weapon',class:'mage',damage:27,range:38,speed:.05,req:{Magic:55}},'Citadel Spirit Idol':{slot:'offhand',class:'summoner',damage:17,range:30,defence:10,req:{Summoning:60}},'Shattered Crown':{slot:'head',class:'all',damage:9,range:14,defence:28,req:{Defence:55}},'Moonweaver Crescent':{slot:'weapon',class:'warrior',damage:30,defence:11,speed:.05,req:{Attack:58}},'Starlight Recurve':{slot:'weapon',class:'ranger',damage:25,range:64,speed:.07,req:{Ranged:58}},'Dreamweaver Staff':{slot:'weapon',class:'mage',damage:32,range:48,speed:.06,req:{Magic:58}},'Moonweaver Crown':{slot:'head',class:'all',damage:11,range:18,defence:32,req:{Defence:58}},'Nightmare Greatblade':{slot:'weapon',class:'warrior',damage:34,defence:13,speed:.06,req:{Attack:62}},'Dreamshot Bow':{slot:'weapon',class:'ranger',damage:29,range:70,speed:.08,req:{Ranged:62}},'Hollowmoon Staff':{slot:'weapon',class:'mage',damage:36,range:54,speed:.07,req:{Magic:62}},'Dream Eater Mask':{slot:'head',class:'all',damage:13,range:20,defence:36,req:{Defence:62}},
+'Spiritweave Robe':{slot:'body',class:'summoner',damage:11,range:18,defence:10,req:{Summoning:50}},'Citadel Greatblade':{slot:'weapon',class:'warrior',damage:26,defence:8,speed:.08,req:{Attack:55}},'Riftpiercer Bow':{slot:'weapon',class:'ranger',damage:21,range:52,speed:.06,req:{Ranged:55}},'Shatterspell Staff':{slot:'weapon',class:'mage',damage:27,range:38,speed:.05,req:{Magic:55}},'Citadel Spirit Idol':{slot:'offhand',class:'summoner',damage:17,range:30,defence:10,req:{Summoning:60}},'Shattered Crown':{slot:'head',class:'all',damage:9,range:14,defence:28,req:{Defence:55}},'Citadel Platebody':{slot:'body',class:'warrior',damage:11,defence:38,req:{Defence:60}},'Citadel Platelegs':{slot:'legs',class:'warrior',damage:8,defence:30,req:{Defence:58}},'Citadel Defender':{slot:'offhand',class:'warrior',damage:5,defence:34,req:{Defence:60}},'Riftwalker Hood':{slot:'head',class:'ranger',damage:8,range:22,defence:12,req:{Ranged:58}},'Riftwalker Body':{slot:'body',class:'ranger',damage:13,range:18,defence:17,req:{Ranged:60}},'Riftwalker Chaps':{slot:'legs',class:'ranger',damage:9,range:19,defence:14,req:{Ranged:59}},'Rift Quiver':{slot:'offhand',class:'ranger',damage:8,range:28,req:{Ranged:60}},'Shatterweave Cowl':{slot:'head',class:'mage',damage:9,range:20,defence:11,req:{Magic:58}},'Shatterweave Robe':{slot:'body',class:'mage',damage:15,range:18,defence:16,req:{Magic:60}},'Shatterweave Legwraps':{slot:'legs',class:'mage',damage:10,range:19,defence:13,req:{Magic:59}},'Shattered Grimoire':{slot:'offhand',class:'mage',damage:12,range:27,req:{Magic:60}},'Spiritbound Hood':{slot:'head',class:'summoner',damage:10,range:21,defence:12,req:{Summoning:58}},'Spiritbound Robe':{slot:'body',class:'summoner',damage:16,range:20,defence:17,req:{Summoning:60}},'Spiritbound Bindings':{slot:'legs',class:'summoner',damage:11,range:20,defence:14,req:{Summoning:59}},'Citadel Cape':{slot:'cape',class:'all',damage:7,range:12,defence:16,req:{Defence:58}},'Riftstone Ring':{slot:'ring',class:'all',damage:7,range:12,defence:10},'Moonweaver Crescent':{slot:'weapon',class:'warrior',damage:30,defence:11,speed:.05,req:{Attack:58}},'Starlight Recurve':{slot:'weapon',class:'ranger',damage:25,range:64,speed:.07,req:{Ranged:58}},'Dreamweaver Staff':{slot:'weapon',class:'mage',damage:32,range:48,speed:.06,req:{Magic:58}},'Moonweaver Crown':{slot:'head',class:'all',damage:11,range:18,defence:32,req:{Defence:58}},'Nightmare Greatblade':{slot:'weapon',class:'warrior',damage:34,defence:13,speed:.06,req:{Attack:62}},'Dreamshot Bow':{slot:'weapon',class:'ranger',damage:29,range:70,speed:.08,req:{Ranged:62}},'Hollowmoon Staff':{slot:'weapon',class:'mage',damage:36,range:54,speed:.07,req:{Magic:62}},'Dream Eater Mask':{slot:'head',class:'all',damage:13,range:20,defence:36,req:{Defence:62}},
 'Moonstone Blade':{slot:'weapon',class:'warrior',damage:22,defence:7,req:{Attack:52}},
 'Moonstone Helm':{slot:'head',class:'warrior',damage:7,defence:24,req:{Defence:50}},
 'Moonstone Platebody':{slot:'body',class:'warrior',damage:10,defence:34,req:{Defence:54}},
@@ -515,6 +516,23 @@ function renderQuests(){let g=document.querySelector('#questGrid'),st=document.q
 
 
 const artisanRecipes={
+citadelbody:{name:'Citadel Platebody',skill:'Crafting',level:62,xp:520,time:5200,cost:{'Citadel Shard':20,'Ancient Alloy':8}},
+citadellegs:{name:'Citadel Platelegs',skill:'Crafting',level:60,xp:440,time:4800,cost:{'Citadel Shard':16,'Ancient Alloy':6}},
+citadeldef:{name:'Citadel Defender',skill:'Crafting',level:61,xp:470,time:5000,cost:{'Citadel Shard':18,'Ancient Alloy':7}},
+rifthood:{name:'Riftwalker Hood',skill:'Crafting',level:58,xp:390,time:4400,cost:{'Citadel Shard':12,'Riftstone':5}},
+riftbody:{name:'Riftwalker Body',skill:'Crafting',level:62,xp:520,time:5200,cost:{'Citadel Shard':20,'Riftstone':8}},
+riftchaps:{name:'Riftwalker Chaps',skill:'Crafting',level:60,xp:450,time:4800,cost:{'Citadel Shard':16,'Riftstone':6}},
+riftquiver:{name:'Rift Quiver',skill:'Crafting',level:61,xp:470,time:4900,cost:{'Citadel Shard':18,'Riftstone':7}},
+shattercowl:{name:'Shatterweave Cowl',skill:'Crafting',level:58,xp:390,time:4400,cost:{'Citadel Shard':12,'Shatterweave Cloth':5}},
+shatterrobe:{name:'Shatterweave Robe',skill:'Crafting',level:62,xp:520,time:5200,cost:{'Citadel Shard':20,'Shatterweave Cloth':8}},
+shatterlegs:{name:'Shatterweave Legwraps',skill:'Crafting',level:60,xp:450,time:4800,cost:{'Citadel Shard':16,'Shatterweave Cloth':6}},
+shatterbook:{name:'Shattered Grimoire',skill:'Crafting',level:61,xp:470,time:4900,cost:{'Citadel Shard':18,'Shatterweave Cloth':7}},
+spiritboundhood:{name:'Spiritbound Hood',skill:'Crafting',level:58,xp:400,time:4500,cost:{'Citadel Shard':12,'Bound Spirit Essence':5}},
+spiritboundrobe:{name:'Spiritbound Robe',skill:'Crafting',level:62,xp:540,time:5300,cost:{'Citadel Shard':20,'Bound Spirit Essence':8}},
+spiritboundlegs:{name:'Spiritbound Bindings',skill:'Crafting',level:60,xp:460,time:4900,cost:{'Citadel Shard':16,'Bound Spirit Essence':6}},
+citadelcape:{name:'Citadel Cape',skill:'Crafting',level:63,xp:600,time:5600,cost:{'Citadel Shard':25,'Shatterweave Cloth':5,'Bound Spirit Essence':5}},
+riftstonering:{name:'Riftstone Ring',skill:'Crafting',level:64,xp:650,time:5800,cost:{'Citadel Shard':25,'Riftstone':10}},
+
 lunarbrow:{name:'Glowbark Longbow',skill:'Fletching',level:52,xp:280,time:3800,cost:{'Glowbark logs':3,'Moonstone bar':1}},
 lunarhood:{name:'Lunarweave Hood',skill:'Crafting',level:50,xp:250,time:3500,cost:{'Lunarweave Cloth':3,'Glowbark logs':1}},
 lunarbody:{name:'Lunarweave Body',skill:'Crafting',level:54,xp:360,time:4300,cost:{'Lunarweave Cloth':5,'Glowbark logs':1}},
@@ -604,10 +622,10 @@ const stopGatherBase=stopGathering;stopGathering=function(show=true){stopGatherB
 function renderArtisan(){
  var fletching=document.querySelector('#fletchingGrid'),crafting=document.querySelector('#craftingGrid');
  if(!fletching||!crafting)return;
- var rangerKeys=new Set(['rhood','rbody','lboots','lgloves','aboots','agloves','fwboots','fwgloves','lchaps','achaps','fwchaps','mirehood','mirebody','lunarhood','lunarbody','lunarchaps','lunarquiver']);
- var mageKeys=new Set(['charm','scrapguard','oakstaff','ironstaff','mcowl','mrobe','cboots','cgloves','aslip','ahand','fwslip','fwhand','clegs','alegwraps','fwlegwraps','aspell','ashenbook','winterorb','rotstaff','mirecowl','mirerobe','moonstaff','lunarcowl','lunarrobe','lunarwraps','moongrimoire']);
- var summonerKeys=new Set(['spiritstaff','summonhood','summonrobe','emberfocus','spirithood','spiritrobe','frosttotem','voidsceptre','behemothsigil','mooncaller','lunarveil','lunarvest','lunarbindings','moonidol']);
- var utilityKeys=new Set(['copperband','greenamulet','greencloak','ironsignet','ashenamulet','ashenmantle','frostring','frostheart','frostcape']);
+ var rangerKeys=new Set(['rifthood','riftbody','riftchaps','riftquiver','rhood','rbody','lboots','lgloves','aboots','agloves','fwboots','fwgloves','lchaps','achaps','fwchaps','mirehood','mirebody','lunarhood','lunarbody','lunarchaps','lunarquiver']);
+ var mageKeys=new Set(['shattercowl','shatterrobe','shatterlegs','shatterbook','charm','scrapguard','oakstaff','ironstaff','mcowl','mrobe','cboots','cgloves','aslip','ahand','fwslip','fwhand','clegs','alegwraps','fwlegwraps','aspell','ashenbook','winterorb','rotstaff','mirecowl','mirerobe','moonstaff','lunarcowl','lunarrobe','lunarwraps','moongrimoire']);
+ var summonerKeys=new Set(['spiritboundhood','spiritboundrobe','spiritboundlegs','spiritstaff','summonhood','summonrobe','emberfocus','spirithood','spiritrobe','frosttotem','voidsceptre','behemothsigil','mooncaller','lunarveil','lunarvest','lunarbindings','moonidol']);
+ var utilityKeys=new Set(['citadelbody','citadellegs','citadeldef','citadelcape','riftstonering','copperband','greenamulet','greencloak','ironsignet','ashenamulet','ashenmantle','frostring','frostheart','frostcape']);
  function recipeCard(entry){
   var k=entry[0],r=entry[1],actualXp=Math.round(r.xp*3),costs=Object.entries(r.cost);
   var hasMaterials=costs.every(function(cost){return (save.bank[cost[0]]||0)>=cost[1]}),hasLevel=save.skills[r.skill].lvl>=r.level;
@@ -856,7 +874,7 @@ function showRaidResults(chest,elapsed){
  document.querySelector('.bossVictory').textContent='RAID COMPLETE!';
  document.querySelector('#bossResultName').textContent='THE SHATTERED CITADEL';
  document.querySelector('#bossResultFlavor').textContent=chest.unique?'Rare unique obtained: '+chest.unique+'!':'The Citadel Lord has fallen. Your unique pity chance has increased.';
- var rewards=[['Raid Tokens',chest.tokens],['Coins',chest.coins],['Spirit Shard',chest.shards]];if(chest.unique)rewards.push([chest.unique,1]);
+ var rewards=[['Raid Tokens',chest.tokens],['Coins',chest.coins],['Spirit Shard',chest.shards]];(chest.materials||[]).forEach(function(x){rewards.push([x.name,x.qty])});if(chest.unique)rewards.push([chest.unique,1]);
  document.querySelector('#bossResultRewards').innerHTML=rewards.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+'</span><b>+'+Number(x[1]).toLocaleString()+'</b></div>'}).join('');
  document.querySelector('#bossResultXp').innerHTML='<div class="bossResultRow"><span>Raid completion rewards claimed</span><b>✓</b></div>';
  document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
@@ -864,10 +882,12 @@ function showRaidResults(chest,elapsed){
  modal.classList.add('show')
 }
 function awardRaidChest(){
- var tokens=8+Math.floor(Math.random()*5),coins=2500+Math.floor(Math.random()*2501),shards=8+Math.floor(Math.random()*9),unique=null;
+ var tokens=8+Math.floor(Math.random()*5),coins=2500+Math.floor(Math.random()*2501),shards=8+Math.floor(Math.random()*9),unique=null,materials=[];
  save.raid.tokens=(save.raid.tokens||0)+tokens;save.coins+=coins;save.bank['Spirit Shard']=(save.bank['Spirit Shard']||0)+shards;
+ var matPool=['Citadel Shard','Ancient Alloy','Riftstone','Shatterweave Cloth','Bound Spirit Essence'];
+ for(var roll=0;roll<2;roll++){var name=matPool[Math.floor(Math.random()*matPool.length)],qty=name==='Citadel Shard'?3+Math.floor(Math.random()*5):1+Math.floor(Math.random()*3);save.bank[name]=(save.bank[name]||0)+qty;var found=materials.find(function(x){return x.name===name});if(found)found.qty+=qty;else materials.push({name:name,qty:qty})}
  var chance=Math.min(.30,.08+(save.raid.pity||0)*.02);if(Math.random()<chance){unique=raidUniques[Math.floor(Math.random()*raidUniques.length)];save.bank[unique]=(save.bank[unique]||0)+1;save.collection[unique]=true;save.raid.pity=0}else save.raid.pity=(save.raid.pity||0)+1;
- return{tokens:tokens,coins:coins,shards:shards,unique:unique,chance:chance}
+ return{tokens:tokens,coins:coins,shards:shards,materials:materials,unique:unique,chance:chance}
 }
 function buyRaidReward(name){
  var costs={'Citadel Greatblade':120,'Riftpiercer Bow':120,'Shatterspell Staff':120,'Citadel Spirit Idol':120,'Shattered Crown':150},cost=costs[name];if(!cost||!raidUniques.includes(name))return;if((save.raid.tokens||0)<cost){alert('You need '+cost+' Raid Tokens.');return}if(!confirm('Spend '+cost+' Raid Tokens on '+name+'?'))return;save.raid.tokens-=cost;save.bank[name]=(save.bank[name]||0)+1;save.collection[name]=true;writeSave(true);renderRaid();renderUI()
