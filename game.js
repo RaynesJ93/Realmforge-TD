@@ -1450,7 +1450,13 @@ startWave.onclick=launchWave;
 function updateBattleControls(){var a=document.querySelector('#autoWave'),sp=document.querySelector('#battleSpeed');if(a)a.textContent='Auto Wave: '+(autoWave?'ON':'OFF');if(sp)sp.textContent=battleSpeed+'x Speed'}
 window.toggleAutoWave=function(){autoWave=!autoWave;updateBattleControls();if(autoWave&&!waveRunning&&!mapFinished)setTimeout(launchWave,250)};
 window.toggleBattleSpeed=function(){battleSpeed=battleSpeed===1?3:1;updateBattleControls()};
-function spawn(kind){const path=battlePath();let d=enemyDB[kind],scale=raidMode?(1.35+wave*.18):dungeonMode?(dungeonType==='realmforge'?(1.85+wave*.20):dungeonType==='ashenfalls'?(1.28+wave*.15):dungeonType==='frozen'?(1.35+wave*.16):dungeonType==='drowned'?(1.55+wave*.18):(1.15+wave*.14)):maps[currentMap].mult*(1+wave*.13)*(bossMode?1.08:1),rewardMult=raidMode?1:maps[currentMap].mult;enemies.push({kind,x:path[0][0],y:path[0][1],seg:1,hp:d.hp*scale,max:d.hp*scale,speed:d.speed,reward:Math.round(d.reward*rewardMult),dead:false,lunaraRole:d.role||null})}
+function spawn(kind){const path=battlePath();let d=enemyDB[kind],scale=raidMode?(1.35+wave*.18):dungeonMode?(dungeonType==='realmforge'?(1.85+wave*.20):dungeonType==='ashenfalls'?(1.28+wave*.15):dungeonType==='frozen'?(1.35+wave*.16):dungeonType==='drowned'?(1.55+wave*.18):(1.15+wave*.14)):maps[currentMap].mult*(1+wave*.13)*(bossMode?1.08:1),rewardMult=raidMode?1:maps[currentMap].mult;
+ const isBoss=masteryBossKinds.has(kind),region=maps[currentMap]&&maps[currentMap].region;
+ // Elite enemies begin in Ashen Peaks and become more common in later regions.
+ // Bosses are never rolled as elites. Boss Hunts are left unchanged.
+ let eliteChance=!raidMode&&!dungeonMode&&!bossMode&&!isBoss?(region==='ashen'?.08:region==='frost'?.12:region==='blackfen'?.16:region==='lunara'?.20:0):0;
+ let isElite=eliteChance>0&&Math.random()<eliteChance,eliteHp=isElite?1.75:1,eliteReward=isElite?2:1;
+ enemies.push({kind,x:path[0][0],y:path[0][1],seg:1,hp:d.hp*scale*eliteHp,max:d.hp*scale*eliteHp,speed:d.speed,reward:Math.round(d.reward*rewardMult*eliteReward),dead:false,lunaraRole:d.role||null,elite:isElite,isElite:isElite})}
 function checkBossMilestones(kind){let kills=kind==='warlord'?save.campaign.bossKills:kind==='tyrant'?save.campaign.ashenBossKills:kind==='frostwyrm'?save.campaign.frostBossKills:kind==='mirequeen'?save.campaign.mireBossKills:kind==='moonweaver'?save.campaign.moonBossKills:0,arr=save.bossHunt.milestones[kind]||(save.bossHunt.milestones[kind]=[]),bossName=kind==='warlord'?'Warlord':kind==='tyrant'?'Ember Tyrant':kind==='frostwyrm'?'Frost Wyrm':kind==='moonweaver'?'Moonweaver':'Mire Queen';[10,25,50,100,250].forEach(m=>{if(kills>=m&&!arr.includes(m)){arr.push(m);let reward=m*25;save.coins+=reward;save.drops.push(bossName+' '+m+' kills milestone: +'+reward+' coins')}})}
 function rarePerkMult(){return hasPerk('lucky')?1.10:1}
 function addSummoningBossDrop(kind){
