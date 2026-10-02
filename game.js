@@ -1061,7 +1061,7 @@ function skillCardHeading(name){
  return '<b class="skillCardHeading"><img class="skillCardIcon" src="assets/skills/'+slug+'-v311.webp" alt="" width="36" height="36" draggable="false"><span>'+name+'</span></b>';
 }
 
-const masteryDefinitions=[
+var masteryDefinitions=[
  {id:'mining',skill:'Mining',icon:'⛏️',title:'Master Miner',passive:'+15% chance to receive an additional ore',objectives:[['highTierOre','Mine high-tier ores',500],['moonstone','Mine Moonstone Ore',150],['doubleOre','Trigger double-ore gathers',50],['totalOre','Mine total ore after Level 99',1000]]},
  {id:'smithing',skill:'Smithing',icon:'🔨',title:'Master Smith',passive:'10% chance to preserve materials when Smithing equipment',objectives:[['highTierBars','Smelt high-tier bars',500],['moonstoneBars','Smelt Moonstone Bars',150],['highTierGear','Smith high-tier equipment',250],['moonstoneGear','Smith Moonstone equipment',50]]},
  {id:'woodcutting',skill:'Woodcutting',icon:'🌲',title:'Master Woodsman',passive:'+15% chance to receive an additional log',objectives:[['highTierLogs','Chop high-tier logs',500],['glowbark','Chop Glowbark Logs',150],['doubleLogs','Trigger double-log gathers',50],['totalLogs','Chop total logs after Level 99',1000]]},
@@ -1079,6 +1079,7 @@ const masteryDefinitions=[
  {id:'hitpoints',skill:'Hitpoints',icon:'❤️',title:'Undying',passive:'+10% starting lives + once-per-battle Last Stand',objectives:[['maps','Complete maps',50],['bosses','Defeat bosses',30],['dungeons','Complete dungeons',15],['raids','Complete Shattered Citadel raids',5]]}
 ];
 function ensureMasterySave(){
+ if(!Array.isArray(masteryDefinitions))return;
  save.mastery=save.mastery&&typeof save.mastery==='object'?save.mastery:{skills:{},trial:{unlocked:false,completed:false},maxCape:false};
  save.mastery.skills=save.mastery.skills&&typeof save.mastery.skills==='object'?save.mastery.skills:{};
  masteryDefinitions.forEach(function(d){var m=save.mastery.skills[d.id];if(!m||typeof m!=='object')m=save.mastery.skills[d.id]={progress:{},mastered:false,claimed:false};m.progress=m.progress&&typeof m.progress==='object'?m.progress:{};m.mastered=!!m.mastered;m.claimed=!!m.claimed;d.objectives.forEach(function(o){m.progress[o[0]]=Math.max(0,Number(m.progress[o[0]])||0)})});
@@ -1086,6 +1087,7 @@ function ensureMasterySave(){
  save.mastery.maxCape=!!save.mastery.maxCape;
 }
 function renderMastery(){
+ if(!Array.isArray(masteryDefinitions))return;
  var grid=document.querySelector('#masteryGrid'),summary=document.querySelector('#masterySummary'),maxBox=document.querySelector('#maxMastery');if(!grid)return;
  ensureMasterySave();
  var mastered=masteryDefinitions.filter(function(d){return save.mastery.skills[d.id].mastered}).length;
