@@ -213,3 +213,6 @@ body:has(#battle.active){overscroll-behavior:none}
 .realmforgedSkill:after{content:'✦';position:absolute;right:7px;top:5px;color:#f0d982;text-shadow:0 0 8px #e0c66e;pointer-events:none}
 .realmforgedSummary .card{border-color:rgba(217,189,102,.55)}
 @keyframes realmforgedPulse{0%,100%{box-shadow:0 0 8px rgba(224,198,110,.18),inset 0 0 10px rgba(224,198,110,.06)}50%{box-shadow:0 0 18px rgba(224,198,110,.42),inset 0 0 16px rgba(224,198,110,.12)}}
+
+/* Mastery cape reward artwork */
+.masteryCapePreview{display:flex;align-items:center;gap:10px;margin:8px 0}.masteryCapePreview img{width:92px;height:92px;object-fit:cover;object-position:77% 48%;border:1px solid rgba(217,189,102,.55);border-radius:9px;background:#15120f;box-shadow:0 0 10px rgba(217,189,102,.18)}.masteryCapePreview span,.masteryCapePreview b{font-weight:800}.masteryCapePreview.claimPreview{justify-content:center;flex-direction:column}.masteryCapePreview.claimPreview img{width:140px;height:140px}
