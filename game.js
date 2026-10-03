@@ -1215,7 +1215,7 @@ const bossArtVersions={warlord:179,tyrant:226,frostwyrm:227,mirequeen:220};
 bossGrid.innerHTML=bd.map(([k,n,mi,kills,loot])=>{
  const unlocked=bossUnlocked(k),best=save.bossHunt.best[k],milestones=save.bossHunt.milestones[k];
  return '<article class="card bossCard '+(unlocked?'':'locked')+'">'+
- '<span class="bossPortrait" aria-hidden="true" style="background-image:url(assets/enemy-'+k+'-walk-v'+bossArtVersions[k]+'.webp)"></span>'+
+ '<span class="bossPortrait" aria-hidden="true" style="'+(k==='mirequeen'?'background-image:url(assets/enemy-mirequeen-v248.webp);background-size:contain;background-position:center':'background-image:url(assets/enemy-'+k+'-walk-v'+bossArtVersions[k]+'.webp)')+'"></span>'+
  '<div class="bossOverview"><h3>'+n+'</h3><div class="bossStats"><span>Kills <b>'+kills+'</b></span><span>Best <b>'+(best?(best/1000).toFixed(1)+'s':'—')+'</b></span></div>'+
  '<button '+(unlocked?'':'disabled')+' aria-label="'+(unlocked?'Start 3-wave hunt: ':'Campaign locked: ')+n+'" onclick="startBossHunt(\''+k+'\')">'+(unlocked?'Hunt · 3 waves':'Campaign locked')+'</button></div>'+
  '<details class="bossDetails" data-boss-details="'+k+'" '+(openBossDetails.has(k)?'open':'')+'><summary>Drops &amp; milestones</summary>'+

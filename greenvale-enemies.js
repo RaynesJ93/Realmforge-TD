@@ -12,6 +12,14 @@
   dreamkeeper:{size:108,height:120},dreameater:{size:150,height:108}
  });
  for(const kind of ['moonsprite','glimmerling','sporewalker','moonfang','lunarsentinel','starweaver','astralgolem','voidborn','moonweaver','dreamshade','dreamkeeper','dreameater'])Object.assign(config[kind],{single:true,version:310,facingRight:true});
+ // Approved Stage 1 enemy cutouts, packed with the same foot baseline.
+ Object.assign(config,{
+  cryptking:{size:139,height:120},citadelthrall:{size:76,height:120},
+  shardguard:{size:88,height:120},riftstalker:{size:94,height:120},
+  citadelmage:{size:88,height:120},stonewarden:{size:148,height:120},
+  riftkeeper:{size:139,height:120},citadellord:{size:155,height:120}
+ });
+ for(const kind of ['cryptking','citadelthrall','shardguard','riftstalker','citadelmage','stonewarden','riftkeeper','citadellord'])Object.assign(config[kind],{single:true,version:402,facingRight:true});
  const sheets={},motion=new WeakMap();let seed=0;
  for(const kind of Object.keys(config)){const img=new Image();const source=config[kind].source||kind;img.src=config[kind].single?'assets/enemy-'+source+'-v'+config[kind].version+'.webp':config[kind].svg?'assets/enemy-'+source+'-v245.svg':'assets/enemy-'+source+'-walk-v'+(config[kind].version||179)+'.webp';sheets[kind]=img;}
  function walkState(e){
@@ -36,4 +44,3 @@
  }
  window.GreenvaleEnemies={draw,config,walkState};
 })();
-
