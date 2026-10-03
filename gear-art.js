@@ -285,10 +285,11 @@ function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){
  const key=signature(cls);let entry=towerCache.get(cls);
  if(!entry||entry.key!==key){entry={key,frames:new Map(),url:null};towerCache.set(cls,entry)}
- // Five cached poses are enough for the small in-battle tower render and cut
- // runtime canvas memory roughly in half compared with the old nine-frame set.
- const frame=Math.max(0,Math.min(4,Math.round(phase*4)));
- if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/4),144,180,true));
+ // Use one pre-rendered battle sprite per equipment setup. Attack/projectile
+ // effects provide the motion; rebuilding/swapping character poses while every
+ // tower attacks was the main iOS frame-time spike.
+ const frame=0;
+ if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},0),144,180,true));
  return entry.frames.get(frame)
 }
 function portrait(cls){
