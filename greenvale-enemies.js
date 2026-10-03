@@ -12,17 +12,8 @@
   dreamkeeper:{size:108,height:120},dreameater:{size:150,height:108}
  });
  for(const kind of ['moonsprite','glimmerling','sporewalker','moonfang','lunarsentinel','starweaver','astralgolem','voidborn','moonweaver','dreamshade','dreamkeeper','dreameater'])Object.assign(config[kind],{single:true,version:310,facingRight:true});
- // Stage 1 enemy artwork temporarily disabled for performance isolation.
- // Files remain in assets; these enemies fall back to the lightweight canvas renderer.
- const sheets={},motion=new WeakMap(),loaded=new Set();let seed=0;
- function artSrc(kind){const cfg=config[kind],source=cfg.source||kind;return cfg.single?'assets/enemy-'+source+'-v'+cfg.version+'.webp':cfg.svg?'assets/enemy-'+source+'-v245.svg':'assets/enemy-'+source+'-walk-v'+(cfg.version||179)+'.webp'}
- function ensureSheet(kind){
-   if(sheets[kind])return sheets[kind];
-   const cfg=config[kind];if(!cfg)return null;
-   const img=new Image();img.decoding='async';img.loading='lazy';img.src=artSrc(kind);sheets[kind]=img;
-   if(img.decode)img.decode().then(()=>loaded.add(kind)).catch(()=>{});else img.onload=()=>loaded.add(kind);
-   return img;
- }
+ const sheets={},motion=new WeakMap();let seed=0;
+ for(const kind of Object.keys(config)){const img=new Image();const source=config[kind].source||kind;img.src=config[kind].single?'assets/enemy-'+source+'-v'+config[kind].version+'.webp':config[kind].svg?'assets/enemy-'+source+'-v245.svg':'assets/enemy-'+source+'-walk-v'+(config[kind].version||179)+'.webp';sheets[kind]=img;}
  function walkState(e){
    let s=motion.get(e);
    if(!s){s={x:e.x,y:e.y,distance:(seed++%7)*4,facing:-1};motion.set(e,s);}
@@ -33,7 +24,7 @@
    return s;
  }
  function draw(e,c){
-   const cfg=config[e.kind],img=ensureSheet(e.kind);
+   const cfg=config[e.kind],img=sheets[e.kind];
    if(!cfg||!img||!img.complete||!img.naturalWidth)return 0;
    const s=walkState(e),phase=(s.distance%(cfg.stride||36))/(cfg.stride||36),frame=Math.floor(phase*4),size=cfg.size;
    const bob=Math.abs(Math.sin(phase*Math.PI*2))*(e.kind==='rootwarden'?.9:.6);
@@ -45,3 +36,4 @@
  }
  window.GreenvaleEnemies={draw,config,walkState};
 })();
+
