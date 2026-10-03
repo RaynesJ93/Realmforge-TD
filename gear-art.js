@@ -285,7 +285,13 @@ function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
 function portrait(cls){tower(cls);const entry=towerCache.get(cls);if(!entry.url)entry.url=entry.frames.get(0).toDataURL('image/png');return entry.url}
 function drawTower(t){const a=t.attackVisual,phase=a?1-a.life/a.duration:0;const art=tower(t.type,phase);const h=103,w=h*art.width/art.height;ctx.drawImage(art,Math.max(0,Math.min(canvas.width-w,t.x-w/2)),Math.max(0,Math.min(canvas.height-h,t.y+17-h)),w,h)}
-function decorate(){
+let lastDecorateAt=0;
+function decorate(force=false){
+ // Full artwork decoration is expensive on mobile. Most renderUI calls happen
+ // during saves/progress changes, so avoid rescanning every menu repeatedly.
+ const now=performance.now();
+ if(!force&&now-lastDecorateAt<750)return;
+ lastDecorateAt=now;
  // Text labels and all existing controls remain authoritative and accessible.
  for(const root of ['bankGrid','craftGrid','artisanGrid','collectionGrid','hunterShop','generalStoreGrid','blacksmithStoreGrid','merchantStoreGrid','enhancementGrid']){
   const el=document.getElementById(root);if(!el)continue;
