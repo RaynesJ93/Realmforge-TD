@@ -487,7 +487,7 @@ function renderSmithProgress(){if(!smithingKey)return;let r=recipes[smithingKey]
 const oldStopGather=stopGathering;stopGathering=function(show=true){oldStopGather(show);if(smithingKey)stopSmithing(show)}
 window.startSmithing=startSmithing;
 function equipItem(name,targetClass){
- let it=itemDB[name];if(!it||!(save.items[name]>0))return;
+ let it=itemDB[name],owned=(save.items[name]||0)+(save.bank[name]||0);if(!it||owned<=0)return;
  if(it.req){for(const [skill,lvl] of Object.entries(it.req))if(save.skills[skill].lvl<lvl){alert(name+' requires '+skill+' level '+lvl+'.');return}}
  const cls=it.class==='all'?targetClass:it.class;
  if(!['warrior','ranger','mage','summoner'].includes(cls)){alert('Choose which class should equip this item.');return}
