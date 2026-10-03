@@ -279,35 +279,12 @@ Object.assign(equipmentArtwork,{"Infernal Greatblade":"assets/equipment/infernal
 Object.assign(equipmentArtwork,{"Spiritcaller Staff": "assets/equipment/spiritcaller-staff-art-20260927.webp", "Emberbond Focus": "assets/equipment/emberbond-focus-art-20260927.webp", "Frostbound Totem": "assets/equipment/frostbound-totem-art-20260927.webp", "Voidcaller Sceptre": "assets/equipment/voidcaller-sceptre-art-20260927.webp", "Behemoth Sigil": "assets/equipment/behemoth-sigil-art-20260927.webp", "Summoner Hood": "assets/equipment/summoner-hood-art-20260927.webp", "Summoner Robe": "assets/equipment/summoner-robe-art-20260927.webp", "Spiritweave Hood": "assets/equipment/spiritweave-hood-art-20260927.webp", "Spiritweave Robe": "assets/equipment/spiritweave-robe-art-20260927.webp", "Citadel Greatblade": "assets/equipment/citadel-greatblade-art-20260927.webp", "Riftpiercer Bow": "assets/equipment/riftpiercer-bow-art-20260927.webp", "Shatterspell Staff": "assets/equipment/shatterspell-staff-art-20260927.webp", "Citadel Spirit Idol": "assets/equipment/citadel-spirit-idol-art-20260927.webp", "Shattered Crown": "assets/equipment/shattered-crown-art-20260927.webp"});
 const icons=new Map(),towerCache=new Map();
 equipmentArtwork['Moonstone Blade']='assets/equipment/moonstone-blade-20260929.webp';
-equipmentArtwork['Attack Skillcape']='assets/mastery/attack-skillcape-v401.webp';
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
-function tower(cls,phase=0){
- const key=signature(cls);let entry=towerCache.get(cls);
- if(!entry||entry.key!==key){entry={key,frames:new Map(),url:null};towerCache.set(cls,entry)}
- // Use one pre-rendered battle sprite per equipment setup. Attack/projectile
- // effects provide the motion; rebuilding/swapping character poses while every
- // tower attacks was the main iOS frame-time spike.
- const frame=0;
- if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},0),144,180,true));
- return entry.frames.get(frame)
-}
-function portrait(cls){
- const key=signature(cls);let entry=towerCache.get(cls);
- if(!entry||entry.key!==key){entry={key,frames:new Map(),url:null};towerCache.set(cls,entry)}
- // Portraits are generated once per equipment signature rather than converting
- // a battle animation canvas into a data URL on every UI rebuild.
- if(!entry.url)entry.url=render(characterMesh(cls,save.equipment[cls]||{},0),160,200,true).toDataURL('image/webp',.82);
- return entry.url
-}
+function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
+function portrait(cls){tower(cls);const entry=towerCache.get(cls);if(!entry.url)entry.url=entry.frames.get(0).toDataURL('image/png');return entry.url}
 function drawTower(t){const a=t.attackVisual,phase=a?1-a.life/a.duration:0;const art=tower(t.type,phase);const h=103,w=h*art.width/art.height;ctx.drawImage(art,Math.max(0,Math.min(canvas.width-w,t.x-w/2)),Math.max(0,Math.min(canvas.height-h,t.y+17-h)),w,h)}
-let lastDecorateAt=0;
-function decorate(force=false){
- // Full artwork decoration is expensive on mobile. Most renderUI calls happen
- // during saves/progress changes, so avoid rescanning every menu repeatedly.
- const now=performance.now();
- if(!force&&now-lastDecorateAt<750)return;
- lastDecorateAt=now;
+function decorate(){
  // Text labels and all existing controls remain authoritative and accessible.
  for(const root of ['bankGrid','craftGrid','artisanGrid','collectionGrid','hunterShop','generalStoreGrid','blacksmithStoreGrid','merchantStoreGrid','enhancementGrid']){
   const el=document.getElementById(root);if(!el)continue;
@@ -327,4 +304,5 @@ function decorate(force=false){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
