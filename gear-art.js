@@ -282,8 +282,23 @@ equipmentArtwork['Moonstone Blade']='assets/equipment/moonstone-blade-20260929.w
 equipmentArtwork['Attack Skillcape']='assets/mastery/attack-skillcape-v401.webp';
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
-function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
-function portrait(cls){tower(cls);const entry=towerCache.get(cls);if(!entry.url)entry.url=entry.frames.get(0).toDataURL('image/png');return entry.url}
+function tower(cls,phase=0){
+ const key=signature(cls);let entry=towerCache.get(cls);
+ if(!entry||entry.key!==key){entry={key,frames:new Map(),url:null};towerCache.set(cls,entry)}
+ // Five cached poses are enough for the small in-battle tower render and cut
+ // runtime canvas memory roughly in half compared with the old nine-frame set.
+ const frame=Math.max(0,Math.min(4,Math.round(phase*4)));
+ if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/4),144,180,true));
+ return entry.frames.get(frame)
+}
+function portrait(cls){
+ const key=signature(cls);let entry=towerCache.get(cls);
+ if(!entry||entry.key!==key){entry={key,frames:new Map(),url:null};towerCache.set(cls,entry)}
+ // Portraits are generated once per equipment signature rather than converting
+ // a battle animation canvas into a data URL on every UI rebuild.
+ if(!entry.url)entry.url=render(characterMesh(cls,save.equipment[cls]||{},0),160,200,true).toDataURL('image/webp',.82);
+ return entry.url
+}
 function drawTower(t){const a=t.attackVisual,phase=a?1-a.life/a.duration:0;const art=tower(t.type,phase);const h=103,w=h*art.width/art.height;ctx.drawImage(art,Math.max(0,Math.min(canvas.width-w,t.x-w/2)),Math.max(0,Math.min(canvas.height-h,t.y+17-h)),w,h)}
 let lastDecorateAt=0;
 function decorate(force=false){
