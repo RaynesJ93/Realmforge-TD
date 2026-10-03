@@ -42,7 +42,7 @@
 /* Startup safety shim: guarantees the drop handler exists before game.js executes.
    game.js replaces this with the full handler during normal startup. */
 window.rollDrop=window.rollDrop||function(){};
-</script><script src="game.js?v=407-mastery-combat-fix"></script><script>
+</script><script src="game.js?v=409-raid-equip-fix"></script><script>
 function forceRecoverNormalSave(){
  try{
   var p=JSON.parse(localStorage.getItem('realmforge_v01')||'null');
