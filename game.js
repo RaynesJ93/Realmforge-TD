@@ -640,9 +640,10 @@ function renderArtisan(){
  }
  var all=Object.entries(artisanRecipes);
  var fletch=all.filter(function(e){return e[1].skill==='Fletching'});
- var rangerFletch=fletch.filter(function(e){return e[0]!=='arrows'});
- var utilityFletch=fletch.filter(function(e){return e[0]==='arrows'});
- fletching.innerHTML=group('🏹 Ranger Equipment',rangerFletch,false)+(utilityFletch.length?group('🪶 Ranger Supplies',utilityFletch,false):'');
+ var staffFletch=fletch.filter(function(e){return /staff/i.test(e[1].name)});
+ var supplyFletch=fletch.filter(function(e){return e[0]==='arrows'||/quiver/i.test(e[1].name)});
+ var rangerFletch=fletch.filter(function(e){return !/staff/i.test(e[1].name)&&e[0]!=='arrows'&&!/quiver/i.test(e[1].name)});
+ fletching.innerHTML=(rangerFletch.length?group('🏹 Ranger Equipment',rangerFletch,false):'')+(supplyFletch.length?group('🪶 Ranger Supplies',supplyFletch,false):'')+(staffFletch.length?group('🔮 Staffs',staffFletch,false):'');
  var craft=all.filter(function(e){return e[1].skill==='Crafting'}),used=new Set();
  function take(set){return craft.filter(function(e){if(set.has(e[0])){used.add(e[0]);return true}return false})}
  var warrior=take(warriorKeys),ranger=take(rangerKeys),mage=take(mageKeys),summoner=take(summonerKeys),utility=take(utilityKeys),other=craft.filter(function(e){return !used.has(e[0])});
