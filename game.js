@@ -1172,7 +1172,7 @@ function bankResourceCard(entry){var n=entry[0],q=entry[1];return '<div class="c
 const bankResourceOrder={
  'Copper ore':1,'Tin ore':2,'Ironvale ore':10,'Frostsilver ore':25,'Bogiron ore':38,
  'Bronze bar':1,'Ironvale bar':12,'Frostsilver bar':27,'Bogiron bar':40,
- 'Logs':1,'Oakheart logs':10,'Frostpine logs':25,'Rotwood logs':38,
+ 'Logs':1,'Oakheart logs':10,'Frostpine logs':25,'Rotwood logs':38,'Glowbark logs':50,
  'Raw Minnow':1,'Cooked Minnow':2,'Raw Trout':8,'Cooked Trout':9,'Raw Pike':18,'Cooked Pike':19,'Raw Frostscale Salmon':30,'Cooked Frostscale Salmon':31,
  'Goblin scrap':1,'Ash Thread':9,'Ashweave Cloth':10,'Golem Core':15,'Flameguard Sigil':20,'Ember Core':25,'Frost Thread':24,'Frostweave Cloth':25,'Wyrm Essence':35,'Mire Thread':37,'Mireweave Cloth':38,'Mire Essence':45,'Spirit Shard':50,'Ancient Spirit Core':60
 };
