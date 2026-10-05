@@ -675,20 +675,20 @@ const hunterTasks=[{kind:'rat',name:'Rats',min:18,max:30,level:1,xp:240,points:4
 {kind:'astralgolem',name:'Astral Golems',min:8,max:14,level:80,xp:7800,points:85,lunara:true},
 {kind:'voidborn',name:'Voidborn',min:8,max:14,level:82,xp:8300,points:90,lunara:true}];
 const hunterShop=[
-{key:'elite',name:'Elite Contracts',cost:50,desc:'Unlock the toughest Monster Hunter assignments.'},
-{key:'supply',name:"Hunter's Supply Pouch",cost:60,desc:'+2 Dungeon Supply Bag capacity.'},
-{key:'cache',name:'Bounty Caches',cost:75,desc:'Completed assignments award +50% coins.'},
-{key:'hunterring',name:"Hunter's Ring",cost:90,desc:'All-class ring: +3 damage, +5 range, +4 defence.',item:'Hunter Ring'},
-{key:'materials',name:'Material Hunter',cost:100,desc:'Double rare monster-material drop chances.'},
-{key:'veteran',name:'Veteran Contracts',cost:125,desc:'Assignments become 25% larger and award +35% Hunter XP and points.'},
-{key:'huntergloves',name:"Hunter's Gloves",cost:150,desc:'All-class gloves: +5 damage and +5 defence.',item:'Hunter Gloves'},
-{key:'tracker',name:'Guild Tracker',cost:175,desc:'+10% coins from assignment monsters while on assignment.'},
-{key:'master',name:'Master Contracts',cost:250,desc:'Assignments become 50% larger and award +75% Hunter XP and points.',requires:'veteran'},
-{key:'masteramulet',name:'Master Hunter Amulet',cost:300,desc:'All-class amulet: +7 damage, +10 range, +8 defence.',item:'Master Hunter Amulet'},
-{key:'trophy',name:'Trophy Hunter',cost:400,desc:'25% chance for assignment kills to award an extra common resource.'},
-{key:'huntercape',name:"Hunter's Cape",cost:500,desc:'All-class cape: +10 damage, +15 range, +12 defence.',item:'Hunter Cape'},
-{key:'crest',name:"Guildmaster's Crest",cost:750,desc:'+10% damage against your current Hunter assignment.'},
-{key:'masterarmour',name:'Master Hunter Armour',cost:1000,desc:'All-class body armour: +12 damage, +18 range, +20 defence.',item:'Master Hunter Armour'}
+{key:'elite',name:'Elite Contracts',cost:50,desc:'Unlock level 20+ target pools near your Hunter level and improved contract rewards.'},
+{key:'supply',name:"Hunter's Supply Pouch",cost:75,desc:'+2 Dungeon Supply Bag capacity.'},
+{key:'cache',name:'Bounty Caches',cost:100,desc:'Completed assignments award +50% coins.'},
+{key:'hunterring',name:"Hunter's Ring",cost:125,desc:'All-class ring: +3 damage, +5 range, +4 defence.',item:'Hunter Ring'},
+{key:'materials',name:'Material Hunter',cost:150,desc:'Double rare monster-material drop chances.'},
+{key:'veteran',name:'Veteran Contracts',cost:200,desc:'Tougher target pool, 25% larger assignments and improved Hunter XP.'},
+{key:'huntergloves',name:"Hunter's Gloves",cost:225,desc:'All-class gloves: +5 damage and +5 defence.',item:'Hunter Gloves'},
+{key:'tracker',name:'Guild Tracker',cost:275,desc:'+10% coins from assignment monsters while on assignment.'},
+{key:'master',name:'Master Contracts',cost:400,desc:'Highest-level target pool, 50% larger assignments and the strongest Hunter XP rewards.',requires:'veteran'},
+{key:'masteramulet',name:'Master Hunter Amulet',cost:500,desc:'All-class amulet: +7 damage, +10 range, +8 defence.',item:'Master Hunter Amulet'},
+{key:'trophy',name:'Trophy Hunter',cost:650,desc:'25% chance for assignment kills to award an extra common resource.'},
+{key:'huntercape',name:"Hunter's Cape",cost:800,desc:'All-class cape: +10 damage, +15 range, +12 defence.',item:'Hunter Cape'},
+{key:'crest',name:"Guildmaster's Crest",cost:1100,desc:'+10% damage against your current Hunter assignment.'},
+{key:'masterarmour',name:'Master Hunter Armour',cost:1500,desc:'All-class body armour: +12 damage, +18 range, +20 defence.',item:'Master Hunter Armour'}
 ];
 function hunterTargetMaps(kind){var out=[];for(var i=0;i<maps.length;i++){var m=maps[i];if(m&&m.kinds&&m.kinds.includes(kind)&&i<save.campaign.unlocked&&(!m.req||combatLevel()>=m.req))out.push(i)}return out}
 function hunterContractTier(){var u=save.hunter&&save.hunter.unlocks||{};return u.master?'master':u.veteran?'veteran':u.elite?'elite':'guild'}
