@@ -368,3 +368,12 @@ body:has(#battle.active){overscroll-behavior:none}
  #hunterShop .hunterRewardCard>small{font-size:.72rem}
  #hunterShop .hunterRewardCard>button{width:100%;min-height:40px}
 }
+
+/* V326 class-grouped equipment salvaging */
+#salvageGrid{display:block!important}
+.salvageClassGroup{border:1px solid rgba(205,164,99,.38);border-radius:8px;margin:9px 0;background:rgba(15,13,10,.22);overflow:hidden}
+.salvageClassGroup>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;cursor:pointer;color:#ead8b0}
+.salvageClassGroup>summary span{font-size:.76rem;opacity:.82;text-align:right}
+.salvageClassGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:0 9px 9px}
+.salvageClassGrid .marketItem{min-width:0;margin:0}
+@media(max-width:620px){.salvageClassGroup>summary{padding:11px 10px}.salvageClassGroup>summary b{font-size:.92rem}.salvageClassGroup>summary span{font-size:.68rem}.salvageClassGrid{grid-template-columns:1fr!important;padding:0 7px 7px}.salvageClassGrid .marketQuick{display:flex;gap:7px}.salvageClassGrid .marketQuick button{flex:1;min-width:0}}
