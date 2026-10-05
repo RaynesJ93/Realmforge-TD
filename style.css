@@ -258,3 +258,12 @@ body:has(#battle.active){overscroll-behavior:none}
 .dungeonMapArtwork{width:100%;aspect-ratio:900/520;object-fit:cover;object-position:center;border-radius:8px;border:1px solid rgba(255,255,255,.13);margin-bottom:2px;display:block}
 .dungeonCard.locked .dungeonMapArtwork{filter:saturate(.45) brightness(.72)}
 @media(max-width:620px){.dungeonMapArtwork{max-height:150px}}
+
+/* Dungeon Stage 5 completion rewards */
+.dungeonMilestoneCallout,.dungeonRareCallout{display:block;margin:10px auto 0;padding:8px 10px;border:1px solid var(--boss-accent);border-radius:9px;background:rgba(0,0,0,.28);max-width:520px;font-weight:900}
+.dungeonMilestoneCallout{color:#f0c761;letter-spacing:.04em}
+.dungeonRareCallout{color:#eee;line-height:1.8}
+.dungeonRareCallout em{font-style:normal;font-size:.72rem;color:#f0c761;margin-left:5px}
+.bossResultRow.dungeonReward.rare{border:1px solid var(--boss-accent);border-radius:8px;margin:5px 0;background:color-mix(in srgb,var(--boss-accent) 13%,transparent);font-weight:800}
+.bossResultRow.dungeonReward.mythic{border:2px solid #e5bd54;border-radius:8px;margin:5px 0;background:linear-gradient(90deg,rgba(229,189,84,.18),rgba(122,72,170,.2));font-weight:900;box-shadow:0 0 12px rgba(229,189,84,.16)}
+.bossResultRow.dungeonReward.mythic b{color:#ffe38a}
