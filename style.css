@@ -297,3 +297,6 @@ body:has(#battle.active){overscroll-behavior:none}
 .raidPowerOption small{font-size:.62rem;letter-spacing:.08em;font-weight:900;color:#e5c968}
 .raidPowerOption b{font-size:1rem}.raidPowerOption span{font-size:.8rem;line-height:1.35;opacity:.88}
 @media(max-width:620px){.raidPowerChoices{grid-template-columns:1fr}.raidPowerOption{min-height:0}}
+
+/* Raid reward exchange */
+.raidExchangeGroup{margin:8px 0;border:1px solid rgba(213,184,84,.25);border-radius:9px;overflow:hidden}.raidExchangeGroup>summary{cursor:pointer;padding:10px 12px;font-weight:900}.raidExchangeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;padding:0 9px 9px}.raidExchangeItem{position:relative;padding-top:34px}.raidOwned{position:absolute;top:7px;right:7px;font-size:.61rem;font-weight:900}.raidExchangeItem.owned{border-color:#6f9b55}.raidExchangeItem.owned .raidOwned{color:#a8dc86}@media(max-width:620px){.raidExchangeGrid{grid-template-columns:1fr}}
