@@ -216,3 +216,40 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* Mastery cape reward artwork */
 .masteryCapePreview{display:flex;align-items:center;gap:10px;margin:8px 0}.masteryCapePreview img{width:92px;height:92px;object-fit:cover;object-position:77% 48%;border:1px solid rgba(217,189,102,.55);border-radius:9px;background:#15120f;box-shadow:0 0 10px rgba(217,189,102,.18)}.masteryCapePreview span,.masteryCapePreview b{font-weight:800}.masteryCapePreview.claimPreview{justify-content:center;flex-direction:column}.masteryCapePreview.claimPreview img{width:140px;height:140px}
+
+
+/* Dungeon selection overhaul */
+#dungeons .panel>p:first-of-type{max-width:760px}
+#dungeonGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;align-items:start}
+.dungeonCard{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:8px;min-height:215px;padding:14px}
+.dungeonCard h3{margin:0;padding-right:72px;font-size:1.08rem;line-height:1.2}
+.dungeonCard.locked{opacity:.72}
+.dungeonCard.locked:after{content:"LOCKED";position:absolute;top:12px;right:10px;padding:3px 7px;border:1px solid currentColor;border-radius:999px;font-size:.64rem;font-weight:800;letter-spacing:.08em}
+.dungeonMeta{font-size:.82rem;opacity:.82}
+.dungeonStats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:2px}
+.dungeonStats span{display:flex;flex-direction:column;gap:2px;padding:7px 9px;border:1px solid rgba(255,255,255,.12);border-radius:7px;background:rgba(0,0,0,.16);font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;opacity:.9}
+.dungeonStats b{font-size:.95rem;text-transform:none;letter-spacing:0}
+.dungeonEnter{width:100%;margin-top:auto;min-height:38px;font-weight:800}
+.dungeonDetails{margin-top:2px;border-top:1px solid rgba(255,255,255,.12);padding-top:7px}
+.dungeonDetails summary,.dungeonSupplies summary{cursor:pointer;font-weight:800}
+.dungeonDetails p{margin:7px 0;font-size:.8rem;line-height:1.35}
+.dungeonMilestones{display:flex;flex-wrap:wrap;gap:5px}
+.dungeonMilestones span{padding:4px 7px;border:1px solid rgba(255,255,255,.14);border-radius:999px;font-size:.68rem;opacity:.7}
+.dungeonMilestones span.complete{opacity:1;font-weight:800}
+.dungeonSupplies{grid-column:1/-1;padding:12px 14px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(0,0,0,.12)}
+.dungeonSupplies>summary{display:flex;justify-content:space-between;gap:12px}
+.dungeonFoodList{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px;margin-top:10px}
+.dungeonFood{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px;border:1px solid rgba(255,255,255,.12);border-radius:8px}
+.dungeonFood small{display:block;margin-top:3px;opacity:.75}
+.dungeonFoodActions{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.dungeonFoodActions button{padding:5px 7px;font-size:.72rem}
+#supplyBagPanel{display:none}
+@media(max-width:620px){
+ #dungeonGrid{grid-template-columns:1fr;gap:9px}
+ .dungeonCard{min-height:0;padding:11px;gap:6px}
+ .dungeonCard h3{font-size:1rem}
+ .dungeonStats span{padding:6px 8px}
+ .dungeonFood{align-items:flex-start;flex-direction:column}
+ .dungeonFoodActions{width:100%;justify-content:stretch}
+ .dungeonFoodActions button{flex:1}
+}
