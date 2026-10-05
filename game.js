@@ -702,8 +702,9 @@ function frozenCryptUnlocked(){return save.campaign.cleared.includes(14)}
 function drownedTempleUnlocked(){return save.campaign.cleared.includes(19)}
 function dreamingHollowUnlocked(){return save.campaign.cleared.includes(24)}
 const foodHeal={'Cooked Minnow':2,'Cooked Trout':4,'Cooked Pike':6,'Cooked Frostscale Salmon':9,'Cooked Moonfin':11};
-function supplyCount(){return Object.values(save.dungeon.supplies||{}).reduce(function(n,q){return n+(Number(q)||0)},0)}
-function addDungeonFood(name){if(!foodHeal[name])return;var cap=save.hunter.unlocks.supply?10:8;if(supplyCount()>=cap){alert('Your Dungeon Supply Bag is full ('+cap+'/'+cap+').');return}if((save.bank[name]||0)<1){alert('You do not have any '+name+' in your Bank.');return}save.bank[name]--;save.dungeon.supplies[name]=(save.dungeon.supplies[name]||0)+1;persist();renderUI()}
+function supplyCount(){save.dungeon=save.dungeon||{};save.dungeon.supplies=save.dungeon.supplies||{};return Object.values(save.dungeon.supplies).reduce(function(n,q){return n+(Number(q)||0)},0)}
+function dungeonSupplyCapacity(){return save.hunter&&save.hunter.unlocks&&save.hunter.unlocks.supply?10:8}
+function addDungeonFood(name){if(!foodHeal[name])return;save.dungeon.supplies=save.dungeon.supplies||{};var cap=dungeonSupplyCapacity();if(supplyCount()>=cap){alert('Your Dungeon Supply Bag is full ('+cap+'/'+cap+').');return}if((save.bank[name]||0)<1){alert('You do not have any '+name+' in your Bank.');return}save.bank[name]--;save.dungeon.supplies[name]=(save.dungeon.supplies[name]||0)+1;persist();renderUI()}
 function removeDungeonFood(name){if(!foodHeal[name]||(save.dungeon.supplies[name]||0)<1)return;save.dungeon.supplies[name]--;save.bank[name]=(save.bank[name]||0)+1;persist();renderUI()}
 function eatDungeonFood(name){if(!dungeonMode){alert('Food can only be eaten inside a dungeon.');return}if(waveRunning||enemies.length||spawnPending){alert('You can only eat between dungeon waves.');return}if((save.dungeon.supplies[name]||0)<1)return;if(lives>=20){alert('Your lives are already full.');return}var before=lives;lives=Math.min(20,lives+foodHeal[name]);save.dungeon.supplies[name]--;writeSave(false);hud();renderUI();msg('Ate '+name+' and restored '+(lives-before)+' lives.')}
 window.addDungeonFood=addDungeonFood;window.removeDungeonFood=removeDungeonFood;window.eatDungeonFood=eatDungeonFood;
@@ -835,7 +836,7 @@ function renderSupplyBag(){var g=document.querySelector('#supplyBagGrid'),c=docu
 function renderDungeon(){
  var g=document.querySelector('#dungeonGrid');if(!g)return;
  var expanded=new Set(Array.from(g.querySelectorAll('[data-dungeon-detail][open]'),function(d){return d.dataset.dungeonDetail}));
- var capacity=save.hunter.unlocks.supply?10:8,count=supplyCount();
+ var capacity=dungeonSupplyCapacity(),count=supplyCount();
  var entries=[
  {key:'greenvale',name:'Greenvale Depths',map:'assets/maps/dungeon-greenvale-depths-v262.webp',waves:15,boss:'Root Warden',elites:'5 and 10',state:save.dungeon,unlocked:dungeonUnlocked(),action:'startDungeon()',lock:'Clear Goblin Stronghold',loot:'500–750 coins, Greenvale materials and 3 dungeon weapons at 2.5% each.'},
  {key:'ashenfalls',name:'The Ashen Falls',map:'assets/maps/dungeon-ashen-falls-v262.webp',waves:20,boss:'Infernal Warden',elites:'5, 10 and 15',state:save.dungeon.ashenFalls,unlocked:ashenFallsUnlocked(),action:'startAshenFalls()',lock:'Defeat the Ember Tyrant',loot:'950–1,400 coins, Ashen materials, 3 weapons at 3% each and the Infernal Warden Mask at 1%.'},
