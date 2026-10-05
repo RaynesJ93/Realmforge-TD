@@ -300,3 +300,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* Raid reward exchange */
 .raidExchangeGroup{margin:8px 0;border:1px solid rgba(213,184,84,.25);border-radius:9px;overflow:hidden}.raidExchangeGroup>summary{cursor:pointer;padding:10px 12px;font-weight:900}.raidExchangeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;padding:0 9px 9px}.raidExchangeItem{position:relative;padding-top:34px}.raidOwned{position:absolute;top:7px;right:7px;font-size:.61rem;font-weight:900}.raidExchangeItem.owned{border-color:#6f9b55}.raidExchangeItem.owned .raidOwned{color:#a8dc86}@media(max-width:620px){.raidExchangeGrid{grid-template-columns:1fr}}
+
+/* Raid cleanup Stage 6 */
+.raidUniqueCallout{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px auto;padding:10px;border:1px solid #d5b854;border-radius:9px;background:rgba(213,184,84,.1);font-weight:900}.raidUniqueCallout em{font-style:normal;font-size:.65rem;color:#f0d579;letter-spacing:.06em}.bossResultRow.raidUniqueReward{border:2px solid #d5b854;border-radius:8px;margin:5px 0;background:rgba(213,184,84,.12);font-weight:900}
