@@ -1431,7 +1431,7 @@ const summonDB={
 let selectedSummon='spiritwolf';
 function summonStats(kind){
  const d=summonDB[kind]||summonDB.spiritwolf,level=(save.skills.Summoning&&save.skills.Summoning.lvl)||1;
- const dmgBonus=bonus('summoner','damage'),rangeBonus=bonus('summoner','range'),speedBonus=Math.max(0,Math.min(.45,bonus('summoner','speed')));
+ const spiritPower=summonGearPower(),dmgBonus=bonus('summoner','damage')+spiritPower,rangeBonus=bonus('summoner','range')+spiritPower*2,speedBonus=Math.max(0,Math.min(.45,bonus('summoner','speed')+spiritPower*.002));
  return{kind:kind,name:d.name,level:level,unlock:d.level,cost:d.cost,style:d.style,damage:(d.damage+dmgBonus)*(1+(level-1)*.035),rate:d.rate*(1-speedBonus),leash:d.leash+rangeBonus,speed:d.speed}
 }
 function chooseSummon(kind){
