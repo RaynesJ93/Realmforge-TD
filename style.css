@@ -306,3 +306,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* Hunter Guild cleanup Stage 1 */
 .hunterTask{position:relative;padding-top:38px}.hunterContractTier{position:absolute;top:9px;right:9px;padding:3px 7px;border:1px solid #8ca46a;border-radius:999px;font-size:.62rem;font-weight:900;letter-spacing:.06em;color:#b9d78d}.hunterTargetHint{display:block;margin-top:7px;opacity:.8}.hunterTargetHint.missing{color:#d78b82}.hunterTaskEmpty{display:flex;flex-direction:column;gap:5px}
+
+/* Hunter Guild cleanup Stage 2 */
+.hunterContractTier.elite{color:#d8b66a;border-color:#b58b42}.hunterContractTier.veteran{color:#9fc9e8;border-color:#678da8}.hunterContractTier.master{color:#d7a7ee;border-color:#9b67b3;box-shadow:0 0 10px rgba(155,103,179,.18)}
