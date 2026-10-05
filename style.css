@@ -344,3 +344,27 @@ body:has(#battle.active){overscroll-behavior:none}
  .equipmentSlot>small{font-size:.69rem!important}
  .equipmentSummary{font-size:.82rem}
 }
+
+/* V325 Hunter Rewards mobile layout repair */
+#hunterShop.grid{display:block!important;grid-template-columns:none!important}
+#hunterShop .hunterTierSummary{width:100%;box-sizing:border-box}
+#hunterShop .hunterRewardGroup{display:block;width:100%;box-sizing:border-box;min-width:0}
+#hunterShop .hunterRewardGroup>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+#hunterShop .hunterRewardGroup>summary span{float:none;white-space:nowrap}
+#hunterShop .hunterRewardGrid{width:100%;box-sizing:border-box}
+#hunterShop .hunterRewardCard{min-width:0;box-sizing:border-box}
+#hunterShop .hunterRewardCard>b,#hunterShop .hunterRewardCard>p,#hunterShop .hunterRewardCard>small{overflow-wrap:normal;word-break:normal;white-space:normal}
+@media(max-width:620px){
+ #hunterShop .hunterTierSummary{grid-template-columns:1fr 1fr!important;gap:7px}
+ #hunterShop .hunterTierSummary>span{min-width:0;padding:9px 7px}
+ #hunterShop .hunterTierSummary>span>b{font-size:.86rem;line-height:1.2}
+ #hunterShop .hunterTierSummary small{font-size:.68rem;line-height:1.25}
+ #hunterShop .hunterRewardGroup{margin:8px 0}
+ #hunterShop .hunterRewardGroup>summary{padding:10px;font-size:.86rem}
+ #hunterShop .hunterRewardGrid{display:grid!important;grid-template-columns:1fr!important;padding:0 7px 7px!important}
+ #hunterShop .hunterRewardCard{width:100%;padding:32px 10px 10px!important;gap:5px}
+ #hunterShop .hunterRewardCard>b{font-size:.9rem;line-height:1.2}
+ #hunterShop .hunterRewardCard>p{font-size:.78rem;line-height:1.35}
+ #hunterShop .hunterRewardCard>small{font-size:.72rem}
+ #hunterShop .hunterRewardCard>button{width:100%;min-height:40px}
+}
