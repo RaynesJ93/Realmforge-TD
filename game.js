@@ -1164,8 +1164,8 @@ Object.entries(save.bank).forEach(function(entry){
  var n=entry[0],q=entry[1],cat='Materials';
  if(itemDB[n])return;
  if(/ ore$/i.test(n))cat='Ores';
- else if(n.includes('bar'))cat='Bars';
- else if(n==='Logs'||n.includes('logs'))cat='Wood';
+ else if(n==='Logs'||/ logs$/i.test(n))cat='Wood';
+ else if(/ bar$/i.test(n))cat='Bars';
  else if(n.includes('Minnow')||n.includes('Trout')||n.includes('Pike')||n.includes('Salmon'))cat='Food';
  resourceGroups[cat].push([n,q])
 });
