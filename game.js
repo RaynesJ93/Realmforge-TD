@@ -983,7 +983,7 @@ function renderRaid(){
 window.startRaid=startRaid;window.continueRaid=continueRaid;window.abandonRaid=abandonRaid;
 
 let bossRunStart=null;
-function snapshotBossRun(){return {coins:save.coins,bank:{...save.bank},items:{...save.items},xp:Object.fromEntries(Object.entries(save.skills).map(([k,v])=>[k,{lvl:v.lvl,xp:v.xp}]))};}
+function snapshotBossRun(){return {coins:save.coins,bank:{...save.bank},items:{...save.items},xp:Object.fromEntries(Object.entries(save.skills).map(([k,v])=>[k,{lvl:v.lvl,xp:v.xp}])),dungeonMilestones:{greenvale:[...(save.dungeon.milestones||[])],ashenfalls:[...(save.dungeon.ashenFalls.milestones||[])],frozen:[...(save.dungeon.frozenCrypt.milestones||[])],drowned:[...(save.dungeon.drownedTemple.milestones||[])],dreaming:[...(save.dungeon.dreamingHollow.milestones||[])]}};}
 function xpTotalAt(skill,state){let total=state.xp||0;for(let l=1;l<(state.lvl||1);l++)total+=xpNeed(l);return total;}
 function bossRewardData(kind,elapsed){
  var before=bossRunStart||snapshotBossRun(), rewards=[], xp=[];
@@ -1033,14 +1033,21 @@ function showDungeonResults(type,elapsed){
  Object.keys(save.items).forEach(function(n){var d=(save.items[n]||0)-(before.items[n]||0);if(d>0)rewards.push([n,d])});
  Object.entries(save.skills).forEach(function(entry){var n=entry[0],v=entry[1],b=before.xp[n];if(!b)return;var d=xpTotalAt(n,v)-xpTotalAt(n,b);if(d>0)xp.push([n,d])});
  var ashen=type==='ashenfalls',frozen=type==='frozen',drowned=type==='drowned',dreaming=type==='dreaming';
+ var state=dreaming?save.dungeon.dreamingHollow:drowned?save.dungeon.drownedTemple:frozen?save.dungeon.frozenCrypt:ashen?save.dungeon.ashenFalls:save.dungeon;
+ var oldMilestones=(before.dungeonMilestones&&before.dungeonMilestones[type])||[],newMilestone=(state.milestones||[]).filter(function(m){return !oldMilestones.includes(m)}).pop()||0;
+ var rareNames=new Set(['Verdant Edge','Thornshot Bow','Rootbinder Staff','Infernal Greatblade','Ashfall Recurve','Cinderheart Staff','Infernal Warden Mask','Cryptfang Greatsword','Glacial Recurve','Soulfrost Sceptre','Crown of the Crypt','Colossus Cleaver','Drowned Recurve','Temple Hexstaff','Bogheart Talisman','Nightmare Greatblade','Dreamshot Bow','Hollowmoon Staff','Dream Eater Mask','Rootwarden Cape','Thornrunner Cape','Rootweaver Mantle','Grove Spirit Cape','Infernal Crest Amulet','Ashfall Eye Pendant','Infernal Rune Amulet','Warden Spirit Amulet','Cryptguard Ring','Icefang Ring','Soulfrost Ring','Crypt Spirit Ring','Colossus Mantle','Drowned Hunter Cape','Temple Hexmantle','Bogbound Spirit Cape','Dreamguard Amulet','Dreamshot Pendant','Hollowmoon Amulet','Dreambinder Amulet']);
+ var chaseNames=new Set(['Infernal Warden Mask','Crown of the Crypt','Bogheart Talisman','Dream Eater Mask']);
+ var rareDrops=rewards.filter(function(x){return rareNames.has(x[0])});
  modal.style.setProperty('--boss-accent',dreaming?'#b68be0':drowned?'#72964b':frozen?'#73b9db':ashen?'#d76528':'#6f9b55');modal.style.setProperty('--boss-deep',dreaming?'#241633':drowned?'#182c20':frozen?'#132f43':ashen?'#401d12':'#1d3524');
- document.querySelector('.bossVictory').textContent='DUNGEON COMPLETE!';
+ document.querySelector('.bossVictory').textContent=rareDrops.length?(rareDrops.some(function(x){return chaseNames.has(x[0])})?'MYTHIC DUNGEON DROP!':'RARE DUNGEON DROP!'):'DUNGEON COMPLETE!';
  document.querySelector('#bossResultName').textContent=dreaming?'THE DREAMING HOLLOW':drowned?'THE DROWNED TEMPLE':frozen?'THE FROZEN CRYPT':ashen?'THE ASHEN FALLS':'GREENVALE DEPTHS';
- document.querySelector('#bossResultFlavor').textContent=dreaming?'The Dream Eater has fallen. The Hollow wakes and releases its lunar treasures.':drowned?'The Bog Colossus has fallen. The drowned vault yields its treasures.':frozen?'The Crypt King has fallen. The frozen vault yields its treasures.':ashen?'The Infernal Warden has fallen. The burning vault yields its treasures.':'The Root Warden has fallen. The depths surrender their treasures.';
- document.querySelector('#bossResultRewards').innerHTML=rewards.length?rewards.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+'</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No rewards</span></div>';
+ var flavor=dreaming?'The Dream Eater has fallen. The Hollow wakes and releases its lunar treasures.':drowned?'The Bog Colossus has fallen. The drowned vault yields its treasures.':frozen?'The Crypt King has fallen. The frozen vault yields its treasures.':ashen?'The Infernal Warden has fallen. The burning vault yields its treasures.':'The Root Warden has fallen. The depths surrender their treasures.';
+ document.querySelector('#bossResultFlavor').innerHTML=flavor+(newMilestone?'<span class="dungeonMilestoneCallout">★ '+newMilestone+' CLEARS MILESTONE REACHED ★</span>':'')+(rareDrops.length?'<span class="dungeonRareCallout">'+rareDrops.map(function(x){return menuItemArt(x[0])+'<b>'+x[0]+'</b>'+(chaseNames.has(x[0])?' <em>MYTHIC 1%</em>':' <em>RARE DROP</em>')}).join('<br>')+'</span>':'');
+ document.querySelector('#bossResultRewards').innerHTML=rewards.length?rewards.map(function(x){var rarity=chaseNames.has(x[0])?' mythic':rareNames.has(x[0])?' rare':'';return '<div class="bossResultRow dungeonReward'+rarity+'"><span>'+menuItemArt(x[0])+x[0]+'</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No rewards</span></div>';
  document.querySelector('#bossResultXp').innerHTML=xp.length?xp.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+' XP</span><b>+'+x[1]+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No XP earned</span></div>';
  document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
  document.querySelector('#bossResultWaves').textContent=(ashen||frozen||drowned||dreaming)?'20 / 20':'15 / 15';
+ var cont=document.querySelector('#bossResultsModal .bossContinue');if(cont)cont.textContent='CLAIM DUNGEON CHEST';
  modal.classList.add('show');
 }
 function closeBossResults(){var m=document.querySelector('#bossResultsModal');if(m)m.classList.remove('show')}window.closeBossResults=closeBossResults;
