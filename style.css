@@ -279,3 +279,13 @@ body:has(#battle.active){overscroll-behavior:none}
 .raidRoomCard.locked{opacity:.58;filter:saturate(.65)}
 .raidOverview>button{margin-top:6px}
 @media(max-width:620px){.raidRoomGrid{grid-template-columns:1fr}.raidRoomCard{min-height:0}.raidRoomCard img{max-height:150px;object-fit:cover}}
+
+/* Raid cleanup Stage 3 — skilling/preparation */
+.raidUpgradeGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:9px;margin:10px 0}
+.raidUpgradeCard{position:relative;padding-top:36px}
+.raidUpgradeCard>p{margin:5px 0}.raidUpgradeCard>small{display:block;min-height:32px;margin-bottom:8px}
+.raidUpgradeState{position:absolute;top:8px;right:8px;padding:3px 7px;border:1px solid currentColor;border-radius:999px;font-size:.62rem;font-weight:900;letter-spacing:.05em}
+.raidUpgradeCard.ready{border-color:#d5b854}.raidUpgradeCard.ready .raidUpgradeState{color:#f0d579}
+.raidUpgradeCard.active{border-color:#6f9b55;background:rgba(111,155,85,.08)}.raidUpgradeCard.active .raidUpgradeState{color:#a8dc86}
+.raidUpgradeCard.missing{opacity:.72}.raidUpgradeCard.missing .raidUpgradeState{color:#aaa}
+@media(max-width:620px){.raidUpgradeGrid{grid-template-columns:1fr}.raidUpgradeCard>small{min-height:0}}
