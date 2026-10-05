@@ -316,3 +316,6 @@ body:has(#battle.active){overscroll-behavior:none}
 .hunterRewardGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:8px;padding:0 9px 9px}.hunterRewardCard{position:relative;padding-top:36px;display:flex;flex-direction:column;gap:6px}.hunterRewardCard>p{margin:0;flex:1}.hunterRewardCard>button{margin-top:3px}
 .hunterRewardState{position:absolute;top:8px;right:8px;font-size:.61rem;font-weight:900;letter-spacing:.05em}.hunterReady{border-color:#b58b42}.hunterReady .hunterRewardState{color:#e3c372}.hunterBought{border-color:#6f9b55}.hunterBought .hunterRewardState{color:#a8dc86}.hunterLocked,.hunterNeedPoints{opacity:.72}
 @media(max-width:620px){.hunterRewardGrid{grid-template-columns:1fr}.hunterTierSummary{grid-template-columns:1fr 1fr}.hunterRewardCard{min-height:0}}
+
+/* Hunter Guild cleanup Stage 5 */
+.hunterCompleteActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.hunterCompleteActions button{margin:0}.hunterBonusReward{border:1px solid #b58b42;border-radius:8px;background:rgba(181,139,66,.12);padding:8px}.hunterBonusReward>b{font-size:.66rem;color:#e3c372;letter-spacing:.05em}@media(max-width:520px){.hunterCompleteActions{grid-template-columns:1fr}}
