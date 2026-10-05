@@ -1309,7 +1309,7 @@ equipmentGrid.innerHTML=['warrior','ranger','mage','summoner'].map(function(c){v
  ['moonweaver','Moonweaver','Lunara',save.campaign.moonBossKills||0,[['Moonweaver Crescent','2.5%'],['Starlight Recurve','2.5%'],['Dreamweaver Staff','2.5%'],['Moonweaver Crown','1.5%'],['Lunar Thread','Resource'],['Spirit Shards','Resource'],['Ancient Spirit Core','Resource']]]
 ];
 const openBossDetails=new Set(Array.from(bossGrid.querySelectorAll('details[data-boss-details][open]'),function(d){return d.dataset.bossDetails}));
-const bossArtVersions={warlord:179,tyrant:226,frostwyrm:227,mirequeen:220,moonweaver:402};
+const bossArtVersions={warlord:179,tyrant:226,frostwyrm:227,mirequeen:248,moonweaver:310};
 bossGrid.innerHTML=bd.map(function(row){var k=row[0],n=row[1],region=row[2],kills=row[3],loot=row[4],unlocked=bossUnlocked(k),best=save.bossHunt.best[k],milestones=save.bossHunt.milestones[k]||[],got=loot.filter(function(x){return x[1]!=='Resource'&&save.collection[x[0]]}).length,collectible=loot.filter(function(x){return x[1]!=='Resource'}).length;
  return '<article class="card bossCard '+(unlocked?'':'locked')+'">'+
  '<span class="bossPortrait" aria-hidden="true" style="background-image:url(assets/enemy-'+k+'-walk-v'+bossArtVersions[k]+'.webp)"></span>'+
