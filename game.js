@@ -451,11 +451,17 @@ function enhanceItem(name){
  var cost=enhancementCosts[lvl+1];if(save.salvagePoints<cost){alert('You need '+cost.toLocaleString()+' Salvage Points for the next enhancement.');return}
  save.salvagePoints-=cost;save.enhancements[name]=lvl+1;save.drops.push('Blacksmith: '+name+' enhanced to +'+(lvl+1)+' for '+cost+' Salvage Points');persist()
 }
+function salvageReqLevel(name){var it=itemDB[name]||{},vals=Object.values(it.req||{}).map(Number).filter(Number.isFinite);return vals.length?Math.max.apply(null,vals):1}
+function salvageCard(n){var qty=salvageAvailable(n),v=salvageValue(n),it=itemDB[n],rare=salvageUniqueNames.includes(n),lvl=salvageReqLevel(n);return '<div class="card marketItem"><b>'+n+'</b><div>'+it.class+' • '+it.slot+' • Level '+lvl+'</div><small>Available: '+qty+' • '+v+' Salvage Points each'+(rare?' • RARE':'')+'</small><div class="marketQuick"><button data-salvage-one="'+encodeURIComponent(n)+'">Salvage 1</button><button data-salvage-all="'+encodeURIComponent(n)+'">Salvage All</button></div></div>'}
 function renderSalvage(){
  var g=document.querySelector('#salvageGrid'),wallet=document.querySelector('#salvagePoints');if(wallet)wallet.textContent=(save.salvagePoints||0).toLocaleString();if(!g)return;
- var owned=Object.keys(save.items).filter(function(n){return salvageAvailable(n)>0&&itemDB[n]});
+ var owned=Object.keys(save.items).filter(function(n){return salvageAvailable(n)>0&&itemDB[n]&&!itemDB[n].legacyShared});
  if(!owned.length){g.innerHTML='<div class="card">No unequipped equipment is available to salvage. Equipped gear is protected.</div>';return}
- g.innerHTML=owned.map(function(n){var qty=salvageAvailable(n),v=salvageValue(n),rare=salvageUniqueNames.includes(n);return '<div class="card marketItem"><b>'+n+'</b><div>'+itemDB[n].class+' • '+itemDB[n].slot+'</div><small>Available: '+qty+' • '+v+' Salvage Points each'+(rare?' • RARE':'')+'</small><div class="marketQuick"><button data-salvage-one="'+encodeURIComponent(n)+'">Salvage 1</button><button data-salvage-all="'+encodeURIComponent(n)+'">Salvage All</button></div></div>'}).join('');g.querySelectorAll('[data-salvage-one]').forEach(function(b){b.onclick=function(){salvageItem(decodeURIComponent(b.dataset.salvageOne),false)}});g.querySelectorAll('[data-salvage-all]').forEach(function(b){b.onclick=function(){salvageItem(decodeURIComponent(b.dataset.salvageAll),true)}})
+ var order=['warrior','ranger','mage','summoner','all'],labels={warrior:'⚔ Warrior',ranger:'🏹 Ranger',mage:'✦ Mage',summoner:'◈ Summoner',all:'Legacy / Unassigned'};
+ var groups={warrior:[],ranger:[],mage:[],summoner:[],all:[]};owned.forEach(function(n){var c=itemDB[n].class;groups[c]?(groups[c].push(n)):groups.all.push(n)});
+ Object.keys(groups).forEach(function(c){groups[c].sort(function(a,b){var d=salvageReqLevel(a)-salvageReqLevel(b);if(d)return d;d=String(itemDB[a].slot).localeCompare(String(itemDB[b].slot));return d||a.localeCompare(b)})});
+ g.innerHTML=order.filter(function(c){return groups[c].length}).map(function(c){var list=groups[c],lo=salvageReqLevel(list[0]),hi=salvageReqLevel(list[list.length-1]);return '<details class="salvageClassGroup"><summary><b>'+labels[c]+'</b><span>'+list.length+' items • Lv '+lo+(hi!==lo?'–'+hi:'')+'</span></summary><div class="salvageClassGrid">'+list.map(salvageCard).join('')+'</div></details>'}).join('');
+ g.querySelectorAll('[data-salvage-one]').forEach(function(b){b.onclick=function(){salvageItem(decodeURIComponent(b.dataset.salvageOne),false)}});g.querySelectorAll('[data-salvage-all]').forEach(function(b){b.onclick=function(){salvageItem(decodeURIComponent(b.dataset.salvageAll),true)}})
 }
 function renderEnhancements(){
  var g=document.querySelector('#enhancementGrid'),wallet=document.querySelector('#enhanceSalvagePoints');if(wallet)wallet.textContent=(save.salvagePoints||0).toLocaleString();if(!g)return;
