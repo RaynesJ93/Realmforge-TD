@@ -303,3 +303,6 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* Raid cleanup Stage 6 */
 .raidUniqueCallout{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px auto;padding:10px;border:1px solid #d5b854;border-radius:9px;background:rgba(213,184,84,.1);font-weight:900}.raidUniqueCallout em{font-style:normal;font-size:.65rem;color:#f0d579;letter-spacing:.06em}.bossResultRow.raidUniqueReward{border:2px solid #d5b854;border-radius:8px;margin:5px 0;background:rgba(213,184,84,.12);font-weight:900}
+
+/* Hunter Guild cleanup Stage 1 */
+.hunterTask{position:relative;padding-top:38px}.hunterContractTier{position:absolute;top:9px;right:9px;padding:3px 7px;border:1px solid #8ca46a;border-radius:999px;font-size:.62rem;font-weight:900;letter-spacing:.06em;color:#b9d78d}.hunterTargetHint{display:block;margin-top:7px;opacity:.8}.hunterTargetHint.missing{color:#d78b82}.hunterTaskEmpty{display:flex;flex-direction:column;gap:5px}
