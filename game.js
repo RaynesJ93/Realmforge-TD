@@ -1489,7 +1489,7 @@ startWave.onclick=launchWave;
 function updateBattleControls(){var a=document.querySelector('#autoWave'),sp=document.querySelector('#battleSpeed');if(a)a.textContent='Auto Wave: '+(autoWave?'ON':'OFF');if(sp)sp.textContent=battleSpeed+'x Speed'}
 window.toggleAutoWave=function(){autoWave=!autoWave;updateBattleControls();if(autoWave&&!waveRunning&&!mapFinished)setTimeout(launchWave,250)};
 window.toggleBattleSpeed=function(){battleSpeed=battleSpeed===1?3:1;updateBattleControls()};
-function spawn(kind){const path=battlePath();let d=enemyDB[kind],scale=raidMode?(1.35+wave*.18):dungeonMode?(dungeonType==='realmforge'?(1.85+wave*.20):dungeonType==='ashenfalls'?(1.28+wave*.15):dungeonType==='frozen'?(1.35+wave*.16):dungeonType==='drowned'?(1.55+wave*.18):dungeonType==='dreaming'?(1.72+wave*.19):(1.15+wave*.14)):maps[currentMap].mult*(1+wave*.13)*(bossMode?1.08:1),rewardMult=raidMode?1:maps[currentMap].mult;
+function spawn(kind){const path=battlePath();let d=enemyDB[kind],scale=raidMode?(1.35+wave*.18):dungeonMode?(dungeonType==='realmforge'?(1.85+wave*.20):dungeonType==='ashenfalls'?(1.30+wave*.15):dungeonType==='frozen'?(1.42+wave*.16):dungeonType==='drowned'?(1.56+wave*.17):dungeonType==='dreaming'?(1.72+wave*.18):(1.15+wave*.14)):maps[currentMap].mult*(1+wave*.13)*(bossMode?1.08:1),rewardMult=raidMode?1:maps[currentMap].mult;
  const isBoss=masteryBossKinds.has(kind),region=maps[currentMap]&&maps[currentMap].region;
  // Elite enemies begin in Ashen Peaks and become more common in later regions.
  // Bosses are never rolled as elites. Boss Hunts are left unchanged.
