@@ -865,10 +865,10 @@ function renderDungeon(){
 
 
 const raidRooms=[
- {name:'Outer Breach',type:'Combat Waves',desc:'Fight through the ruined entrance and secure the Citadel.'},
+ {name:'Outer Breach',type:'5 Combat Waves',desc:'Break through Citadel Thralls and Rift Stalkers, ending with a Shardguard push.'},
  {name:'Broken Bastion',type:'Mini-boss',desc:'Defeat the Stone Warden and survive its Stoneflesh phase.'},
  {name:'Forgotten Stores',type:'Skilling',desc:'Gather raid-only supplies and prepare for the deeper Citadel.'},
- {name:'Fractured Halls',type:'Modified Waves',desc:'Harder enemy waves with a raid modifier.'},
+ {name:'Fractured Halls',type:'7 Escalating Waves',desc:'A longer late-raid gauntlet introducing Dreamkeepers and Voidborn reinforcements.'},
  {name:'Heartguard Chamber',type:'Mini-boss',desc:'Second guardian encounter before the inner keep.'},
  {name:'Last Sanctuary',type:'Preparation',desc:'Final preparation and raid-buff choice.'},
  {name:'Shattered Throne',type:'Raid Boss',desc:'Face the Citadel Lord and complete the raid.'}
