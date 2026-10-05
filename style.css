@@ -319,3 +319,28 @@ body:has(#battle.active){overscroll-behavior:none}
 
 /* Hunter Guild cleanup Stage 5 */
 .hunterCompleteActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.hunterCompleteActions button{margin:0}.hunterBonusReward{border:1px solid #b58b42;border-radius:8px;background:rgba(181,139,66,.12);padding:8px}.hunterBonusReward>b{font-size:.66rem;color:#e3c372;letter-spacing:.05em}@media(max-width:520px){.hunterCompleteActions{grid-template-columns:1fr}}
+
+/* V324 equipment mobile overflow repair */
+.equipmentClassCard>summary>div{min-width:0;display:flex;flex-direction:column;gap:2px}
+.equipmentClassCard>summary>div>b{font-size:1rem;line-height:1.15}
+.equipmentClassCard>summary>div>small{display:block;line-height:1.25}
+.equipmentClassCard>summary>span{flex:0 1 48%;line-height:1.35;white-space:normal}
+.equipmentSlot{grid-template-columns:58px 34px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important}
+.equipmentSlot>span{grid-column:1;grid-row:1 / span 2;white-space:normal!important}
+.equipmentSlot>.menuItemIcon{grid-column:2;grid-row:1 / span 2}
+.equipmentSlot>b{grid-column:3;grid-row:1;min-width:0;max-width:100%;overflow-wrap:anywhere!important;word-break:normal!important}
+.equipmentSlot>small{grid-column:3;grid-row:2;min-width:0;line-height:1.25}
+.equipmentSummary{display:flex;flex-wrap:wrap;align-items:center;gap:5px 12px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(205,164,99,.25)}
+.equipmentSummary>b{flex:1 0 100%}.equipmentSummary>span{white-space:nowrap}
+@media(max-width:520px){
+ .equipmentClassCard>summary{align-items:flex-start!important;flex-wrap:wrap;padding:12px!important}
+ .equipmentClassCard>summary>div{flex:1 1 52%}
+ .equipmentClassCard>summary>span{flex:1 1 42%;font-size:.65rem!important}
+ .equipmentSlots{grid-template-columns:1fr!important;gap:6px!important}
+ .equipmentSlot{grid-template-columns:64px 36px minmax(0,1fr)!important;min-height:58px;padding:8px 9px!important}
+ .equipmentSlot .menuItemIcon{width:32px!important;height:32px!important}
+ .equipmentSlot>span{font-size:.72rem!important}
+ .equipmentSlot>b{font-size:.78rem!important;line-height:1.18!important}
+ .equipmentSlot>small{font-size:.69rem!important}
+ .equipmentSummary{font-size:.82rem}
+}
