@@ -289,3 +289,11 @@ body:has(#battle.active){overscroll-behavior:none}
 .raidUpgradeCard.active{border-color:#6f9b55;background:rgba(111,155,85,.08)}.raidUpgradeCard.active .raidUpgradeState{color:#a8dc86}
 .raidUpgradeCard.missing{opacity:.72}.raidUpgradeCard.missing .raidUpgradeState{color:#aaa}
 @media(max-width:620px){.raidUpgradeGrid{grid-template-columns:1fr}.raidUpgradeCard>small{min-height:0}}
+
+/* Raid cleanup Stage 4 — power choices */
+.raidPowerChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.raidPowerOption{display:flex;flex-direction:column;align-items:flex-start;gap:7px;text-align:left;min-height:128px;padding:14px;border:1px solid rgba(213,184,84,.55);border-radius:10px;background:rgba(24,20,27,.92)}
+.raidPowerOption:hover{transform:translateY(-2px);border-color:#e5c968}
+.raidPowerOption small{font-size:.62rem;letter-spacing:.08em;font-weight:900;color:#e5c968}
+.raidPowerOption b{font-size:1rem}.raidPowerOption span{font-size:.8rem;line-height:1.35;opacity:.88}
+@media(max-width:620px){.raidPowerChoices{grid-template-columns:1fr}.raidPowerOption{min-height:0}}
