@@ -253,3 +253,8 @@ body:has(#battle.active){overscroll-behavior:none}
  .dungeonFoodActions{width:100%;justify-content:stretch}
  .dungeonFoodActions button{flex:1}
 }
+
+/* Dungeon Stage 4 artwork */
+.dungeonMapArtwork{width:100%;aspect-ratio:900/520;object-fit:cover;object-position:center;border-radius:8px;border:1px solid rgba(255,255,255,.13);margin-bottom:2px;display:block}
+.dungeonCard.locked .dungeonMapArtwork{filter:saturate(.45) brightness(.72)}
+@media(max-width:620px){.dungeonMapArtwork{max-height:150px}}
