@@ -267,3 +267,15 @@ body:has(#battle.active){overscroll-behavior:none}
 .bossResultRow.dungeonReward.rare{border:1px solid var(--boss-accent);border-radius:8px;margin:5px 0;background:color-mix(in srgb,var(--boss-accent) 13%,transparent);font-weight:800}
 .bossResultRow.dungeonReward.mythic{border:2px solid #e5bd54;border-radius:8px;margin:5px 0;background:linear-gradient(90deg,rgba(229,189,84,.18),rgba(122,72,170,.2));font-weight:900;box-shadow:0 0 12px rgba(229,189,84,.16)}
 .bossResultRow.dungeonReward.mythic b{color:#ffe38a}
+
+/* Raid cleanup — room progression */
+.raidRoomGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0}
+.raidRoomCard{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:5px;min-height:190px}
+.raidRoomCard>p,.raidRoomCard>small{margin:2px 0}
+.raidRoomBadge{position:absolute;z-index:2;right:8px;top:8px;padding:4px 7px;border:1px solid currentColor;border-radius:999px;background:rgba(8,11,9,.84);font-size:.65rem;font-weight:900;letter-spacing:.06em}
+.raidRoomCard.complete{border-color:#6f9b55}.raidRoomCard.complete .raidRoomBadge{color:#a8dc86}
+.raidRoomCard.active,.raidRoomCard.available{border-color:#d5b854;box-shadow:0 0 0 1px rgba(213,184,84,.2)}
+.raidRoomCard.active .raidRoomBadge,.raidRoomCard.available .raidRoomBadge{color:#f0d579}
+.raidRoomCard.locked{opacity:.58;filter:saturate(.65)}
+.raidOverview>button{margin-top:6px}
+@media(max-width:620px){.raidRoomGrid{grid-template-columns:1fr}.raidRoomCard{min-height:0}.raidRoomCard img{max-height:150px;object-fit:cover}}
