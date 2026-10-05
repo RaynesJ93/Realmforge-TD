@@ -283,7 +283,20 @@ function renderMarketplace(){
   var max=Math.floor(save.coins/x.price),id='marketQty-'+shop+'-'+x.name.replace(/[^a-z0-9]/gi,'_');
   return '<div class="card marketItem"><b>'+menuItemArt(x.name)+x.name+'</b><div class="marketPrice">'+menuItemArt('Coins')+x.price.toLocaleString()+' coins each</div><small>Owned: '+(save.bank[x.name]||0)+'</small><div class="marketBulk"><label>Qty</label><input id="'+id+'" type="number" inputmode="numeric" min="1" value="1"><button '+(max<1?'disabled':'')+' data-market-shop="'+shop+'" data-market-name="'+x.name+'">Buy</button></div><div class="marketQuick"><button '+(max<5?'disabled':'')+' data-market-quick="5" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x5</button><button '+(max<10?'disabled':'')+' data-market-quick="10" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x10</button><button '+(max<50?'disabled':'')+' data-market-quick="50" data-market-shop="'+shop+'" data-market-name="'+x.name+'">x50</button><button '+(max<1?'disabled':'')+' data-market-quick="'+max+'" data-market-shop="'+shop+'" data-market-name="'+x.name+'">MAX</button></div></div>'
  }).join('')}
- g.innerHTML=cards(generalStore,'general');b.innerHTML=cards(blacksmithStore,'blacksmith');m.innerHTML=cards(merchantPool.filter(function(x){return save.market.merchantStock.includes(x.name)}),'merchant');
+ function marketCategory(name){
+  if(/ ore$/i.test(name)||/ bar$/i.test(name))return '⛏️ Ores & Bars';
+  if(name==='Logs'||/ logs$/i.test(name))return '🪵 Wood';
+  if(/Minnow|Trout|Pike|Salmon|Moonfin/i.test(name))return '🐟 Food & Fishing';
+  if(/Thread|Cloth|scrap/i.test(name))return '🧵 Crafting Materials';
+  if(itemDB[name])return '⚔️ Weapons & Armour';
+  return '✨ Rare Materials'
+ }
+ function groupedMarket(list,shop){
+  var order=['⛏️ Ores & Bars','🪵 Wood','🐟 Food & Fishing','🧵 Crafting Materials','⚔️ Weapons & Armour','✨ Rare Materials'],groups={};
+  list.forEach(function(x){var cat=marketCategory(x.name);(groups[cat]||(groups[cat]=[])).push(x)});
+  return order.filter(function(cat){return groups[cat]&&groups[cat].length}).map(function(cat){var entries=groups[cat];return '<details class="artisanCategory marketCategory"><summary><span>'+cat+'</span><b>'+entries.length+' items</b></summary><div class="grid artisanCategoryGrid">'+cards(entries,shop)+'</div></details>'}).join('')
+ }
+ g.innerHTML=groupedMarket(generalStore,'general');b.innerHTML=groupedMarket(blacksmithStore,'blacksmith');m.innerHTML=groupedMarket(merchantPool.filter(function(x){return save.market.merchantStock.includes(x.name)}),'merchant');
  [g,b,m].forEach(function(grid){
   grid.querySelectorAll('[data-market-name]:not([data-market-quick])').forEach(function(btn){btn.onclick=function(){marketBuySelected(btn.dataset.marketShop,btn.dataset.marketName)}});
   grid.querySelectorAll('[data-market-quick]').forEach(function(btn){btn.onclick=function(){buyMarketItem(btn.dataset.marketShop,btn.dataset.marketName,btn.dataset.marketQuick)}})
