@@ -398,6 +398,7 @@ const perkShop={
  veteranwarrior:{name:'Veteran Warrior',cost:250,category:'Master',icon:'⚔',desc:'Warrior towers deal +8% damage.'},
  veteranranger:{name:'Veteran Ranger',cost:250,category:'Master',icon:'🏹',desc:'Ranger towers deal +8% damage.'},
  veteranmage:{name:'Veteran Mage',cost:250,category:'Master',icon:'🔮',desc:'Mage towers deal +8% damage.'},
+ veteransummoner:{name:'Veteran Summoner',cost:250,category:'Master',icon:'🐺',desc:'Summoner creatures deal +8% damage.'},
  executioner:{name:'Executioner',cost:350,category:'Master',icon:'💀',desc:'+15% damage against bosses below 25% health.'},
  mastergatherer:{name:'Master Gatherer',cost:400,category:'Master',icon:'🌟',desc:'+10% gathering speed and +10 percentage points to double-resource chances.'},
  realmforged:{name:'Realmforged',cost:750,category:'Master',icon:'🏆',desc:'+5% tower damage, +5% tower range and +5% XP.'}
@@ -1573,7 +1574,7 @@ function updateSpiritWolf(t,now,dt){
   w.state='chase';w.targetX=target.x;w.targetY=target.y;const ranged=st.style==='ranged'||st.style==='splash'||st.style==='magic',attackDistance=ranged?Math.min(125,st.leash*.55):28,d=Math.hypot(target.x-w.x,target.y-w.y);
   if(d>attackDistance)moveWolf(w,target.x,target.y,st.speed*dt);
   else if(now-w.last>=st.rate*(masteryPassive('summoning')?.95:1)){
-   w.last=now;w.attackUntil=now+210;w.state='attack';let damage=st.damage;if(masteryPassive('summoning'))damage*=1.05;if(raidMode&&hasRaidBuff('spiritlegion'))damage*=1.25;if(raidMode&&hasRaidBuff('huntersfocus'))damage*=1.10;
+   w.last=now;w.attackUntil=now+210;w.state='attack';let damage=st.damage;if(masteryPassive('summoning'))damage*=1.05;if(hasPerk('veteransummoner'))damage*=1.08;if(hasPerk('sharp'))damage*=1.05;if(hasPerk('realmforged'))damage*=1.05;if(raidMode&&hasRaidBuff('spiritlegion'))damage*=1.25;if(raidMode&&hasRaidBuff('huntersfocus'))damage*=1.10;
    if(st.style==='magic')damage*=1.08;target.hp-=damage;trackCombatHit('summoner',target,damage);
    if(st.style==='splash')enemies.forEach(e=>{if(e!==target&&!e.dead&&Math.hypot(e.x-target.x,e.y-target.y)<55)e.hp-=damage*.35});
    if(st.style==='slow')target.summonSlowUntil=now+1200;
