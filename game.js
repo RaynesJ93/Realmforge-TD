@@ -784,7 +784,7 @@ function finishDungeon(){
   save.collection[unique]=true;
   save.drops.push(unique+' DUNGEON UNIQUE!');
  }
- var accessory=rollDungeonAccessory(['Rootwarden Cape','Thornrunner Cape','Rootweaver Mantle','Grove Spirit Cape'],'GREENVALE DEPTHS');
+ var accessory=rollDungeonAccessory(['Rootwarden Cape','Thornrunner Cape','Rootweaver Mantle','Grove Spirit Cape'],'GREENVALE DEPTHS');var milestoneReward=(save.dungeon.milestones||[]).includes(save.dungeon.completions)?save.dungeon.completions*75:0;setDungeonChestRewards([['Coins',coins+milestoneReward],['Bronze bar',bars],['Oakheart logs',oak],['Ironvale ore',iron],['Ashweave Cloth',cloth],unique&&[unique,1],accessory&&[accessory,1]]);
  var bonusReward=oak+' Oakheart logs\n'+iron+' Ironvale ore\n'+cloth+' Ashweave Cloth';
  var chest=coins+' coins\n'+bars+' Bronze bars\n'+bonusReward+(unique?'\nRARE: '+unique:'');
  save.drops.push('Greenvale Depths chest: '+oak+' Oakheart logs - '+iron+' Ironvale ore - '+cloth+' Ashweave Cloth');
@@ -803,7 +803,7 @@ function finishAshenFalls(){
  save.coins+=coins;save.bank['Ironvale bar']=(save.bank['Ironvale bar']||0)+iron;save.bank['Ashweave Cloth']=(save.bank['Ashweave Cloth']||0)+cloth;save.bank['Golem Core']=(save.bank['Golem Core']||0)+cores;
  var roll=Math.random()/rarePerkMult(),unique=roll<.03?'Infernal Greatblade':roll<.06?'Ashfall Recurve':roll<.09?'Cinderheart Staff':null;var chase=Math.random()<.01*rarePerkMult()?'Infernal Warden Mask':null;
  [unique,chase].filter(Boolean).forEach(function(n){save.items[n]=(save.items[n]||0)+1;save.collection[n]=true;save.drops.push(n+' ASHEN FALLS UNIQUE!')});
- var accessory=rollDungeonAccessory(['Infernal Crest Amulet','Ashfall Eye Pendant','Infernal Rune Amulet','Warden Spirit Amulet'],'ASHEN FALLS');
+ var accessory=rollDungeonAccessory(['Infernal Crest Amulet','Ashfall Eye Pendant','Infernal Rune Amulet','Warden Spirit Amulet'],'ASHEN FALLS');var milestoneReward=(af.milestones||[]).includes(af.completions)?af.completions*100:0;setDungeonChestRewards([['Coins',coins+milestoneReward],['Ironvale bar',iron],['Ashweave Cloth',cloth],['Golem Core',cores],unique&&[unique,1],chase&&[chase,1],accessory&&[accessory,1]]);
  save.drops.push('Ashen Falls Chest: '+coins+' coins - '+iron+' Ironvale bars - '+cloth+' Ashweave Cloth - '+cores+' Golem Core'+(unique?' - RARE: '+unique:'')+(chase?' - MYTHIC 1%: '+chase:''));
  persist();renderUI();setTimeout(function(){showDungeonResults('ashenfalls',elapsed);bossRunStart=null},150);
 }
@@ -850,7 +850,7 @@ function finishFrozenCrypt(){
   save.collection[chase]=true;
   save.drops.push(chase+' 1% CHASE DROP!');
  }
- var accessory=rollDungeonAccessory(['Cryptguard Ring','Icefang Ring','Soulfrost Ring','Crypt Spirit Ring'],'FROZEN CRYPT');
+ var accessory=rollDungeonAccessory(['Cryptguard Ring','Icefang Ring','Soulfrost Ring','Crypt Spirit Ring'],'FROZEN CRYPT');var milestoneReward=(fc.milestones||[]).includes(fc.completions)?fc.completions*150:0;setDungeonChestRewards([['Coins',coins+milestoneReward],['Frostsilver bar',bars],['Frostsilver ore',ore],['Frostpine logs',logs],['Frostweave Cloth',cloth],unique&&[unique,1],chase&&[chase,1],accessory&&[accessory,1]]);
  var chest=coins+' coins\n'+bars+' Frostsilver bars\n'+ore+' Frostsilver ore\n'+logs+' Frostpine logs\n'+cloth+' Frostweave Cloth'+(unique?'\nRARE: '+unique:'')+(chase?'\nMYTHIC 1%: '+chase:'');
  save.drops.push('Frozen Crypt Chest: '+chest.replace(/\n/g,' - '));
  persist();
@@ -868,7 +868,7 @@ function finishDrownedTemple(){
  var roll=Math.random()/rarePerkMult(),unique=roll<.03?'Colossus Cleaver':roll<.06?'Drowned Recurve':roll<.09?'Temple Hexstaff':null;
  var chase=Math.random()<.01*rarePerkMult()?'Bogheart Talisman':null;
  [unique,chase].filter(Boolean).forEach(function(n){save.items[n]=(save.items[n]||0)+1;save.collection[n]=true;save.drops.push(n+' DROWNED TEMPLE UNIQUE!')});
- var accessory=rollDungeonAccessory(['Colossus Mantle','Drowned Hunter Cape','Temple Hexmantle','Bogbound Spirit Cape'],'DROWNED TEMPLE');
+ var accessory=rollDungeonAccessory(['Colossus Mantle','Drowned Hunter Cape','Temple Hexmantle','Bogbound Spirit Cape'],'DROWNED TEMPLE');var milestoneReward=(dt.milestones||[]).includes(dt.completions)?dt.completions*225:0;setDungeonChestRewards([['Coins',coins+milestoneReward],['Bogiron bar',bars],['Bogiron ore',ore],['Rotwood logs',logs],['Mireweave Cloth',cloth],unique&&[unique,1],chase&&[chase,1],accessory&&[accessory,1]]);
  save.drops.push('Drowned Temple Chest: '+coins+' coins - '+bars+' Bogiron bars - '+ore+' Bogiron ore - '+logs+' Rotwood logs - '+cloth+' Mireweave Cloth'+(unique?' - RARE: '+unique:'')+(chase?' - MYTHIC 1%: '+chase:''));
  persist();renderUI();setTimeout(function(){showDungeonResults('drowned',elapsed);bossRunStart=null},150);
 }
