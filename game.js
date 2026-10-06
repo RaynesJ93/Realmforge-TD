@@ -351,7 +351,23 @@ const perkTaskPool=[
 {id:'moonfin100',name:'Moonlit Angler',desc:'Catch 100 Moonfin',type:'moonfinfish',amount:100,xp:450,tier:'Elite',points:5,req:'Lunara unlocked'},
 {id:'lunarcloth50',name:'Lunar Weaver',desc:'Craft 50 Lunarweave Cloth',type:'lunarcloth',amount:50,xp:550,tier:'Elite',points:6,req:'Lunara unlocked'},
 {id:'moonboss3',name:'Moonbreaker',desc:'Defeat the Moonweaver 3 times',type:'moonboss',amount:3,xp:900,tier:'Legendary',points:8,req:'Moonweaver defeated'},
-{id:'dreaming2',name:'Dreamwalker',desc:'Complete The Dreaming Hollow twice',type:'dreaming',amount:2,xp:1300,tier:'Legendary',points:10,req:'Dreaming Hollow unlocked'}
+{id:'dreaming2',name:'Dreamwalker',desc:'Complete The Dreaming Hollow twice',type:'dreaming',amount:2,xp:1300,tier:'Legendary',points:10,req:'Dreaming Hollow unlocked'},
+{id:'summon250',name:'Spirit Swarm',desc:'Defeat 250 enemies with Summoner creatures',type:'summonkill',amount:250,xp:350,tier:'Hard',points:4},
+{id:'summon750',name:'Spirit Legion',desc:'Defeat 750 enemies with Summoner creatures',type:'summonkill',amount:750,xp:900,tier:'Elite',points:7},
+{id:'elite75',name:'Elite Purge',desc:'Defeat 75 elite enemies',type:'elitekill',amount:75,xp:650,tier:'Elite',points:6},
+{id:'bosshunts5',name:'Hunt Rotation',desc:'Complete 5 Boss Hunts',type:'bosshunt',amount:5,xp:700,tier:'Elite',points:6,req:'Boss Hunts unlocked'},
+{id:'empowered3',name:'Empowered Hunter',desc:'Complete 3 Empowered Boss Hunts',type:'empoweredhunt',amount:3,xp:900,tier:'Legendary',points:8,req:'Empowered Boss Hunt unlocked'},
+{id:'mythic2',name:'Mythic Hunter',desc:'Complete 2 Mythic Boss Hunts',type:'mythichunt',amount:2,xp:1300,tier:'Legendary',points:10,req:'Mythic Boss Hunt unlocked'},
+{id:'endgame2',name:'Realm Threat',desc:'Defeat 2 Endgame Hunt bosses',type:'endgamehunt',amount:2,xp:1600,tier:'Legendary',points:12,req:'Endgame Hunts unlocked'},
+{id:'raids3',name:'Citadel Veteran',desc:'Complete The Shattered Citadel 3 times',type:'raidcomplete',amount:3,xp:2400,tier:'Legendary',points:16,req:'Shattered Citadel unlocked'},
+{id:'dungeons10',name:'Dungeon Marathon',desc:'Complete 10 dungeons',type:'anydungeon',amount:10,xp:1800,tier:'Legendary',points:12,req:'Dungeons unlocked'},
+{id:'hunter20',name:'Relentless Hunter',desc:'Complete 20 Hunter assignments',type:'huntertask',amount:20,xp:1200,tier:'Legendary',points:10},
+{id:'mine1000',name:'Mountain Mover',desc:'Mine 1,000 ores',type:'mine',amount:1000,xp:700,tier:'Elite',points:7},
+{id:'wood1000',name:'Forest Clearer',desc:'Chop 1,000 logs',type:'wood',amount:1000,xp:700,tier:'Elite',points:7},
+{id:'fish1000',name:'Deepwater Haul',desc:'Catch 1,000 fish',type:'fish',amount:1000,xp:700,tier:'Elite',points:7},
+{id:'craft500',name:'Master Artisan',desc:'Craft 500 items',type:'craft',amount:500,xp:800,tier:'Elite',points:8},
+{id:'fletch500',name:'Master Bowyer',desc:'Fletch 500 items',type:'fletch',amount:500,xp:800,tier:'Elite',points:8},
+{id:'smith300',name:'Forge Master',desc:'Smith 300 items',type:'smith',amount:300,xp:850,tier:'Elite',points:8}
 ];
 const perkSkillRewards={
  mine100:{skill:'Mining',xp:10000},mine250:{skill:'Mining',xp:25000},fish150:{skill:'Fishing',xp:12500},cook100:{skill:'Cooking',xp:12500},smith40:{skill:'Smithing',xp:30000},
@@ -360,7 +376,7 @@ const perkSkillRewards={
  mine500:{skill:'Mining',xp:40000},wood400:{skill:'Woodcutting',xp:40000},fish400:{skill:'Fishing',xp:40000},cook300:{skill:'Cooking',xp:40000},smith100:{skill:'Smithing',xp:50000},
  fletch200:{skill:'Fletching',xp:50000},craft150:{skill:'Crafting',xp:50000},hunter5:{skill:'Monster Hunter',xp:60000},ashen2:{skill:'combat',xp:70000},
  frostkills300:{skill:'combat',xp:70000},blackfenkills300:{skill:'combat',xp:80000},boss10:{skill:'combat',xp:100000},hunter10:{skill:'Monster Hunter',xp:100000},
- dungeons5:{skill:'combat',xp:125000},boss25:{skill:'combat',xp:175000},raid1:{skill:'combat',xp:250000},lunarakills300:{skill:'combat',xp:100000},moonstone150:{skill:'Mining',xp:70000},glowbark150:{skill:'Woodcutting',xp:70000},moonfin100:{skill:'Fishing',xp:70000},lunarcloth50:{skill:'Crafting',xp:85000},moonboss3:{skill:'combat',xp:140000},dreaming2:{skill:'combat',xp:180000}
+ dungeons5:{skill:'combat',xp:125000},boss25:{skill:'combat',xp:175000},raid1:{skill:'combat',xp:250000},summon250:{skill:'Summoning',xp:80000},summon750:{skill:'Summoning',xp:175000},elite75:{skill:'combat',xp:120000},bosshunts5:{skill:'combat',xp:125000},empowered3:{skill:'combat',xp:160000},mythic2:{skill:'combat',xp:220000},endgame2:{skill:'combat',xp:275000},raids3:{skill:'combat',xp:350000},dungeons10:{skill:'combat',xp:225000},hunter20:{skill:'Monster Hunter',xp:175000},mine1000:{skill:'Mining',xp:120000},wood1000:{skill:'Woodcutting',xp:120000},fish1000:{skill:'Fishing',xp:120000},craft500:{skill:'Crafting',xp:140000},fletch500:{skill:'Fletching',xp:140000},smith300:{skill:'Smithing',xp:150000},lunarakills300:{skill:'combat',xp:100000},moonstone150:{skill:'Mining',xp:70000},glowbark150:{skill:'Woodcutting',xp:70000},moonfin100:{skill:'Fishing',xp:70000},lunarcloth50:{skill:'Crafting',xp:85000},moonboss3:{skill:'combat',xp:140000},dreaming2:{skill:'combat',xp:180000}
 };
 function grantRawSkillXP(skill,xp){var s=save.skills[skill];if(!s)return 0;var old=s.lvl,gained=Math.max(0,Math.round(xp));s.xp+=gained;while(s.lvl<99&&s.xp>=xpNeed(s.lvl)){s.xp-=xpNeed(s.lvl);s.lvl++}window.dispatchEvent(new CustomEvent('realmforge:xp',{detail:{skill:skill,gained:gained,oldLevel:old,level:s.lvl}}));return gained}
 function perkCombatRewardSkill(){var choices=['Attack','Strength','Defence','Ranged','Magic','Summoning'],best=choices[0];choices.forEach(function(k){if((save.skills[k]?.lvl||1)<(save.skills[best]?.lvl||1))best=k});return best}
