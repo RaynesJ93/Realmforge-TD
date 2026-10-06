@@ -162,3 +162,6 @@ body.atTitle main.app{display:none}
 
 /* Thread ingredients stay compact alongside quantities and owned counts. */
 #skilling .materialLine .menuItemIcon{display:inline-block;width:20px;height:20px;object-fit:contain;vertical-align:middle;margin-right:4px}
+
+/* V455: single-frame boss portraits must not use 4-frame sprite-sheet scaling. */
+#bosses .bossPortrait-mirequeen,#bosses .bossPortrait-moonweaver{background-size:contain;background-position:center;background-repeat:no-repeat}
