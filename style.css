@@ -377,3 +377,21 @@ body:has(#battle.active){overscroll-behavior:none}
 .salvageClassGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:0 9px 9px}
 .salvageClassGrid .marketItem{min-width:0;margin:0}
 @media(max-width:620px){.salvageClassGroup>summary{padding:11px 10px}.salvageClassGroup>summary b{font-size:.92rem}.salvageClassGroup>summary span{font-size:.68rem}.salvageClassGrid{grid-template-columns:1fr!important;padding:0 7px 7px}.salvageClassGrid .marketQuick{display:flex;gap:7px}.salvageClassGrid .marketQuick button{flex:1;min-width:0}}
+
+
+/* V464: Quest Journal Stage 1 — compact grouped quest browser. */
+#quests .questStats{padding:8px;margin:8px 0 10px}
+.questOverview{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;text-align:center}
+.questOverview>div{background:#202921;border:1px solid #4c5c4d;border-radius:8px;padding:7px 4px}
+.questOverview b,.questOverview small{display:block}.questOverview b{color:#e4c66a;font-size:15px}.questOverview small{font-size:10px;color:#b9c3b9;margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+.questGrid{display:block}
+.questCategory{background:#202820;border:1px solid #53634f;border-radius:10px;margin:0 0 7px;overflow:hidden}
+.questCategory>summary{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 12px;cursor:pointer;list-style:none;background:#293329}
+.questCategory>summary::-webkit-details-marker{display:none}.questCategory>summary:after{content:'▾';color:#d5b854;font-size:13px;transition:transform .15s}.questCategory:not([open])>summary:after{transform:rotate(-90deg)}
+.questCategory>summary>b{color:#e4c66a;font-size:14px}.questCategory>summary>span{margin-left:auto;color:#aebbaa;font-size:11px;white-space:nowrap}
+.questCategoryGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:7px;padding:7px}
+.questCard{padding:10px;border-radius:9px;min-width:0}.questCardHead{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.questCardHead>div{min-width:0}.questCard h3{font-size:14px;margin:2px 0 4px;line-height:1.25}.questNpc{font-size:9px}.questStatus{flex-shrink:0;font-size:9px;font-weight:900;letter-spacing:.45px;color:#d5b854;background:#18201a;border:1px solid #56634f;border-radius:999px;padding:4px 6px}
+.questStory{font-size:11px;line-height:1.35;color:#b9c3b9;margin:5px 0 7px}.questObjective{display:grid;gap:2px;padding:7px;background:#202821;border-radius:7px;border:1px solid #465345}.questObjective b{font-size:10px;color:#9fc477;text-transform:uppercase;letter-spacing:.5px}.questObjective span{font-size:11px;line-height:1.35}
+.questRewards{margin-top:6px;border-top:1px solid #465345}.questRewards summary{display:flex;justify-content:space-between;cursor:pointer;padding:6px 0 3px;color:#d5b854;font-size:10px;font-weight:800}.questRewards summary span{color:#9aa798;font-weight:600}.questRewards>div{display:grid;gap:2px;padding:3px 0}.questRewards>div span{font-size:10px;color:#c3cec0}
+.questAction{margin-top:7px}.questAction button{width:100%;min-height:38px;padding:7px;font-size:11px}.questAction strong{display:block;text-align:center;padding:7px;font-size:10px;letter-spacing:.5px}.questReady{border-color:#d5b854;box-shadow:inset 0 0 0 1px #d5b85455}.questComplete{opacity:.78}.questComplete .questStatus{color:#a8d78d;border-color:#73905e}.questLocked{opacity:.5}
+@media(max-width:600px){.questCategoryGrid{grid-template-columns:1fr;padding:6px}.questCategory>summary{padding:10px}.questCard{padding:9px}.questStory{display:none}}
