@@ -1325,7 +1325,7 @@ const openBossDetails=new Set(Array.from(bossGrid.querySelectorAll('details[data
 const bossArtFiles={warlord:'enemy-warlord-walk-v179.webp',tyrant:'enemy-tyrant-walk-v226.webp',frostwyrm:'enemy-frostwyrm-walk-v227.webp',mirequeen:'enemy-mirequeen-v248.webp',moonweaver:'enemy-moonweaver-v310.webp'};
 bossGrid.innerHTML=bd.map(function(row){var k=row[0],n=row[1],region=row[2],kills=row[3],loot=row[4],unlocked=bossUnlocked(k),best=save.bossHunt.best[k],milestones=save.bossHunt.milestones[k]||[],got=loot.filter(function(x){return x[1]!=='Resource'&&save.collection[x[0]]}).length,collectible=loot.filter(function(x){return x[1]!=='Resource'}).length;
  return '<article class="card bossCard '+(unlocked?'':'locked')+'">'+
- '<span class="bossPortrait" aria-hidden="true" style="background-image:url(assets/'+bossArtFiles[k]+')"></span>'+
+ '<span class="bossPortrait bossPortrait-'+k+'" aria-hidden="true" style="background-image:url(assets/'+bossArtFiles[k]+')"></span>'+
  '<div class="bossOverview"><div><small>'+region+'</small><h3>'+n+'</h3></div><div class="bossStats"><span>Kills <b>'+kills+'</b></span><span>Best <b>'+(best?(best/1000).toFixed(1)+'s':'—')+'</b></span><span>Log <b>'+got+'/'+collectible+'</b></span></div>'+
  '<button '+(unlocked?'':'disabled')+' aria-label="'+(unlocked?'Start 3-wave hunt: ':'Campaign locked: ')+n+'" onclick="startBossHunt(\''+k+'\')">'+(unlocked?'Hunt · 3 waves':'Campaign locked')+'</button></div>'+
  '<details class="bossDetails" data-boss-details="'+k+'" '+(openBossDetails.has(k)?'open':'')+'><summary><b>Drops & milestones</b><span>'+loot.length+' drops</span></summary>'+
