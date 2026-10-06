@@ -417,12 +417,33 @@ const perkShop={
  veteransummoner:{name:'Veteran Summoner',cost:250,category:'Master',icon:'🐺',desc:'Summoner creatures deal +8% damage.'},
  executioner:{name:'Executioner',cost:350,category:'Master',icon:'💀',desc:'+15% damage against bosses below 25% health.'},
  mastergatherer:{name:'Master Gatherer',cost:400,category:'Master',icon:'🌟',desc:'+10% gathering speed and +10 percentage points to double-resource chances.'},
- realmforged:{name:'Realmforged',cost:750,category:'Master',icon:'🏆',desc:'+5% tower damage, +5% tower range and +5% XP.'}
+ realmforged:{name:'Realmforged',cost:750,category:'Master',icon:'🏆',desc:'+5% tower damage, +5% tower range and +5% XP.'},
+ mastermine:{name:'Master Miner',cost:90,category:'Skilling',icon:'⛏️',desc:'Mining double-resource chance increases to 40%.'},
+ masterwood:{name:'Master Lumberjack',cost:90,category:'Skilling',icon:'🪓',desc:'Woodcutting double-resource chance increases to 40%.'},
+ masterfish:{name:'Master Angler',cost:90,category:'Skilling',icon:'🎣',desc:'Fishing double-resource chance increases to 40%.'},
+ mastersmith:{name:'Master Smith',cost:100,category:'Skilling',icon:'🔨',desc:'35% chance when Smithing to create an additional item.'},
+ masterartisan:{name:'Master Artisan',cost:100,category:'Skilling',icon:'🧵',desc:'35% chance for an extra Crafting or Fletching output.'},
+ masterchef:{name:'Master Chef',cost:90,category:'Skilling',icon:'🍳',desc:'35% chance for double cooked output.'},
+ berserker:{name:'Berserker',cost:150,category:'Combat',icon:'⚔️',desc:'Warrior towers deal +12% damage but have -8% range.'},
+ deadeye:{name:'Deadeye',cost:150,category:'Combat',icon:'🏹',desc:'Ranger towers gain +10% damage and +8% range.'},
+ arcanesurgeperk:{name:'Arcane Surge',cost:150,category:'Combat',icon:'🔮',desc:'Mage towers deal +12% damage.'},
+ spiritcommander:{name:'Spirit Commander',cost:150,category:'Combat',icon:'🐺',desc:'Summoner creatures gain +12% damage and +10% leash range.'},
+ treasurehunter:{name:'Treasure Hunter',cost:175,category:'Loot',icon:'💰',desc:'+15% enemy coins and +8% relative rare-drop chance.'},
+ dungeonscavenger:{name:'Dungeon Scavenger',cost:175,category:'Loot',icon:'🎒',desc:'Dungeon completion resource caches give +20% resources.'},
+ elitehunterperk:{name:'Elite Hunter',cost:250,category:'Master',icon:'☠️',desc:'+15% damage against Elite enemies.'},
+ spiritlink:{name:'Spirit Link',cost:275,category:'Master',icon:'✨',desc:'Summoner creatures deal +15% damage against bosses.'},
+ glasscannon:{name:'Glass Cannon',cost:325,category:'Keystone',icon:'💥',desc:'+18% tower and summon damage, but leaking an enemy costs 2 lives.',keystone:true},
+ overcharged:{name:'Overcharged Towers',cost:300,category:'Keystone',icon:'⚡',desc:'+8% tower and summon damage. Tower placement costs +15%.',keystone:true},
+ masterhunts:{name:'Master of Hunts',cost:300,category:'Keystone',icon:'🏆',desc:'+12% relative Boss Hunt unique-drop chance.',keystone:true},
+ resourcefulkey:{name:'Resourceful',cost:275,category:'Keystone',icon:'🌿',desc:'+15 percentage points to Mining, Woodcutting and Fishing double-resource chances.',keystone:true},
+ firststrike:{name:'First Strike',cost:300,category:'Keystone',icon:'🗡️',desc:'+25% damage against enemies above 90% health.',keystone:true}
 };
-function buyPerk(id){var p=perkShop[id];if(!p||save.perks.unlocked.includes(id))return;if(save.perks.points<p.cost){alert('You need '+p.cost+' Perk Points.');return}save.perks.points-=p.cost;save.perks.unlocked.push(id);save.drops.push('PERK UNLOCKED: '+p.name);persist()}
+function buyPerk(id){var p=perkShop[id];if(!p||save.perks.unlocked.includes(id))return;if(p.keystone&&save.perks.level<50){alert('Keystone Perks unlock at Perk Level 50.');return}if(save.perks.points<p.cost){alert('You need '+p.cost+' Perk Points.');return}save.perks.points-=p.cost;save.perks.unlocked.push(id);save.drops.push('PERK UNLOCKED: '+p.name);persist()}
 window.buyPerk=buyPerk;
 function togglePerk(id){if(!save.perks.unlocked.includes(id))return;var i=save.perks.equipped.indexOf(id);if(i>=0)save.perks.equipped.splice(i,1);else if(save.perks.equipped.length<perkSlots())save.perks.equipped.push(id);else{alert('All perk slots are full.');return}persist()}
-function hasPerk(id){return save.perks.equipped.includes(id)}
+function hasPerk(id){return save.perks.equipped.includes(id)||save.perks.keystone===id}
+function toggleKeystone(id){var p=perkShop[id];if(!p||!p.keystone||!save.perks.unlocked.includes(id))return;if(save.perks.level<50){alert('Keystone slot unlocks at Perk Level 50.');return}save.perks.keystone=save.perks.keystone===id?null:id;persist()}
+window.toggleKeystone=toggleKeystone;
 function renderPerks(){
  var g=document.querySelector('#perkTaskGrid'),stats=document.querySelector('#perkStats'),owned=document.querySelector('#perkOwned');if(!g)return;
  refreshPerkTasks();var need=save.perks.level>=99?0:perkXpNeed(save.perks.level),slotMax=perkSlots(),pct=need?Math.min(100,save.perks.xp/need*100):100;
