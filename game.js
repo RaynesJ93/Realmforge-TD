@@ -543,7 +543,43 @@ function questKill(k){save.quests.kills[k]=qkill(k)+1}
 function questCraft(n){save.quests.crafted[n]=qcraft(n)+1}
 function startQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!q.req()||save.quests.started.includes(id)||save.quests.completed.includes(id))return;save.quests.started.push(id);persist()}window.startQuest=startQuest;
 function claimQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!save.quests.started.includes(id)||!q.done()||save.quests.completed.includes(id))return;q.give();save.quests.completed.push(id);save.drops.push('QUEST COMPLETE: '+q.name);persist();alert('Quest complete: '+q.name+'\nReward: '+q.reward)}window.claimQuest=claimQuest;
-function renderQuests(){let g=document.querySelector('#questGrid'),st=document.querySelector('#questStats');if(!g)return;st.textContent=save.quests.completed.length+' / '+questDB.length+' quests completed';g.innerHTML=questDB.map(q=>{let complete=save.quests.completed.includes(q.id),started=save.quests.started.includes(q.id),available=q.req(),ready=started&&q.done();return '<div class="questCard '+(complete?'questComplete':!available?'questLocked':'')+'"><span class="questNpc">'+q.npc+'</span><h3>'+q.name+'</h3><p>'+q.story+'</p><b>Objective</b><p>'+q.objective+'</p><div class="questReward"><b>Quest Rewards</b><div>'+q.reward.split(' + ').map(function(x){return '<span>• '+x+'</span>'}).join('')+'</div></div><div class="questAction">'+(complete?'<strong>QUEST COMPLETE</strong>':!available?'<button disabled>Requirements not met</button>':!started?'<button onclick="startQuest(\''+q.id+'\')">Start Quest</button>':ready?'<button onclick="claimQuest(\''+q.id+'\')">Claim Reward</button>':'<strong>IN PROGRESS</strong>')+'</div></div>'}).join('')}
+function questCategory(q){
+ if(save.quests.completed.includes(q.id))return 'completed';
+ if(['road','stronghold','embers','tyrant','frostcall','wyrm'].includes(q.id))return 'story';
+ if(['forge','frostforge'].includes(q.id))return 'skilling';
+ if(['depths','cryptking'].includes(q.id))return 'dungeons';
+ if(q.id==='ashenmaster')return 'ashen';
+ return 'story'
+}
+function renderQuests(){
+ let g=document.querySelector('#questGrid'),st=document.querySelector('#questStats');if(!g)return;
+ var openGroups=new Set(Array.from(g.querySelectorAll('details[data-quest-category][open]'),function(d){return d.dataset.questCategory}));
+ var categories=[
+  {id:'story',icon:'📜',name:'Main Story'},
+  {id:'greenvale',icon:'🌿',name:'Greenvale'},
+  {id:'ashen',icon:'🔥',name:'Ashen Peaks'},
+  {id:'frost',icon:'❄️',name:'Frostmere'},
+  {id:'blackfen',icon:'🌑',name:'Blackfen'},
+  {id:'lunara',icon:'🌙',name:'Lunara'},
+  {id:'skilling',icon:'⚒️',name:'Skilling'},
+  {id:'combat',icon:'⚔️',name:'Combat'},
+  {id:'dungeons',icon:'🏰',name:'Dungeons'},
+  {id:'raids',icon:'👑',name:'Raids'},
+  {id:'mastery',icon:'✨',name:'Mastery'},
+  {id:'completed',icon:'✓',name:'Completed'}
+ ];
+ var completed=save.quests.completed.length,started=save.quests.started.filter(function(id){return !save.quests.completed.includes(id)}).length,available=questDB.filter(function(q){return !save.quests.completed.includes(q.id)&&q.req()}).length;
+ st.innerHTML='<div class="questOverview"><div><b>'+completed+' / '+questDB.length+'</b><small>Completed</small></div><div><b>'+started+'</b><small>Active</small></div><div><b>'+available+'</b><small>Available</small></div></div>';
+ function card(q){
+  let complete=save.quests.completed.includes(q.id),started=save.quests.started.includes(q.id),available=q.req(),ready=started&&q.done(),status=complete?'COMPLETE':!available?'LOCKED':ready?'READY':started?'IN PROGRESS':'AVAILABLE';
+  return '<div class="questCard '+(complete?'questComplete ':!available?'questLocked ':'')+(ready?'questReady':'')+'"><div class="questCardHead"><div><span class="questNpc">'+q.npc+'</span><h3>'+q.name+'</h3></div><span class="questStatus">'+(complete?'✓ ':!available?'🔒 ':'')+status+'</span></div><p class="questStory">'+q.story+'</p><div class="questObjective"><b>Objective</b><span>'+q.objective+'</span></div><details class="questRewards"><summary>Rewards <span>'+q.reward.split(' + ').length+' items</span></summary><div>'+q.reward.split(' + ').map(function(x){return '<span>• '+x+'</span>'}).join('')+'</div></details><div class="questAction">'+(complete?'<strong>✓ QUEST COMPLETE</strong>':!available?'<button disabled>Requirements not met</button>':!started?'<button onclick="startQuest(\''+q.id+'\')">Start Quest</button>':ready?'<button onclick="claimQuest(\''+q.id+'\')">Claim Reward</button>':'<strong>IN PROGRESS</strong>')+'</div></div>'
+ }
+ var groups={};categories.forEach(function(c){groups[c.id]=[]});questDB.forEach(function(q){var cat=questCategory(q);(groups[cat]||(groups[cat]=[])).push(q)});
+ g.innerHTML=categories.filter(function(c){return groups[c.id]&&groups[c.id].length}).map(function(c){
+  var list=groups[c.id],done=list.filter(function(q){return save.quests.completed.includes(q.id)}).length,active=list.filter(function(q){return save.quests.started.includes(q.id)&&!save.quests.completed.includes(q.id)}).length,shouldOpen=openGroups.has(c.id)||(!openGroups.size&&c.id==='story'&&active>0);
+  return '<details class="questCategory" data-quest-category="'+c.id+'"'+(shouldOpen?' open':'')+'><summary><b>'+c.icon+' '+c.name+'</b><span>'+done+' / '+list.length+(active?' • '+active+' active':'')+(done===list.length?' ✓':'')+'</span></summary><div class="questCategoryGrid">'+list.map(card).join('')+'</div></details>'
+ }).join('')
+}
 
 
 const artisanRecipes={
