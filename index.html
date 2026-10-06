@@ -38,11 +38,11 @@
    window.__realmforgeSaveDiagnostic={primary:p,backup:bk};
  }catch(e){show('Save read error: '+e.message)}
 })();
-</script><script src="gear-art.js?v=batch9-ember-mage-summoner"></script><script src="greenvale-enemies.js?v=413-stage3-art"></script><script src="greenvale-maps.js?v=414-dungeon-stage6"></script><script src="raid-maps.js?v=20260928"></script><script>
+</script><script src="gear-art.js?v=batch10-art-aliases"></script><script src="greenvale-enemies.js?v=413-stage3-art"></script><script src="greenvale-maps.js?v=414-dungeon-stage6"></script><script src="raid-maps.js?v=20260928"></script><script>
 /* Startup safety shim: guarantees the drop handler exists before game.js executes.
    game.js replaces this with the full handler during normal startup. */
 window.rollDrop=window.rollDrop||function(){};
-</script><script>window.REALMFORGE_BUILD="456";</script><script src="game.js?v=456-single-boss-art"></script><script>
+</script><script>window.REALMFORGE_BUILD="456";</script><script src="game.js?v=batch10-art-aliases"></script><script>
 function forceRecoverNormalSave(){
  try{
   var p=JSON.parse(localStorage.getItem('realmforge_v01')||'null');
@@ -171,7 +171,6 @@ function handleRealmforgeImport(event){
  reader.readAsText(file);
 }
 </script><div id="chestResultsModal" class="chestResultsModal" aria-hidden="true"><div class="chestResultsCard"><button class="chestResultsX" onclick="closeChestResults()">×</button><div class="chestBrand">REALMFORGE TD</div><div class="chestOpened">CHEST OPENED</div><img id="chestResultArtwork" class="chestResultArtwork" src="assets/chest-supply-v272.webp" alt="" width="104" height="72"><h2 id="chestResultTitle">REALM CHEST</h2><p id="chestResultCost"></p><div class="chestRewardHeading">REWARDS</div><div id="chestResultRewards"></div><div class="chestPityNote">Legendary pity progresses from eligible Heroic and Mythic chests.</div><button class="chestContinue" onclick="closeChestResults()">CLAIM REWARDS</button></div></div><div id="raidPowerModal" class="raidPowerModal" aria-hidden="true"><div class="raidPowerCard"><div class="raidPowerBrand">SHATTERED CITADEL</div><h2>CHOOSE A RAID POWER</h2><p>Choose 1 of 3. Your choice lasts until this raid ends.</p><div id="raidPowerChoices" class="raidPowerChoices"></div><small>You must choose a power before continuing.</small></div></div><div id="hunterCompleteModal" class="bossResultsModal" aria-hidden="true"><div class="bossResultsCard"><button class="bossResultsX" onclick="closeHunterComplete()">×</button><div class="bossVictory">HUNTER GUILD</div><h2>ASSIGNMENT COMPLETE!</h2><p id="hunterCompleteTarget"></p><div class="bossResultColumns" style="grid-template-columns:1fr"><section><h3>REWARDS</h3><div id="hunterCompleteRewards"></div></section></div><div class="hunterCompleteActions"><button onclick="closeHunterComplete()">CLAIM REWARDS</button><button class="bossContinue" onclick="nextHunterAssignment()">NEXT ASSIGNMENT</button></div></div></div><div id="bossResultsModal" class="bossResultsModal" aria-hidden="true"><div class="bossResultsCard"><button class="bossResultsX" onclick="closeBossResults()">×</button><div class="bossVictory">BOSS DEFEATED!</div><h2 id="bossResultName">Boss</h2><p id="bossResultFlavor"></p><div class="bossResultColumns"><section><h3>REWARDS</h3><div id="bossResultRewards"></div></section><section><h3>XP EARNED</h3><div id="bossResultXp"></div></section></div><div class="bossResultStats"><div><small>CLEAR TIME</small><b id="bossResultTime">--</b></div><div><small>WAVES COMPLETED</small><b id="bossResultWaves">--</b></div></div><button class="bossContinue" onclick="closeBossResults()">CONTINUE</button></div></div><script src="realm-theme.js?v=237"></script><script src="title-screen.js?v=237"></script></body></html>
-
 
 
 
