@@ -454,3 +454,7 @@ body:has(#battle.active){overscroll-behavior:none}
  #bossGrid .bossQuickStats{width:auto}
 }
 @media(max-width:360px){#bossGrid .bossDifficultyGrid{grid-template-columns:1fr!important}}
+
+/* V484: Boss Hunt replay action. */
+.bossResultActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.bossResultActions .bossContinue,.bossResultActions .bossPlayAgain{width:100%;margin:0}.bossPlayAgain{border-color:#b99142;background:linear-gradient(#80612b,#5b431f);color:#fff0bd;font-weight:900}
+@media(max-width:420px){.bossResultActions{grid-template-columns:1fr}}
