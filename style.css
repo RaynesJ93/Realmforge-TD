@@ -437,3 +437,20 @@ body:has(#battle.active){overscroll-behavior:none}
 /* V479: Perks Stage 3 — expanded shop + Keystone slot. */
 .perkKeystoneSummary{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;margin:8px 0 12px;border:1px solid #765c8c;border-radius:9px;background:linear-gradient(90deg,#28222f,#211f27)}.perkKeystoneSummary b{color:#d8b8ef}.perkKeystoneSummary span{text-align:right;font-size:10px;color:#cfc2d8}.keystoneCard{border-color:#6f5680;background:linear-gradient(180deg,#292330,#222329)}.keystoneCard .perkTaskHead small{border-color:#806399;color:#d7b8e9}.keystoneCard.perkEquipped{border-color:#c291df;box-shadow:inset 0 0 0 1px #c291df55,0 0 14px #8d59aa22}
 @media(max-width:650px){.perkKeystoneSummary{align-items:flex-start;flex-direction:column}.perkKeystoneSummary span{text-align:left}}
+
+/* V482: Boss Hunts mobile width repair. */
+#bossGrid{display:block!important;width:100%;min-width:0;box-sizing:border-box}
+#bossGrid>.bossCard{display:block!important;width:100%!important;max-width:100%;min-width:0;box-sizing:border-box;margin:0 0 14px}
+#bossGrid .bossCardHeader,#bossGrid .bossMasteryPanel,#bossGrid .bossDifficultyGrid,#bossGrid .bossQuickStats,#bossGrid .bossDetails{min-width:0;max-width:100%;box-sizing:border-box}
+#bossGrid .bossIdentity,#bossGrid .bossMasteryLine>span{min-width:0;overflow-wrap:normal;word-break:normal}
+#bossGrid .bossIdentity h3,#bossGrid .bossIdentity small,#bossGrid .bossStatus{white-space:normal;word-break:normal;overflow-wrap:normal}
+@media(max-width:600px){
+ #bossGrid .bossCardHeader{display:grid!important;grid-template-columns:58px minmax(0,1fr)!important;gap:9px}
+ #bossGrid .bossCollection{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;text-align:left;min-width:0}
+ #bossGrid .bossMasteryLine{display:grid;grid-template-columns:1fr;gap:3px}
+ #bossGrid .bossMasteryLine>span{text-align:left}
+ #bossGrid .bossDifficultyGrid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%}
+ #bossGrid .bossTier{width:100%;min-width:0;box-sizing:border-box;white-space:normal;word-break:normal}
+ #bossGrid .bossQuickStats{width:auto}
+}
+@media(max-width:360px){#bossGrid .bossDifficultyGrid{grid-template-columns:1fr!important}}
