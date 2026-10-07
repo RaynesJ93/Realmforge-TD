@@ -299,6 +299,8 @@ Object.assign(equipmentArtwork,{"Greenvale Signet · Ironbound Band":"assets/equ
 Object.assign(equipmentArtwork,{"Realmforged Greatsword":"assets/equipment/realmforged-greatsword-batch11.webp","Gilded Longbow":"assets/equipment/gilded-longbow-batch11.webp","Arcane Warstaff":"assets/equipment/arcane-warstaff-batch11.webp","Crown of Fortune":"assets/equipment/crown-of-fortune-batch11.webp","Adventurer's Ring":"assets/equipment/adventurers-ring-batch11.webp"});
 // Batch 12: approved Frost Wyrm warrior and ranger artwork.
 Object.assign(equipmentArtwork,{"Wyrmguard Cape": "assets/equipment/wyrmguard-cape-batch12.webp", "Frostfang Amulet": "assets/equipment/frostfang-amulet-batch12.webp", "Glacier Warband": "assets/equipment/glacier-warband-batch12.webp", "Snowstalker Cape": "assets/equipment/snowstalker-cape-batch12.webp", "Wyrmeye Pendant": "assets/equipment/wyrmeye-pendant-batch12.webp", "Glacial Marksman Ring": "assets/equipment/glacial-marksman-ring-batch12.webp"});
+// Batch 13: approved Frost Wyrm mage and summoner artwork.
+Object.assign(equipmentArtwork,{"Wintermage Mantle": "assets/equipment/wintermage-mantle-batch13.webp", "Wintercore Amulet": "assets/equipment/wintercore-amulet-batch13.webp", "Frost Rune Ring": "assets/equipment/frost-rune-ring-batch13.webp", "Spiritfrost Cape": "assets/equipment/spiritfrost-cape-batch13.webp", "Wyrm Spirit Amulet": "assets/equipment/wyrm-spirit-amulet-batch13.webp", "Frostbinder Ring": "assets/equipment/frostbinder-ring-batch13.webp"});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
@@ -324,5 +326,6 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
 
