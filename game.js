@@ -1197,6 +1197,7 @@ function bossRewardData(kind,elapsed){
 function bossRewardSummary(kind,elapsed){var d=bossRewardData(kind,elapsed),r=d.rewards.map(function(x){return x[0]+': +'+x[1]}),xp=d.xp.map(function(x){return x[0]+' XP: +'+x[1]});return d.title+' defeated!\n\nREWARDS EARNED\n'+(r.length?r.join('\n'):'No item/resource drops this run.')+'\n\nXP EARNED\n'+(xp.length?xp.join('\n'):'No XP earned.')+'\n\nClear time: '+(elapsed/1000).toFixed(1)+'s';}
 function showBossResults(kind,elapsed){
  var victory=document.querySelector('.bossVictory');if(victory)victory.textContent='BOSS DEFEATED!';
+ var replay=document.querySelector('#bossPlayAgain');if(replay){var isHunt=!!bossMode;replay.style.display=isHunt?'block':'none';if(isHunt){replay.dataset.kind=kind;replay.dataset.diff=endgameBossMode?'endgame':bossDifficulty}}
  var d=bossRewardData(kind,elapsed),modal=document.querySelector('#bossResultsModal');if(!modal){alert(bossRewardSummary(kind,elapsed));return}
  var themes={warlord:['#6f8f3a','#26351f','Goblin Stronghold conquered'],tyrant:['#d76528','#401d12','The flames of the citadel grow silent'],frostwyrm:['#73b9db','#173447','The frozen beast has fallen'],mirequeen:['#8ba553','#243a2b','The heart of Blackfen is yours']},t=themes[kind]||themes.warlord;
  modal.style.setProperty('--boss-accent',t[0]);modal.style.setProperty('--boss-deep',t[1]);
@@ -1249,6 +1250,7 @@ function showDungeonResults(type,elapsed){
  modal.classList.add('show');
 }
 function closeBossResults(){var m=document.querySelector('#bossResultsModal');if(m)m.classList.remove('show')}window.closeBossResults=closeBossResults;
+function playBossAgain(){var btn=document.querySelector('#bossPlayAgain');if(!btn||!btn.dataset.kind)return;var kind=btn.dataset.kind,diff=btn.dataset.diff||'normal';closeBossResults();startBossHunt(kind,diff)}window.playBossAgain=playBossAgain;
 const endgameBossData={ashenbehemoth:{name:'Ashen Behemoth',map:9,req:'50 Ember Tyrant Mastery + Combat 55',open:function(){return bossMasteryKills('tyrant')>=50&&combatLevel()>=55},adds:['flameguard','lavabeast','ashsentinel'],drops:[['Behemoth Warplate','2%'],['Behemoth Embercore','5%']]},frostcolossus:{name:'Frostbound Colossus',map:14,req:'75 Frost Wyrm Mastery + Combat 62',open:function(){return bossMasteryKills('frostwyrm')>=75&&combatLevel()>=62},adds:['frostguard','frozengolem','iceraider'],drops:[['Colossus Frostguard','2%'],['Frozen Colossus Core','5%']]},astraldevourer:{name:'Astral Devourer',map:24,req:'100 Moonweaver Mastery + Combat 70',open:function(){return bossMasteryKills('moonweaver')>=100&&combatLevel()>=70},adds:['voidborn','astralgolem','dreamkeeper'],drops:[['Astral Devourer Sigil','2%'],['Devoured Star Core','5%']]}};
 function bossDifficultyUnlocked(kind,diff){if(endgameBossData[kind])return endgameBossData[kind].open();var k=save.bossHunt.difficultyKills[kind]||{normal:0,empowered:0,mythic:0};return diff==='normal'||diff==='empowered'&&k.normal>=25||diff==='mythic'&&k.empowered>=50}
 function bossDifficultyWaves(){return endgameBossMode?5:bossDifficulty==='mythic'?5:bossDifficulty==='empowered'?4:3}
