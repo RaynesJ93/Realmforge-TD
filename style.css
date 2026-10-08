@@ -458,3 +458,6 @@ body:has(#battle.active){overscroll-behavior:none}
 /* V484: Boss Hunt replay action. */
 .bossResultActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.bossResultActions .bossContinue,.bossResultActions .bossPlayAgain{width:100%;margin:0}.bossPlayAgain{border-color:#b99142;background:linear-gradient(#80612b,#5b431f);color:#fff0bd;font-weight:900}
 @media(max-width:420px){.bossResultActions{grid-template-columns:1fr}}
+
+/* V485 Perk milestones */
+.perkMilestones{margin:10px 0}.perkMilestoneGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px}.perkMilestoneRow{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;padding:9px;border:1px solid #62573b;border-radius:8px;background:#22251f}.perkMilestoneRow b{display:block;color:#e2c779}.perkMilestoneRow small{display:block;color:#b9bcb4;font-size:10px}.perkMilestoneRow button{flex-shrink:0;font-size:10px}@media(max-width:650px){.perkMilestoneGrid{grid-template-columns:1fr}}
