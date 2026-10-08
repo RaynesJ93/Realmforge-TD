@@ -311,6 +311,8 @@ Object.assign(equipmentArtwork,{"Moonblade Mantle": "assets/equipment/moonblade-
 Object.assign(equipmentArtwork,{"Moonweaver Cape": "assets/equipment/moonweaver-cape-batch17.webp", "Astral Amulet": "assets/equipment/astral-amulet-batch17.webp", "Starweaver Ring": "assets/equipment/starweaver-ring-batch17.webp", "Spiritveil Cape": "assets/equipment/spiritveil-cape-batch17.webp", "Moon Spirit Amulet": "assets/equipment/moon-spirit-amulet-batch17.webp", "Astral Binding Ring": "assets/equipment/astral-binding-ring-batch17.webp"});
 // Batch 19: approved Citadel raid warrior artwork.
 Object.assign(equipmentArtwork,{"Citadel Platebody": "assets/equipment/citadel-platebody-batch19.webp", "Citadel Platelegs": "assets/equipment/citadel-platelegs-batch19.webp", "Citadel Defender": "assets/equipment/citadel-defender-batch19.webp"});
+// Batch 20: approved Riftwalker raid ranged artwork.
+Object.assign(equipmentArtwork,{"Riftwalker Hood": "assets/equipment/riftwalker-hood-batch20.webp", "Riftwalker Body": "assets/equipment/riftwalker-body-batch20.webp", "Riftwalker Chaps": "assets/equipment/riftwalker-chaps-batch20.webp", "Rift Quiver": "assets/equipment/rift-quiver-batch20.webp"});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
@@ -336,6 +338,7 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
 
 
