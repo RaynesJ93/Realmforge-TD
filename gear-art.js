@@ -305,6 +305,8 @@ Object.assign(equipmentArtwork,{"Wintermage Mantle": "assets/equipment/wintermag
 Object.assign(equipmentArtwork,{"Mireguard Cape": "assets/equipment/mireguard-cape-batch14.webp", "Venomheart Amulet": "assets/equipment/venomheart-amulet-batch14.webp", "Bogiron Warband": "assets/equipment/bogiron-warband-batch14.webp", "Venomstalker Cape": "assets/equipment/venomstalker-cape-batch14.webp", "Mirefang Pendant": "assets/equipment/mirefang-pendant-batch14.webp", "Bogeye Ring": "assets/equipment/bogeye-ring-batch14.webp"});
 // Batch 15: approved Mire Queen mage and summoner artwork.
 Object.assign(equipmentArtwork,{"Plagueweave Mantle":"assets/equipment/plagueweave-mantle-batch15.webp","Mireheart Amulet":"assets/equipment/mireheart-amulet-batch15.webp","Bog Rune Ring":"assets/equipment/bog-rune-ring-batch15.webp","Mirespirit Cape":"assets/equipment/mirespirit-cape-batch15.webp","Bog Spirit Amulet":"assets/equipment/bog-spirit-amulet-batch15.webp","Mirebinder Ring":"assets/equipment/mirebinder-ring-batch15.webp"});
+// Batch 16: approved Moonweaver warrior and ranger artwork.
+Object.assign(equipmentArtwork,{"Moonblade Mantle": "assets/equipment/moonblade-mantle-batch16.webp", "Lunar Fang Amulet": "assets/equipment/lunar-fang-amulet-batch16.webp", "Moonstone Warband": "assets/equipment/moonstone-warband-batch16.webp", "Starstalker Cape": "assets/equipment/starstalker-cape-batch16.webp", "Moonfang Pendant": "assets/equipment/moonfang-pendant-batch16.webp", "Starlight Ring": "assets/equipment/starlight-ring-batch16.webp"});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
@@ -330,6 +332,7 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
 
 
