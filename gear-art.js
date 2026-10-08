@@ -313,6 +313,8 @@ Object.assign(equipmentArtwork,{"Moonweaver Cape": "assets/equipment/moonweaver-
 Object.assign(equipmentArtwork,{"Citadel Platebody": "assets/equipment/citadel-platebody-batch19.webp", "Citadel Platelegs": "assets/equipment/citadel-platelegs-batch19.webp", "Citadel Defender": "assets/equipment/citadel-defender-batch19.webp"});
 // Batch 20: approved Riftwalker raid ranged artwork.
 Object.assign(equipmentArtwork,{"Riftwalker Hood": "assets/equipment/riftwalker-hood-batch20.webp", "Riftwalker Body": "assets/equipment/riftwalker-body-batch20.webp", "Riftwalker Chaps": "assets/equipment/riftwalker-chaps-batch20.webp", "Rift Quiver": "assets/equipment/rift-quiver-batch20.webp"});
+// Batch 21: approved Shatterweave raid mage artwork.
+Object.assign(equipmentArtwork,{"Shatterweave Cowl": "assets/equipment/shatterweave-cowl-batch21.webp", "Shatterweave Robe": "assets/equipment/shatterweave-robe-batch21.webp", "Shatterweave Legwraps": "assets/equipment/shatterweave-legwraps-batch21.webp", "Shattered Grimoire": "assets/equipment/shattered-grimoire-batch21.webp"});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
@@ -338,6 +340,7 @@ function decorate(){
 }
 window.RealmforgeGear={descriptor,itemMesh,characterMesh,render,icon,tower,portrait,drawTower,decorate};
 })();
+
 
 
 
