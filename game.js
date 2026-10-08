@@ -6,7 +6,7 @@ Object.assign(skillingArtwork,{"Spirit Shard": "assets/skilling/spirit-shard-art
 // Shared by bank, shops, crafting and all item reward modals.
 Object.assign(skillingArtwork,{'Moonstone ore':'assets/skilling/moonstone-ore-20260929.webp','Moonstone bar':'assets/skilling/moonstone-bar-20260929.webp','Glowbark logs':'assets/skilling/dreamwood-logs-20260929.webp','Cooked Moonfin':'assets/skilling/cooked-moonfin-20260929.webp'});
 Object.assign(skillingArtwork,{"Ash Thread": "assets/skilling/ash-thread-20260927.webp", "Frost Thread": "assets/skilling/frost-thread-20260927.webp", "Mire Thread": "assets/skilling/mire-thread-20260927.webp"});
-Object.assign(skillingArtwork,{"Citadel Shard":"assets/skilling/raid-tokens-art-20260927.webp","Ancient Alloy":"assets/skilling/citadel-ore-art-20260927.webp","Riftstone":"assets/skilling/spirit-shard-art-20260927.webp","Shatterweave Cloth":"assets/skilling/frostweave-cloth-v241.webp","Bound Spirit Essence":"assets/skilling/ancient-spirit-core-art-20260927.webp"});
+Object.assign(skillingArtwork,{"Citadel Shard": "assets/skilling/citadel-shard-batch18.webp", "Ancient Alloy": "assets/skilling/ancient-alloy-batch18.webp", "Riftstone": "assets/skilling/riftstone-batch18.webp", "Shatterweave Cloth": "assets/skilling/shatterweave-cloth-batch18.webp", "Bound Spirit Essence": "assets/skilling/bound-spirit-essence-batch18.webp"});
 const existingSkillArtwork={"Mining":"assets/skills/mining-v228.webp","Woodcutting":"assets/skills/woodcutting-v228.webp","Fishing":"assets/skills/fishing-v228.webp","Cooking":"assets/skills/cooking-v228.webp","Smithing":"assets/skills/smithing-v228.webp","Smelting":"assets/skills/smelting-v228.webp","Fletching":"assets/skills/fletching-v228.webp","Crafting":"assets/skills/crafting-v228.webp"};
 // Moonfin uses only explicit Raw/Cooked items.
 const utilityArtwork={"Coins":"assets/coins-v272.webp"};
@@ -1909,3 +1909,4 @@ window.RealmforgeSession={
 };
 
 window.addEventListener('load',initCloudSave);
+
