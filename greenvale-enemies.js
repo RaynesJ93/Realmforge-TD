@@ -21,6 +21,12 @@
  });
  for(const kind of ['cryptking','citadelthrall','shardguard','riftstalker','citadelmage','stonewarden','riftkeeper','citadellord'])Object.assign(config[kind],{single:true,version:402,facingRight:true});
  config.realmforgedguardian={size:150,height:120,single:true,version:413,facingRight:false};
+ // Batch 23: approved endgame bosses, transparent cutouts with a shared foot baseline.
+ Object.assign(config,{
+  ashenbehemoth:{size:155,height:124,single:true,version:492,facingRight:true},
+  frostcolossus:{size:155,height:124,single:true,version:492,facingRight:true},
+  astraldevourer:{size:160,height:124,single:true,version:492,facingRight:true}
+ });
  const sheets={},motion=new WeakMap();let seed=0;
  for(const kind of Object.keys(config)){const img=new Image();const source=config[kind].source||kind;img.src=config[kind].single?'assets/enemy-'+source+'-v'+config[kind].version+'.webp':config[kind].svg?'assets/enemy-'+source+'-v245.svg':'assets/enemy-'+source+'-walk-v'+(config[kind].version||179)+'.webp';sheets[kind]=img;}
  function walkState(e){
