@@ -317,6 +317,8 @@ Object.assign(equipmentArtwork,{"Riftwalker Hood": "assets/equipment/riftwalker-
 Object.assign(equipmentArtwork,{"Shatterweave Cowl": "assets/equipment/shatterweave-cowl-batch21.webp", "Shatterweave Robe": "assets/equipment/shatterweave-robe-batch21.webp", "Shatterweave Legwraps": "assets/equipment/shatterweave-legwraps-batch21.webp", "Shattered Grimoire": "assets/equipment/shattered-grimoire-batch21.webp"});
 // Batch 22: approved Spiritbound raid summoner artwork.
 Object.assign(equipmentArtwork,{"Spiritbound Hood": "assets/equipment/spiritbound-hood-batch22.webp", "Spiritbound Robe": "assets/equipment/spiritbound-robe-batch22.webp", "Spiritbound Bindings": "assets/equipment/spiritbound-bindings-batch22.webp"});
+// Batch 24: approved endgame equipment rewards.
+Object.assign(equipmentArtwork,{"Behemoth Warplate": "assets/equipment/behemoth-warplate-batch24.webp", "Colossus Frostguard": "assets/equipment/colossus-frostguard-batch24.webp", "Astral Devourer Sigil": "assets/equipment/astral-devourer-sigil-batch24.webp"});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
