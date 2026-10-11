@@ -659,7 +659,7 @@ const questDB=[
 
 ]
 function qkill(k){return Number(save.quests.kills[k])||0}function qcraft(k){return Number(save.quests.crafted[k])||0}
-function questKill(k){save.quests.kills[k]=qkill(k)+1;var region=Object.keys(progressiveRegionEnemies).find(function(x){return progressiveRegionEnemies[x].includes(k)});if(region)questCraft('progressive:region:'+region,1)}
+function questKill(k){save.quests.kills[k]=qkill(k)+1;var dungeonRegions={greenvale:'greenvale',ashenfalls:'ashen',frozen:'frost',drowned:'blackfen',dreaming:'lunara'};var region=dungeonMode?dungeonRegions[dungeonType]:null;if(!region)region=Object.keys(progressiveRegionEnemies).find(function(x){return progressiveRegionEnemies[x].includes(k)});if(region)questCraft('progressive:region:'+region,1)}
 function questCraft(n,qty){save.quests.crafted[n]=qcraft(n)+(Number(qty)||1)}
 function questSkillAction(skill,key,qty){questCraft('skill:'+skill.toLowerCase(),qty);if(key)questCraft('skill:'+skill.toLowerCase()+':'+key,qty)}
 function startQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!q.req()||save.quests.started.includes(id)||save.quests.completed.includes(id))return;save.quests.started.push(id);persist()}window.startQuest=startQuest;
@@ -709,7 +709,7 @@ const progressiveCombatChains=[
 ];
 const progressiveRegionEnemies={
  greenvale:['rat','goblin','wolf','bandit','skeleton','warlord'],
- ashen:['emberling','ashcrawler','fireimp','magma','tyrant','ashguard','emberguard'],
+ ashen:['emberling','ashcrawler','fireimp','magma','tyrant','ashguard','emberguard','cinderhound','ashgolem','flameguard','scout','ashsentinel','lavabeast','infernalwarden'],
  frost:['icecrawler','frostwolf','iceraider','frozengolem','frostguard','frostwyrm','cryptking'],
  blackfen:['bogling','swampcrawler','venomfang','bogguardian','mirewitch','mirequeen','templelurker','drownedguard','bogcolossus'],
  lunara:['moonsprite','glimmerling','sporewalker','moonfang','lunarsentinel','starweaver','astralgolem','voidborn','moonweaver','dreamshade','dreamkeeper','dreameater']
