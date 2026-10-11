@@ -666,7 +666,9 @@ function startQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!q.req()||save.q
 function claimQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!save.quests.started.includes(id)||!q.done()||save.quests.completed.includes(id))return;q.give();save.quests.completed.push(id);save.drops.push('QUEST COMPLETE: '+q.name);persist();showQuestComplete(q)}window.claimQuest=claimQuest;
 function showQuestComplete(q){var m=document.getElementById('questCompleteModal');if(!m){alert('Quest complete: '+q.name+'\nReward: '+q.reward);return}document.getElementById('questCompleteName').textContent=q.name;document.getElementById('questCompleteRewards').textContent=q.reward;m.classList.add('show');m.setAttribute('aria-hidden','false')}
 function closeQuestComplete(){var m=document.getElementById('questCompleteModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}window.closeQuestComplete=closeQuestComplete;
+const archivedQuestIds=new Set(["minerspath","deepminer","moonminer","masterforge","moonforge","forestersoath","glowbarkquest","riverprovisioner","moonfinquest","fletchersmark","masterfletcher","artisanspath","lunarweaverquest","hunterinitiate","hunterveteranquest","hunterelitequest","bosshunter25","dungeonveteran","dungeonmaster","raidveteran","raidmaster"]);
 function questCategory(q){
+ if(archivedQuestIds.has(q.id))return 'archive';
  if(save.quests.completed.includes(q.id))return 'completed';
  if(['road','stronghold'].includes(q.id))return 'greenvale';
  if(['embers','tyrant','ashenmaster'].includes(q.id))return 'ashen';
@@ -730,16 +732,16 @@ function renderQuests(){
   {id:'frost',icon:'❄️',name:'Frostmere'},
   {id:'blackfen',icon:'🌑',name:'Blackfen'},
   {id:'lunara',icon:'🌙',name:'Lunara'},
-  {id:'skilling',icon:'⚒️',name:'Skilling'},
-  {id:'combat',icon:'⚔️',name:'Combat'},
-  {id:'hunter',icon:'🎯',name:'Hunter Guild'},
-  {id:'dungeons',icon:'🏰',name:'Dungeons'},
-  {id:'raids',icon:'👑',name:'Raids'},
-  {id:'mastery',icon:'✨',name:'Mastery'},
-  {id:'completed',icon:'✓',name:'Completed'}
+  {id:'skilling',icon:'⚒️',name:'Story Skilling'},
+  {id:'combat',icon:'⚔️',name:'Special Challenges'},
+  {id:'dungeons',icon:'🏰',name:'Dungeon Challenges'},
+  {id:'raids',icon:'👑',name:'Raid Challenges'},
+  {id:'mastery',icon:'🏆',name:'Mastery & Achievements'},
+  {id:'completed',icon:'✓',name:'Completed Quests'},
+  {id:'archive',icon:'📚',name:'Legacy Quest Archive'}
  ];
- var completed=save.quests.completed.length,started=save.quests.started.filter(function(id){return !save.quests.completed.includes(id)}).length,available=questDB.filter(function(q){return !save.quests.completed.includes(q.id)&&q.req()}).length;
- st.innerHTML='<div class="questOverview"><div><b>'+completed+' / '+questDB.length+'</b><small>Completed</small></div><div><b>'+started+'</b><small>Active</small></div><div><b>'+available+'</b><small>Available</small></div></div>';
+ var visibleQuests=questDB.filter(function(q){return !archivedQuestIds.has(q.id)}),completed=visibleQuests.filter(function(q){return save.quests.completed.includes(q.id)}).length,started=visibleQuests.filter(function(q){return save.quests.started.includes(q.id)&&!save.quests.completed.includes(q.id)}).length,available=visibleQuests.filter(function(q){return !save.quests.completed.includes(q.id)&&q.req()}).length;
+ st.innerHTML='<div class="questOverview"><div><b>'+completed+' / '+visibleQuests.length+'</b><small>Completed</small></div><div><b>'+started+'</b><small>Active</small></div><div><b>'+available+'</b><small>Available</small></div></div>';
  function card(q){
   let complete=save.quests.completed.includes(q.id),started=save.quests.started.includes(q.id),available=q.req(),ready=started&&q.done(),status=complete?'COMPLETE':!available?'LOCKED':ready?'READY':started?'IN PROGRESS':'AVAILABLE';
   return '<div class="questCard '+(complete?'questComplete ':!available?'questLocked ':'')+(ready?'questReady ':'')+(q.id==='questlegend'||q.id==='realmforgedquest'?'questLegendary ':'')+'"><div class="questCardHead"><div><span class="questNpc">'+q.npc+'</span><h3>'+q.name+'</h3></div><span class="questStatus">'+(complete?'✓ ':!available?'🔒 ':'')+status+'</span></div><p class="questStory">'+q.story+'</p><div class="questObjective"><b>Objective</b><span>'+q.objective+'</span></div><details class="questRewards"><summary>Rewards <span>'+q.reward.split(' + ').length+' items</span></summary><div>'+q.reward.split(' + ').map(function(x){return '<span>• '+x+'</span>'}).join('')+'</div></details><div class="questAction">'+(complete?'<strong>✓ QUEST COMPLETE</strong>':!available?'<button disabled>Requirements not met</button>':!started?'<button onclick="startQuest(\''+q.id+'\')">Start Quest</button>':ready?'<button onclick="claimQuest(\''+q.id+'\')">Claim Reward</button>':'<strong>IN PROGRESS</strong>')+'</div></div>'
