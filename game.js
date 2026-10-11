@@ -663,7 +663,9 @@ function questKill(k){save.quests.kills[k]=qkill(k)+1}
 function questCraft(n,qty){save.quests.crafted[n]=qcraft(n)+(Number(qty)||1)}
 function questSkillAction(skill,key,qty){questCraft('skill:'+skill.toLowerCase(),qty);if(key)questCraft('skill:'+skill.toLowerCase()+':'+key,qty)}
 function startQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!q.req()||save.quests.started.includes(id)||save.quests.completed.includes(id))return;save.quests.started.push(id);persist()}window.startQuest=startQuest;
-function claimQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!save.quests.started.includes(id)||!q.done()||save.quests.completed.includes(id))return;q.give();save.quests.completed.push(id);save.drops.push('QUEST COMPLETE: '+q.name);persist();alert('Quest complete: '+q.name+'\nReward: '+q.reward)}window.claimQuest=claimQuest;
+function claimQuest(id){let q=questDB.find(x=>x.id===id);if(!q||!save.quests.started.includes(id)||!q.done()||save.quests.completed.includes(id))return;q.give();save.quests.completed.push(id);save.drops.push('QUEST COMPLETE: '+q.name);persist();showQuestComplete(q)}window.claimQuest=claimQuest;
+function showQuestComplete(q){var m=document.getElementById('questCompleteModal');if(!m){alert('Quest complete: '+q.name+'\nReward: '+q.reward);return}document.getElementById('questCompleteName').textContent=q.name;document.getElementById('questCompleteRewards').textContent=q.reward;m.classList.add('show');m.setAttribute('aria-hidden','false')}
+function closeQuestComplete(){var m=document.getElementById('questCompleteModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}window.closeQuestComplete=closeQuestComplete;
 function questCategory(q){
  if(save.quests.completed.includes(q.id))return 'completed';
  if(['road','stronghold'].includes(q.id))return 'greenvale';
