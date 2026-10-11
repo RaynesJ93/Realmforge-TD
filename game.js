@@ -1085,7 +1085,7 @@ function raidRun(){return save.raid&&save.raid.run}
 function startRaid(){
  if(!raidUnlocked()){alert('The Shattered Citadel unlocks after defeating all four regional campaign bosses.');return}
  if(raidRun()&&!confirm('A raid run is already in progress. Restart it from Room 1?'))return;
- save.raid.run={room:0,startedAt:Date.now(),lives:20,raidCurrency:0,buffs:[],status:'active',resources:{ore:0,logs:0,fish:0,meals:0},upgrades:{reinforce:0,barricade:0,provisions:0,focus:0},skillActions:0};writeSave(true);renderRaid();msg('The Shattered Citadel raid has begun.');enterRaidRoom();
+ save.raid.run={room:0,startedAt:Date.now(),lives:20,raidCurrency:0,buffs:[],status:'active',resources:{ore:0,logs:0,fish:0,meals:0},upgrades:{reinforce:0,barricade:0,provisions:0,focus:0},skillActions:0,xpStart:Object.fromEntries(Object.entries(save.skills).map(function(e){return [e[0],{lvl:e[1].lvl,xp:e[1].xp}]}))};writeSave(true);renderRaid();msg('The Shattered Citadel raid has begun.');enterRaidRoom();
 }
 const raidBuffDB={battlefury:{name:'Battle Fury',tag:'WARRIOR',desc:'Warrior towers deal +22% damage.'},rapidfire:{name:'Rapid Fire',tag:'RANGER',desc:'Ranger towers attack 18% faster.'},arcanesurge:{name:'Arcane Surge',tag:'MAGE',desc:'Mage towers deal +20% damage and gain +10% range.'},spiritlegion:{name:'Spirit Legion',tag:'SUMMONER',desc:'Summoner creatures deal +25% damage.'},fortified:{name:'Fortified Realm',tag:'SURVIVAL',desc:'Gain +6 raid lives immediately (maximum 30).'},warfund:{name:'War Fund',tag:'ECONOMY',desc:'Gain +300 Raid Battle Coins immediately.'},huntersfocus:{name:'Hunter’s Focus',tag:'ALL TOWERS',desc:'All towers gain +10% damage and +8% range.'},timewarp:{name:'Time Warp',tag:'ALL TOWERS',desc:'All towers attack 10% faster.'}};
 function hasRaidBuff(id){var r=raidRun();return !!(r&&Array.isArray(r.buffs)&&r.buffs.includes(id))}
@@ -1100,7 +1100,8 @@ function startRaidBossRoom(room){
  var r=raidRun(),b=raidBosses[room];if(!r||!b)return;raidMode=true;raidBossKind=b.kind;raidBossPhase=0;raidBossLastAbility=0;bossMode=null;dungeonMode=false;currentMap=19;towers=[];enemies=[];shots=[];wave=0;lives=Math.max(1,Number(r.lives)||20);battleCoins=Math.max(340,Number(r.raidCurrency)||340);waveRunning=false;spawnPending=0;mapFinished=false;pendingPoison=[];document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active')});document.querySelector('#battle').classList.add('active');hud();renderUI();msg('BOSS: '+b.name+' — prepare your towers, then launch the wave.');
 }
 const raidUniques=['Citadel Greatblade','Riftpiercer Bow','Shatterspell Staff','Citadel Spirit Idol','Shattered Crown','Citadel Vanguard Cape','Citadel War Amulet','Riftforged Warband','Riftstalker Cape','Riftpiercer Pendant','Riftshot Ring','Shatterweave Mantle','Shatterspell Amulet','Riftmage Ring','Spiritbound Cape','Bound Spirit Amulet','Citadel Binding Ring'];
-function showRaidResults(chest,elapsed){
+function raidEarnedXp(start){if(!start)return null;return Object.entries(save.skills).map(function(e){var before=start[e[0]];if(!before)return null;var gained=xpTotalAt(e[0],e[1])-xpTotalAt(e[0],before);return gained>0?[e[0],Math.round(gained)]:null}).filter(Boolean)}
+function showRaidResults(chest,elapsed,xpGains){
  var modal=document.querySelector('#bossResultsModal');if(!modal)return;
  modal.style.setProperty('--boss-accent','#9b794f');modal.style.setProperty('--boss-deep','#241d2c');
  document.querySelector('.bossVictory').textContent=chest.unique?'RAID UNIQUE!':'RAID COMPLETE!';
@@ -1109,7 +1110,7 @@ function showRaidResults(chest,elapsed){
  document.querySelector('#bossResultFlavor').innerHTML=chest.unique?'<span class="raidUniqueCallout">'+menuItemArt(chest.unique)+'<b>'+chest.unique+'</b><em>NEW RAID UNIQUE</em></span>':'The Citadel Lord has fallen. This chest rolled at <b>'+Math.round(chest.chance*100)+'%</b> unique chance. Next clear: <b>'+Math.round(nextChance*100)+'%</b>.';
  var rewards=[['Raid Tokens',chest.tokens],['Coins',chest.coins],['Spirit Shard',chest.shards]];(chest.materials||[]).forEach(function(x){rewards.push([x.name,x.qty])});if(chest.unique)rewards.push([chest.unique,1]);
  document.querySelector('#bossResultRewards').innerHTML=rewards.map(function(x){return '<div class="bossResultRow '+(x[0]===chest.unique?'raidUniqueReward':'')+'"><span>'+menuItemArt(x[0])+x[0]+'</span><b>+'+Number(x[1]).toLocaleString()+'</b></div>'}).join('');
- document.querySelector('#bossResultXp').innerHTML='<div class="bossResultRow"><span>Raid completion rewards claimed</span><b>✓</b></div>';
+ document.querySelector('#bossResultXp').innerHTML=xpGains===null?'<div class="bossResultRow"><span>XP tracking unavailable for this raid started before the update</span></div>':xpGains.length?xpGains.map(function(x){return '<div class="bossResultRow"><span>'+menuItemArt(x[0])+x[0]+' XP</span><b>+'+x[1].toLocaleString()+'</b></div>'}).join(''):'<div class="bossResultRow"><span>No skill XP earned this raid</span></div>';
  document.querySelector('#bossResultTime').textContent=(elapsed/1000).toFixed(1)+'s';
  document.querySelector('#bossResultWaves').textContent='7 / 7 ROOMS';
  modal.classList.add('show')
@@ -1138,7 +1139,7 @@ function raidRewardShopHtml(){
 window.buyRaidReward=buyRaidReward;
 function finishRaidBossRoom(kind){
  var r=raidRun();if(!r)return;var room=r.room,name=(raidBosses[room]||{}).name||'Raid Boss';waveRunning=false;mapFinished=true;r.lives=lives;r.raidCurrency=battleCoins;
- if(room===6){var elapsed=Math.max(1,Date.now()-(r.startedAt||Date.now())),chest=awardRaidChest();trackBattleCompletion('raid');save.raid.completions=(save.raid.completions||0)+1;addPerkProgress('raidcomplete',1);if(!save.raid.best||elapsed<save.raid.best)save.raid.best=elapsed;save.raid.run=null;raidMode=false;raidBossKind=null;writeSave(true);renderRaid();renderUI();setTimeout(function(){showRaidResults(chest,elapsed);document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active')});var s=document.querySelector('#raids');if(s)s.classList.add('active')},100);return}
+ if(room===6){var raidXpGains=raidEarnedXp(r.xpStart);var elapsed=Math.max(1,Date.now()-(r.startedAt||Date.now())),chest=awardRaidChest();trackBattleCompletion('raid');save.raid.completions=(save.raid.completions||0)+1;addPerkProgress('raidcomplete',1);if(!save.raid.best||elapsed<save.raid.best)save.raid.best=elapsed;save.raid.run=null;raidMode=false;raidBossKind=null;writeSave(true);renderRaid();renderUI();setTimeout(function(){showRaidResults(chest,elapsed,raidXpGains);document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active')});var s=document.querySelector('#raids');if(s)s.classList.add('active')},100);return}
  r.room=room+1;raidMode=false;raidBossKind=null;if(room===1||room===4)offerRaidBuff();writeSave(true);renderRaid();renderUI();setTimeout(function(){alert(name+' defeated! Next: Room '+(r.room+1)+' — '+raidRooms[r.room].name);document.querySelectorAll('.screen').forEach(function(x){x.classList.remove('active')});var s=document.querySelector('#raids');if(s)s.classList.add('active');if(r.buffChoices&&r.buffChoices.length)showRaidPowerPopup()},100)
 }
 function updateRaidBossMechanics(now){
