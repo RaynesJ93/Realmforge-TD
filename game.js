@@ -591,6 +591,11 @@ function equipItem(name,targetClass){
  if(it.req){for(const [skill,lvl] of Object.entries(it.req))if(save.skills[skill].lvl<lvl){alert(name+' requires '+skill+' level '+lvl+'.');return}}
  const cls=it.class==='all'?targetClass:it.class;
  if(!['warrior','ranger','mage','summoner'].includes(cls)){alert('Choose which class should equip this item.');return}
+ save.equipment=save.equipment||{};save.equipment[cls]=save.equipment[cls]||{};
+ if(save.equipment[cls][it.slot]===name)return;
+ // Do not equip the same physical item in multiple tower loadouts unless enough copies exist.
+ var equipped=equippedCopies(name);
+ if(equipped>=owned){alert('All copies of '+name+' are already equipped. Obtain another copy or unequip one from another tower.');return}
  save.equipment[cls][it.slot]=name;persist();
 }window.equipItem=equipItem;
 
