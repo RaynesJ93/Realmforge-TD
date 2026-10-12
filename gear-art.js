@@ -331,6 +331,14 @@ Object.assign(equipmentArtwork,{
  'Mire Queen Effigy':'assets/equipment/mire-queen-effigy-batch28.webp',
  'Moonweaver Spirit Sceptre':'assets/equipment/moonweaver-spirit-sceptre-batch28.webp'
 });
+// Batch 29: approved boss offhand relics.
+Object.assign(equipmentArtwork,{
+ 'Warlord Trophy':'assets/equipment/warlord-trophy-batch29.webp',
+ 'Heart of the Tyrant':'assets/equipment/heart-of-the-tyrant-batch29.webp',
+ 'Frozen Wyrm Eye':'assets/equipment/frozen-wyrm-eye-batch29.webp',
+ 'Venomheart Idol':'assets/equipment/venomheart-idol-batch29.webp',
+ 'Moon Crystal':'assets/equipment/moon-crystal-batch29.webp'
+});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
