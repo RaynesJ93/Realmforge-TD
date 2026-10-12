@@ -323,6 +323,14 @@ Object.assign(equipmentArtwork,{"Behemoth Warplate": "assets/equipment/behemoth-
 Object.assign(equipmentArtwork,{"Citadel Vanguard Cape": "assets/equipment/citadel-vanguard-cape-batch26.webp", "Citadel War Amulet": "assets/equipment/citadel-war-amulet-batch26.webp", "Riftforged Warband": "assets/equipment/riftforged-warband-batch26.webp", "Riftstalker Cape": "assets/equipment/riftstalker-cape-batch26.webp", "Riftpiercer Pendant": "assets/equipment/riftpiercer-pendant-batch26.webp", "Riftshot Ring": "assets/equipment/riftshot-ring-batch26.webp"});
 // Batch 27: approved Mage and Summoner raid accessories.
 Object.assign(equipmentArtwork,{"Shatterweave Mantle": "assets/equipment/shatterweave-mantle-batch27.webp", "Shatterspell Amulet": "assets/equipment/shatterspell-amulet-batch27.webp", "Riftmage Ring": "assets/equipment/riftmage-ring-batch27.webp", "Spiritbound Cape": "assets/equipment/spiritbound-cape-batch27.webp", "Bound Spirit Amulet": "assets/equipment/bound-spirit-amulet-batch27.webp", "Citadel Binding Ring": "assets/equipment/citadel-binding-ring-batch27.webp"});
+// Batch 28: approved boss Summoner weapons.
+Object.assign(equipmentArtwork,{
+ 'Warlord Spirit Drum':'assets/equipment/warlord-spirit-drum-batch28.webp',
+ 'Tyrant Flame Idol':'assets/equipment/tyrant-flame-idol-batch28.webp',
+ 'Wyrmcall Totem':'assets/equipment/wyrmcall-totem-batch28.webp',
+ 'Mire Queen Effigy':'assets/equipment/mire-queen-effigy-batch28.webp',
+ 'Moonweaver Spirit Sceptre':'assets/equipment/moonweaver-spirit-sceptre-batch28.webp'
+});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
