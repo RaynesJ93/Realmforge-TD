@@ -339,6 +339,14 @@ Object.assign(equipmentArtwork,{
  'Venomheart Idol':'assets/equipment/venomheart-idol-batch29.webp',
  'Moon Crystal':'assets/equipment/moon-crystal-batch29.webp'
 });
+// Batch 30: approved Mythic boss cape rewards.
+Object.assign(equipmentArtwork,{
+ "Warlord's War Banner":'assets/equipment/warlords-war-banner-batch30.webp',
+ 'Infernal Tyrant Cape':'assets/equipment/infernal-tyrant-cape-batch30.webp',
+ 'Frozen Wyrm Wings':'assets/equipment/frozen-wyrm-wings-batch30.webp',
+ "Mire Queen's Shroud":'assets/equipment/mire-queens-shroud-batch30.webp',
+ 'Celestial Moon Cape':'assets/equipment/celestial-moon-cape-batch30.webp'
+});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
