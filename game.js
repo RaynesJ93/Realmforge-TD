@@ -17,9 +17,11 @@ const utilityArtwork={"Coins":"assets/coins-v272.webp"};
 const masteryArtwork={'Attack Skillcape':'assets/mastery/attack-skillcape-v401.webp'};
 function menuItemArt(name){const src=utilityArtwork[name]||masteryArtwork[name]||existingSkillArtwork[name]||skillingArtwork[name]||(itemDB[name]&&window.RealmforgeGear?window.RealmforgeGear.icon(name):null);return src?'<img class="menuItemIcon" src="'+src+'" alt="" width="32" height="32" loading="lazy">':'';}
 function resultSkillIcon(name){
+ // Use the same image artwork as the skilling menus, never emoji in XP rewards.
  var art=menuItemArt(name);if(art)return art;
- var icons={Attack:'⚔️',Strength:'💪',Defence:'🛡️',Ranged:'🏹',Magic:'🔮',Summoning:'✨',Hitpoints:'❤️','Monster Hunter':'🐾'};
- return '<span class="menuItemIcon" aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:none;font-size:24px;vertical-align:middle">'+(icons[name]||'⭐')+'</span>'
+ // Combat skills do not yet have dedicated skill images: use existing gear artwork.
+ var combatArtwork={Attack:'Bronze Sword',Strength:'Bronze Dagger',Defence:'Bronze Shield',Ranged:'Oak Shortbow',Magic:'Cracked Staff',Summoning:'Cloth Robe',Hitpoints:'Cooked Minnow','Monster Hunter':'Bronze Helm'};
+ return combatArtwork[name]?menuItemArt(combatArtwork[name]):''
 }
 const KEY='realmforge_v01',BACKUP_KEY='realmforge_backup',TEST_KEY='realmforge_test_v01',SAVE_VERSION=16;
 let testMode=false;
