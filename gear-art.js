@@ -369,6 +369,15 @@ Object.assign(equipmentArtwork,{
  'Realmforged Spirit Amulet':'assets/equipment/realmforged-spirit-amulet-batch33.webp',
  'Realmforged Binding Ring':'assets/equipment/realmforged-binding-ring-batch33.webp'
 });
+// Batch 34: approved combat skillcapes.
+Object.assign(equipmentArtwork,{
+ 'Strength Skillcape':'assets/equipment/strength-skillcape-batch34.webp',
+ 'Defence Skillcape':'assets/equipment/defence-skillcape-batch34.webp',
+ 'Ranged Skillcape':'assets/equipment/ranged-skillcape-batch34.webp',
+ 'Magic Skillcape':'assets/equipment/magic-skillcape-batch34.webp',
+ 'Summoning Skillcape':'assets/equipment/summoning-skillcape-batch34.webp',
+ 'Hitpoints Skillcape':'assets/equipment/hitpoints-skillcape-batch34.webp'
+});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
