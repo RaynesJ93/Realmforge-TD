@@ -385,6 +385,12 @@ Object.assign(equipmentArtwork,{
  'Fishing Skillcape':'assets/equipment/fishing-skillcape-batch35.webp',
  'Hunter Mastery Cape':'assets/equipment/hunter-mastery-cape-batch35.webp'
 });
+Object.assign(equipmentArtwork,{
+ 'Smithing Skillcape':'assets/equipment/smithing-skillcape-batch36.webp',
+ 'Cooking Skillcape':'assets/equipment/cooking-skillcape-batch36.webp',
+ 'Fletching Skillcape':'assets/equipment/fletching-skillcape-batch36.webp',
+ 'Crafting Skillcape':'assets/equipment/crafting-skillcape-batch36.webp'
+});
 function icon(name,cls){if(Object.hasOwn(equipmentArtwork,name))return equipmentArtwork[name];const key=name+'|'+(cls||'');if(!icons.has(key))icons.set(key,render(itemMesh(name,cls),96,96).toDataURL('image/png'));return icons.get(key)}
 function signature(cls){return JSON.stringify(save.equipment[cls]||{})}
 function tower(cls,phase=0){const key=signature(cls);let entry=towerCache.get(cls);if(!entry||entry.key!==key){entry={key,frames:new Map()};towerCache.set(cls,entry)}const frame=Math.max(0,Math.min(8,Math.round(phase*8)));if(!entry.frames.has(frame))entry.frames.set(frame,render(characterMesh(cls,save.equipment[cls]||{},frame/8),256,320,true));return entry.frames.get(frame)}
